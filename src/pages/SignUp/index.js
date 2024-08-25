@@ -1,7 +1,10 @@
-import React from 'react'
+import React from "react";
+import HeaderRegisterLogin from "../../components/HeaderRegisterLogin";
 
 export default function SignUp() {
   return (
-    <div>index</div>
-  )
+    <>
+      <HeaderRegisterLogin text={"Đăng ký"} />
+    </>
+  );
 }
