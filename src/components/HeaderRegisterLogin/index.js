@@ -1,5 +1,6 @@
 import React from "react";
 import logo_h from "../../assets/logo_h.png";
+import "./HeaderRegisterLogin.css"
 export default function HeaderRegisterLogin(props) {
   return (
     <>
