@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import "./FormRegister.css";
+import { Link } from "react-router-dom";
 export default function FormRegister() {
   const [phone, setPhone] = useState(""); // phone
   const [phoneError, setPhoneError] = useState(false); // phone error
@@ -183,9 +184,9 @@ export default function FormRegister() {
             <div className="flex justify-center items-center content__foreign">
               <span>
                 Bạn chưa có tài khoản? {/* content__foreign__login */}
-                <a className="content__foreign__login" href="/signin">
+                <Link to="/signin" className="content__foreign__login">
                   Đăng nhập
-                </a>
+                </Link>
               </span>
             </div>
           </div>
