@@ -2,14 +2,14 @@
     font-family: Helvetica Neue, Helvetica, Arial, 文泉驛正黑, WenQuanYi Zen Hei, Hiragino Sans GB, 儷黑 Pro, LiHei Pro, Heiti TC, 微軟正黑體, Microsoft JhengHei UI, Microsoft JhengHei, sans-serif;
     line-height: 1.2;
     font-size: 14px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, .14);
 }
 .container__register .content{
     width: 400px;
     height: 429px;
     background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, .14);
+
 }
 .container__register .content .content__title{
     width: 100%;
