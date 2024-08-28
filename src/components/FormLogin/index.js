@@ -6,10 +6,11 @@ import {
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import logo_h from "../../assets/logo_h.png";
-// import LoginService from "../../services/user/LoginService";
-import { Link } from "react-router-dom";
+import LoginService from "../../services/LoginService";
+import { Link, useNavigate } from "react-router-dom";
 import "./FormLogin.css";
 export default function FormLogin() {
+  const navigate = useNavigate();
   const [phone, setPhone] = useState(""); // phone
   const [password, setPassword] = useState(""); // password
   // error
@@ -79,15 +80,16 @@ export default function FormLogin() {
     );
   }, [phone, password, phoneError, passwordError]);
   // handle login
-//   const handleLogin = async () => {
-//     try {
-//       const response = await LoginService(phone, password);
-//       localStorage.setItem("token", response.data.token);
-//       navigate("/home", { state: { user: response.data } });
-//     } catch (error) {
-//       throw new Error(error);
-//     }
-//   };
+  const handleLogin = async () => {
+    try {
+      const response = await LoginService(phone, password);
+      console.log(response)
+      localStorage.setItem("token", response.data.token);
+      navigate("/home", { state: { user: response.data } });
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
   return (
     <>
       {/* container */}
@@ -221,7 +223,7 @@ export default function FormLogin() {
               <div className="btn">
                 {/* btn__login */}
                 <button
-                //   onClick={handleLogin}
+                  onClick={handleLogin}
                   disabled={!formValid}
                   className={`btn__login bg-orange-500 w-full h-10 ${
                     !formValid && "cursor-not-allowed"
