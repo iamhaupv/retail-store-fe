@@ -1,4 +1,7 @@
+import ContentRegisterLogin from "../components/ContentRegisterLogin";
+import FormRegister from "../components/FormRegister";
 import LayoutDefault from "../layout/LayoutDefault";
+import AuthOTP from "../pages/AuthOTP";
 import Error404 from "../pages/Error404";
 import Home from "../pages/Home";
 import SignIn from "../pages/SignIn";
@@ -10,8 +13,15 @@ export const routes = [
     element: <LayoutDefault />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/signin", element: <SignIn /> },
-      { path: "/signup", element: <SignUp /> },
+      { path: "signin", element: <SignIn /> },
+      {
+        path: "signup",
+        element: <SignUp />,
+        children: [
+          { index: true , element: <ContentRegisterLogin component={FormRegister} /> },
+          { path: "auth-otp", element: <AuthOTP /> },
+        ],
+      },
       { path: "*", element: <Error404 /> },
     ],
   },

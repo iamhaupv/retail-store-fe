@@ -140,7 +140,7 @@ export default function FormLogin() {
                     className="phone__input"
                     style={{
                       width: phoneError ? "338.4px" : "295.4px",
-                      background: phoneError ? "#fff6f7" : "#ffffff",
+                      background: phoneError ? "#fff6f7" : "#fffffff",
                     }}
                     value={phone}
                     onChange={handleChangePhone}
