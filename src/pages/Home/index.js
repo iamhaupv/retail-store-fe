@@ -1,7 +1,16 @@
-import React from 'react'
-
+import React from "react";
+import Header from "../../components/Header";
+import NavSideBar from "../../components/NavSideBar";
+import "./Home.css";
+import StockReceipt from "../../components/StockReceipt";
 export default function Home() {
   return (
-    <div>index</div>
-  )
+    <>
+      <Header />
+      <div className="container__navbar">
+        <NavSideBar />
+        <StockReceipt/>
+      </div>
+    </>
+  );
 }

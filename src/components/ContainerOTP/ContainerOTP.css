@@ -1,8 +1,30 @@
 .container__auth__otp{
     width: 1040px;
     height: 721.8px;
-    margin: 0px 80px;
+    margin: 0px 114.4px;
     font-family: Helvetica Neue, Helvetica, Arial, 文泉驛正黑, WenQuanYi Zen Hei, Hiragino Sans GB, 儷黑 Pro, LiHei Pro, Heiti TC, 微軟正黑體, Microsoft JhengHei UI, Microsoft JhengHei, sans-serif;
     line-height: 1.2;
     font-size: 14px;
+}
+.content__auth__otp{
+    width: 501.41px;
+    height: 721.8px;
+    padding: 50px 0px;
+}
+.frame__up{
+    width: 501.41px;
+    height: 73px;
+    margin: 0px 0px 6px;
+    background-color: red
+}
+.frame__title{
+    width: 500px;
+    height: 80px;
+    background-color: beige;
+}
+.frame__down{
+    width: 500px;
+    height: 408.8px;
+    padding: 0px 80px 64px;
+    background-color: aqua;
 }

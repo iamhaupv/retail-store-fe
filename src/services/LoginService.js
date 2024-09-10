@@ -1,9 +1,9 @@
 import axios from "axios";
 import GlobalHost from "../GlobalHost";
-const LoginService = async (phoneNumber, password) => {
+const LoginService = async (email, password) => {
   try {
     const reponse = await axios.post(`${GlobalHost.host_user}/login`, {
-      phoneNumber,
+      email,
       password,
     });
     return reponse.data;
