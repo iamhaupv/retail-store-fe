@@ -15,15 +15,13 @@ import { Link } from "react-router-dom";
 export default function NavSideBar() {
   return (
     <>
-      <div className="container">
+      <div className="container__nav">
         <div className="dashboard">
           <div><FontAwesomeIcon className="gauge__high" icon={faGaugeHigh} /></div>
           <div><h1>Dashboard</h1></div>
         </div>
         <div className="menubar">
           <div className="title">
-            {/* <div><FontAwesomeIcon icon={faBuffer} /></div>
-            <div><h1>Sản Phẩm</h1></div> */}
             <span><FontAwesomeIcon icon={faBuffer} /></span>
             <h1>Sản Phẩm</h1>
           </div>

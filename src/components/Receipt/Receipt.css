@@ -1,0 +1,30 @@
+.container__content{
+    padding: 0px 30px 0px 30px;
+    border-radius: 6px;
+}
+.page__name{
+    height: 50px;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    background-color: #fff;
+    border-radius: 6px;
+    border-bottom: 2px solid rgb(245 245 245);
+}
+.receipt__above{
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+}
+.receipt__above span{
+    font-size: 20px;
+    font-weight: bold;
+}
+.receipt__above button{
+    background-color: #2ebf75;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 6px;
+    height: 40px;
+    width: 200px;
+}
