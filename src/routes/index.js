@@ -2,19 +2,51 @@ import ContentRegisterLogin from "../components/ContentRegisterLogin";
 import FormRegister from "../components/FormRegister";
 import LayoutDefault from "../layout/LayoutDefault";
 import AuthOTP from "../pages/AuthOTP";
+import CreateProduct from "../pages/CreateProduct";
+import Discount from "../pages/Discount";
+import Employee from "../pages/Employee";
 import Error404 from "../pages/Error404";
 import Home from "../pages/Home";
 import Inventory from "../pages/Inventory";
+import Order from "../pages/Order";
+import Product from "../pages/Products";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
+import Supply from "../pages/Supply";
 
 export const routes = [
   {
     path: "/",
     element: <LayoutDefault />,
     children: [
-      { path: "/", element: <Home /> },
-      { path: "/inventory", element: <Inventory /> },
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "create-product",
+        element: <CreateProduct />,
+      },
+      {
+        path: "/employee",
+        element: <Employee />,
+      },
+      {
+        path: "/supply",
+        element: <Supply />,
+      },
+      {
+        path: "/inventory",
+        element: <Inventory />,
+      },
+      {
+        path: "/order",
+        element: <Order />,
+      },
+      {
+        path: "/discount",
+        element: <Discount />,
+      },
       { path: "signin", element: <SignIn /> },
       {
         path: "signup",

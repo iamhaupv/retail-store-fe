@@ -23,9 +23,9 @@ export default function NavSideBar() {
         <div className="menubar">
           <div className="title">
             <span><FontAwesomeIcon icon={faBuffer} /></span>
-            <h1>Sản Phẩm</h1>
+            <p>Sản Phẩm</p>
           </div>
-          <div><Link>[+] Thêm mới sản phẩm</Link></div>
+          <div><Link to={"/product"}>[+] Thêm mới sản phẩm</Link></div>
           <div><Link>Danh sách sản phẩm</Link></div>
           <div><Link>Danh mục sản phẩm</Link></div>
           <div><Link>Ngành hàng</Link></div>
@@ -35,35 +35,35 @@ export default function NavSideBar() {
             <span><FontAwesomeIcon icon={faClipboardUser} /></span>
             <h1>Nhân viên</h1>
           </div>
-          <div><Link>[+] Thêm mới nhân viên</Link></div>
+          <div><Link to={"/employee"}>[+] Thêm mới nhân viên</Link></div>
           <div><Link>Danh sách nhân viên</Link></div>
         </div>
         <div className="menubar">
           <div className="title">
-          <span><FontAwesomeIcon className="title__icon" icon={faDumpsterFire} /></span>
-            <h1>Nhà cung cấp</h1>
+          "<span><FontAwesomeIcon className="title__icon" icon={faDumpsterFire} /></span>
+          <p>Nhà cung cấp</p>
           </div>
-          <div><Link>[+] Thêm mới nhà cung cấp</Link></div>
+          <div><Link to={"/supply"}>[+] Thêm mới nhà cung cấp</Link></div>
           <div><Link>Danh sách nhà cung cấp</Link></div>
         </div>
         <div className="menubar">
           <div className="title">
           <span><FontAwesomeIcon icon={faStore} /></span>
-            <h1>Quản lý kho</h1>
+            <h1><Link to={"/inventory"}>Quản lý kho</Link></h1>
           </div>
         </div>
         <div className="menubar">
           <div className="title">
-          <span><FontAwesomeIcon icon={faCartPlus} /></span>
-            <h1>Đơn hàng</h1>
+          <Link className="flex" to={"/order"}><span><FontAwesomeIcon icon={faCartPlus} /></span>
+          <p>Đơn hàng</p></Link>
           </div>
           <div><Link>[+] Thêm mới nhà cung cấp</Link></div>
           <div><Link>Danh sách nhà cung cấp</Link></div>
         </div>
         <div className="menubar">
           <div className="title">
-          <span><FontAwesomeIcon icon={faGift} /></span>
-            <h1>Chương trình khuyến mãi</h1>
+          <Link className="flex" to={"/discount"}><span><FontAwesomeIcon icon={faGift} /></span>
+          <h1>Chương trình khuyến mãi</h1></Link>
           </div>
         </div>
         <div className="menubar">

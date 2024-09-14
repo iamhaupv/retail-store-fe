@@ -6,7 +6,7 @@ import Content from "../../components/Content";
 export default function Inventory() {
   return (
     <>
-      <Header />
+      <Header title={"Kho"} />
       <div className="content__inventory">
         <NavSideBar />
         <Content />

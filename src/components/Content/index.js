@@ -1,13 +1,11 @@
 import React from "react";
-import HeaderDetailStockReceipt from "../HeaderDetailStockReceipt";
-import Receipt from "../Receipt";
 import "./Content.css";
+import { Outlet } from "react-router-dom";
 export default function Content() {
   return (
     <>
       <div className="content">
-        <HeaderDetailStockReceipt />
-        <Receipt />
+        <Outlet />
       </div>
     </>
   );
