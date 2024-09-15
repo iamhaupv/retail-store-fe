@@ -10,7 +10,7 @@ export default function LayoutDefault() {
       </header>
       <div className="layout-main-content flex">
         <NavSideBar/>
-        <Outlet context={{ area: 'main' }} />
+        {/* <Outlet context={{ area: 'main' }} /> */}
       </div>
       <footer>
         <Footer/>

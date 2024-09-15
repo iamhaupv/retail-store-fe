@@ -8,6 +8,7 @@ import Employee from "../pages/Employee";
 import Error404 from "../pages/Error404";
 import Home from "../pages/Home";
 import Inventory from "../pages/Inventory";
+import ListProduct from "../pages/ListProduct";
 import Order from "../pages/Order";
 import Product from "../pages/Products";
 import SignIn from "../pages/SignIn";
@@ -22,6 +23,10 @@ export const routes = [
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "list-product",
+        element: <ListProduct/>,
       },
       {
         path: "create-product",
