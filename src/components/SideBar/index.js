@@ -1,5 +1,5 @@
 import React from "react";
-import "./NavSideBar.css";
+import "./SideBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCartPlus,
@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faBuffer } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "react-router-dom";
-export default function NavSideBar() {
+export default function SideBar() {
   return (
     <>
       <div className="container__nav">

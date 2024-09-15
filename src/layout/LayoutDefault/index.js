@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import Footer from "../../components/Footer"
-import NavSideBar from '../../components/NavSideBar'
+import SideBar from '../../components/SideBar'
 export default function LayoutDefault() {
   return (
     <>
@@ -10,7 +10,7 @@ export default function LayoutDefault() {
       </header>
       <div className="layout-main-content flex">
         <NavSideBar/>
-        {/* <Outlet context={{ area: 'main' }} /> */}
+        <Outlet context={{ area: 'main' }} />
       </div>
       <footer>
         <Footer/>

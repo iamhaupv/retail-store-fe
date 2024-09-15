@@ -10,7 +10,6 @@ import Home from "../pages/Home";
 import Inventory from "../pages/Inventory";
 import ListProduct from "../pages/ListProduct";
 import Order from "../pages/Order";
-import Product from "../pages/Products";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import Supply from "../pages/Supply";
