@@ -14,9 +14,6 @@ export default function LayoutDefault() {
           <SideBar />
           {/* <Outlet context={{ area: "main" }} /> */}
         </div>
-        <footer>
-          <Footer />
-        </footer>
       </div>
     </>
   );
