@@ -10,11 +10,13 @@ import Home from "../pages/Home";
 import Inventory from "../pages/Inventory";
 import ListProduct from "../pages/ListProduct";
 import Order from "../pages/Order";
+import Product from "../pages/Product";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import Supply from "../pages/Supply";
 
 export const routes = [
+  { path: "/signin", element: <SignIn /> },
   {
     path: "/",
     element: <LayoutDefault />,
@@ -25,7 +27,11 @@ export const routes = [
       },
       {
         path: "list-product",
-        element: <ListProduct/>,
+        element: <ListProduct />,
+      },
+      {
+        path: "product",
+        element: <Product />,
       },
       {
         path: "create-product",
@@ -51,7 +57,6 @@ export const routes = [
         path: "/discount",
         element: <Discount />,
       },
-      { path: "signin", element: <SignIn /> },
       {
         path: "signup",
         element: <SignUp />,

@@ -3,17 +3,36 @@ import "./Receipt.css";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import HeaderDetailStockReceipt from "../HeaderDetailStockReceipt";
 export default function Receipt() {
   return (
     <>
+    <div><HeaderDetailStockReceipt/>
       <div className="container__content">
         <div className="page__name p-[30px]">
-          <div>
+          {/* <div>
             <Link>Nhập kho</Link>
           </div>
           <div className="ml-[55px]">
             <Link>Xuất kho</Link>
-          </div>
+          </div> */}
+          <div role="tablist" className="tabs tabs-bordered">
+  <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tab 1" />
+  <div role="tabpanel" className="tab-content p-10">Tab content 1</div>
+
+  <input
+    type="radio"
+    name="my_tabs_1"
+    role="tab"
+    className="tab"
+    aria-label="Tab 2"
+    defaultChecked />
+  <div role="tabpanel" className="tab-content p-10">Tab content 2</div>
+
+  <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tab 3" />
+  <div role="tabpanel" className="tab-content p-10">Tab content 3</div>
+</div>
+{/*  */}
         </div>
         <div className="receipt__above p-[30px] h-[70px]">
           <div class="max-w-sm w-full">
@@ -91,7 +110,7 @@ export default function Receipt() {
             </tbody>
           </table>
         </div>
-      </div>
+      </div></div>
     </>
   );
 }
