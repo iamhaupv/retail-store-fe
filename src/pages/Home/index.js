@@ -1,12 +1,11 @@
 import React from "react";
-import NavSideBar from "../../components/SideBar";
 import "./Home.css";
-import { Outlet } from "react-router-dom";
-import Header from "../../components/Header";
+import FormLogin from "../../components/FormLogin";
+import ContentRegisterLogin from "../../components/ContentRegisterLogin";
 export default function Home() {
   return (
     <>
-      <Header title={"Dashboard"}/>
+       <FormLogin/>
     </>
   );
 }

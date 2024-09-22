@@ -1,5 +1,10 @@
 .content{
-    width: 78%;
+    width: calc(100% - 273px);
     height: 1200px;
-    background-color: rgb(245 245 245);
+    /* background-color: rgb(245 245 245); */
+    display: flex;
+    justify-content: center;
+    background-color: aqua;
+    box-sizing: border-box;
+    display: flex;
 }

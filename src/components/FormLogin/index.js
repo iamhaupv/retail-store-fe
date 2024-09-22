@@ -6,50 +6,51 @@ import {
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import logo_h from "../../assets/logo_h.png";
-import LoginService from "../../services/LoginService";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./FormLogin.css";
+import LoginApi from "../../apis/LoginApi";
 export default function FormLogin() {
+  const location = useLocation();
   const navigate = useNavigate();
-  const [phone, setPhone] = useState(""); // phone
+  const [email, setEmail] = useState(""); // email
   const [password, setPassword] = useState(""); // password
   // error
-  const [phoneError, setPhoneError] = useState(false); // phone error
+  const [emailError, setEmailError] = useState(false); // email error
   const [passwordError, setPasswordError] = useState(false); // password error
   // icon
-  const [iconPhone, setIconPhone] = useState(false); // icon phone
+  const [iconEmail, setIconEmail] = useState(false); // icon email
   const [iconPassword, setIconPassword] = useState(false); // icon password
   // eyes
   const [eye, setEye] = useState(false);
   const [formValid, setFormValid] = useState(false);
   // focus
-  const [focusPhone, setFocusPhone] = useState(false); // focus phone
+  const [focusEmail, setFocusEmail] = useState(false); // focus email
   const [focusPasswor, setFocusPassword] = useState(false); // focus password
   //  handle focus
-  const handleFocusPhone = () => {
-    setFocusPhone(true);
+  const handleFocusEmail = () => {
+    setFocusEmail(true);
   };
   // handle focus password
   const handleFocusPassword = () => {
     setFocusPassword(true);
   };
-  // regex phone
-  const regexPhone = (value) => {
-    const regex = /^(0[3|5|7|8|9]\d{8}|0\d{9})$/;
-    if (value === "" || !regex.test(value)) setPhoneError(true);
-    else setPhoneError(false);
+  // regex email
+  const regexEmail = (value) => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (value === "" || !regex.test(value)) setEmailError(true);
+    else setEmailError(false);
   };
-  // handle change phone
-  const handleChangePhone = (e) => {
-    regexPhone(e.target.value);
-    setPhone(e.target.value);
-    setIconPhone(true);
+  // handle change email
+  const handleChangeEmail = (e) => {
+    regexEmail(e.target.value);
+    setEmail(e.target.value);
+    setIconEmail(true);
   };
-  // handle blur phone
-  const handleBlurPhone = (e) => {
-    regexPhone(e.target.value);
-    setFocusPhone(false);
-    setIconPhone(true);
+  // handle blur email
+  const handleBlurEmail = (e) => {
+    regexEmail(e.target.value);
+    setFocusEmail(false);
+    setIconEmail(true);
   };
   // regex password
   const regexPassword = (value) => {
@@ -76,20 +77,21 @@ export default function FormLogin() {
   // form valid
   useEffect(() => {
     setFormValid(
-      !phoneError && !passwordError && phone.length >= 8 && password.length >= 8
+      !emailError && !passwordError && email.length >= 8 && password.length >= 8
     );
-  }, [phone, password, phoneError, passwordError]);
+  }, [email, password, emailError, passwordError]);
   // handle login
   const handleLogin = async () => {
     try {
-      const response = await LoginService(phone, password);
-      console.log(response)
-      localStorage.setItem("token", response.data.token);
-      navigate("/home", { state: { user: response.data } });
+      const response = await LoginApi(email, password);
+      // localStorage.setItem("token", response.token);
+      console.log(response);
     } catch (error) {
       throw new Error(error);
     }
   };
+  const apiUrl = process.env.REACT_APP_API_URL;
+  console.log(apiUrl);
   return (
     <>
       {/* container */}
@@ -125,12 +127,12 @@ export default function FormLogin() {
               {/* container__content__form phone */}
               <div>
                 <div
-                  onFocus={handleFocusPhone}
+                  onFocus={handleFocusEmail}
                   className="flex justify-center items-center phone"
                   style={{
-                    border: phoneError
+                    border: emailError
                       ? "1px solid red"
-                      : focusPhone
+                      : focusEmail
                       ? "1px solid black"
                       : "1px solid rgba(0, 0, 0, .14)",
                   }}
@@ -139,20 +141,20 @@ export default function FormLogin() {
                   <input
                     className="phone__input"
                     style={{
-                      width: phoneError ? "338.4px" : "295.4px",
-                      background: phoneError ? "#fff6f7" : "#fffffff",
+                      width: emailError ? "338.4px" : "295.4px",
+                      background: emailError ? "#fff6f7" : "#fffffff",
                     }}
-                    value={phone}
-                    onChange={handleChangePhone}
-                    onBlur={handleBlurPhone}
+                    value={email}
+                    onChange={handleChangeEmail}
+                    onBlur={handleBlurEmail}
                     placeholder="Email/Số điện thoại"
                   />
-                  {phoneError ? (
+                  {emailError ? (
                     <div></div>
                   ) : (
                     // container__content__form phone__input__pass
                     <div className="flex justify-center items-center phone__input__pass">
-                      {iconPhone ? (
+                      {iconEmail ? (
                         <div>
                           <FontAwesomeIcon icon={faCircleCheck} />
                         </div>
@@ -165,7 +167,7 @@ export default function FormLogin() {
               </div>
               {/* container__content__form blank__block */}
               <div className="blank__block">
-                {iconPhone && phoneError ? (
+                {iconEmail && emailError ? (
                   <span style={{ color: "#ff424f", fontSize: "12px" }}>
                     Số điện thoại không hợp lệ.
                   </span>
@@ -220,7 +222,7 @@ export default function FormLogin() {
                 )}
               </div>
               {/* container__content__form btn */}
-              <div className="btn">
+              <div className="btn__">
                 {/* btn__login */}
                 <button
                   onClick={handleLogin}

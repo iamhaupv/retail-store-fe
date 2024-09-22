@@ -1,20 +1,54 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
-import Footer from "../../components/Footer";
+import { Outlet, useLocation } from "react-router-dom";
 import SideBar from "../../components/SideBar";
-import "./LayoutDefault.css"
-export default function LayoutDefault() {
+import "./LayoutDefault.css";
+import Header from "../../components/Header";
+import ContentRegisterLogin from "../../components/ContentRegisterLogin";
+import SignIn from "../../pages/SignIn";
+import HeaderRegisterLogin from "../../components/HeaderRegisterLogin";
+
+const LayoutDefault = () => {
+  const location = useLocation();
+  let headerContent;
+
+  switch (location.pathname) {
+    case "/":
+      headerContent = <Header title={"Home"} />;
+      break;
+    case "/employee":
+      headerContent = <Header title={"Employee"} />;
+      break;
+    case "/list-product":
+      headerContent = <Header title={"List Product"} />;
+      break;
+    case "/product":
+      headerContent = <Header title={"Product"} />;
+      break;
+    case "/signin":
+      headerContent = <ContentRegisterLogin component={SignIn} />;
+      break;
+    default:
+      headerContent = <Header title={"Home"} />;
+  }
+
   return (
     <>
-      <div className="container__layout">
-        <header>
-          <Outlet context={{ area: "header" }} />
-        </header>
-        <div className="layout-main-content flex">
-          <SideBar />
-          {/* <Outlet context={{ area: "main" }} /> */}
+      {location.pathname === "/signin" ? (
+        <div className="signin-layout">
+          <HeaderRegisterLogin/>
+          {headerContent}
         </div>
-      </div>
+      ) : (
+        <div className="container__layout">
+          <header>{headerContent}</header>
+          <main className="flex">
+            <SideBar />
+            <Outlet />
+          </main>
+        </div>
+      )}
     </>
   );
-}
+};
+
+export default LayoutDefault;

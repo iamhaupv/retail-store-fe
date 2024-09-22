@@ -89,7 +89,7 @@
    height: 16px;
    padding: 0px 15px 0px 12px; 
 }
-.container .container__content .container__content__form .btn{
+.container .container__content .container__content__form .btn__{
     margin-top: 11.2px;
  }
  .container .container__content .container__content__form .btn__login{
@@ -142,7 +142,7 @@
     width: 404px;
     height: 16.8px;
     padding: 0px 4px 0px 0px;
-    color: #00000042;
+    color: hsla(0, 0%, 0%, 0.259);
  }
  .container .container__foreign .sign__up{
     width: 51.36px;
