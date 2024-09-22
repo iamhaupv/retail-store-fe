@@ -14,11 +14,9 @@ export default function TableProductDetail() {
    })
 
   return (
-<tr>
+    <>
+     <tr className='z-40'>
         <th>
-          {/* <label>
-            <input type="checkbox" className="checkbox" />
-          </label> */}
           <div>
               <div className="font-bold">ASM001</div>
               <svg ref={inputRef} />
@@ -57,8 +55,8 @@ export default function TableProductDetail() {
         </th>
 
         <th>
-          <label className='mr-2'>
-          <button className=" w-6 h-6 " style={{backgroundColor: "#ebf3fe", outline:''}}>
+          
+          <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#ebf3fe", outline:''}}>
           <svg 
              xmlns="http://www.w3.org/2000/svg" 
              fill="none" 
@@ -74,10 +72,9 @@ export default function TableProductDetail() {
           </svg>
 
         </button>
-          </label>
-
-          <label>
-                <button className=" w-6 h-6 " style={{backgroundColor: "#feebe8", outline:''}}>
+          
+                <button id="btn__delete" className="w-6 h-6 rounded-sm " style={{backgroundColor: "#feebe8", outline:''}}
+                   onClick={()=>document.getElementById('Delete').showModal()}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-6 w-6"
@@ -92,9 +89,39 @@ export default function TableProductDetail() {
                         d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-            </label> 
+             
+             {/* Alert Delete */}
+             
         </th>
       </tr>  
       
+             <dialog id="Delete" className="modal">
+              <div className="modal-box w-3/12 ">
+                <h3 className="font-bold text-lg">Bạn muốn xóa sản phẩm này khỏi danh sách bán?</h3>
+                <div className='flex items-center '>
+                  <label className='mr-2'>
+                    <input type="checkbox" className="checkbox" />
+                  </label>  
+                    <p className="py-4">Hàng chưa về</p>
+                </div>
+                <div className='flex items-center '>
+                  <label className='mr-2'>
+                    <input type="checkbox" className="checkbox" />
+                  </label>
+                  <p className="py-4">Không còn kinh doanh</p>
+                </div>
+                {/* Text Area */}
+                <textarea placeholder="Bio" className="textarea textarea-bordered textarea-lg w-full max-w-xs"></textarea>
+                  
+                  <div className="flex modal-action justify-between ">
+                  <button className="btn w-20 bg-orange-500"> Đồng ý</button>
+                    <form method="dialog ">
+                      {/* if there is a button, it will close the modal */}
+                      <button className="btn w-20">Hủy</button>
+                    </form>
+                  </div>                 
+               </div>
+            </dialog>
+            </>
       )
 }

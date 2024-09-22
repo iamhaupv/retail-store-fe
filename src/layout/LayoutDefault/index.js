@@ -1,20 +1,16 @@
 import React from 'react'
+import Header from '../../components/Header'
 import { Outlet } from 'react-router-dom'
 import Footer from "../../components/Footer"
 import SideBar from '../../components/SideBar'
 export default function LayoutDefault() {
   return (
     <>
-      <header>
-        <Outlet context={{ area: 'header' }} />
-      </header>
-      <div className="layout-main-content flex">
-        <NavSideBar/>
-        <Outlet context={{ area: 'main' }} />
+      <Header/>
+      <div className="layout-main-content flex ">
+        <SideBar/>
+        <Outlet/>
       </div>
-      <footer>
-        <Footer/>
-      </footer>
     </>
   )
 }

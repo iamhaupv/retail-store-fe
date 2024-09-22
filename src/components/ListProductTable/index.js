@@ -78,20 +78,13 @@ export default function ListProductTable() {
       <TableProductDetail/>
     </tbody>
     <tfoot>
-      <tr>
-        {/* <th></th>
-        <th>Name</th>
-        <th>Job</th>
-        <th>Favorite Color</th>
-        <th></th> */}
-      </tr>
+      <tr></tr>
     </tfoot>
   </table>
 </div>
-
-
-
     </div>
+
+    
     </>
   )
 }
