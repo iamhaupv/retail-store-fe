@@ -8,6 +8,42 @@ export default function StockInDetail
         <th>KNK0314322021-001</th>
         <td>04/01/2021 13:30PM</td>
         <td>VanHau Store</td>
+        <td>
+        <select class="">
+            <option> 
+              <div className="badge badge-success gap-2">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    className="inline-block h-4 w-4 stroke-current">
+                    <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                 Đang vận chuyển
+                </div>
+            </option>
+            <option>
+             <div className="badge badge-warning gap-2">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    className="inline-block h-4 w-4 stroke-current">
+                    <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Đã giao
+              </div>
+            </option>
+        </select>
+       </td>
         <td>10</td>
         <td>15.000.000</td>
 

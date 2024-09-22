@@ -37,7 +37,7 @@ export default function ListProductTable() {
         </div>
         {/* Nofication and Button Add */}
 
-        <div className='flex justify-between mt-6'>
+        <div className='flex justify-between mt-6 items-center'>
              <h4 className='font-bold text-xl w-32 ml-4'>30 sản phẩm</h4>
            
              <button className="btn btn-success text-white w-36">
@@ -54,16 +54,12 @@ export default function ListProductTable() {
     {/* head */}
     <thead>
       <tr>
-        {/* <th>
-          <label>
-            <input type="checkbox" className="checkbox" />
-          </label>
-        </th> */}
         <th>Modal</th>
         <th>Sản phẩm</th>
         <th>Thương hiệu</th>
         <th>Tình trạng</th>
         <th>Đã bán</th>
+        <th>Đơn giá</th>
         <th>Thao tác</th>
       </tr>
     </thead>

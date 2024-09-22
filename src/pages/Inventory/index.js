@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 
 import "./Inventory.css";
 import StockIn from "../../components/StockIn";
+import InventoryProduct from "../../components/InventoryProduct";
 
 export default function Inventory() {
   return (
@@ -44,7 +45,7 @@ export default function Inventory() {
             <div role="tabpanel" className="tab-content p-10">  </div>
 
             <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Hàng tồn" />
-            <div role="tabpanel" className="tab-content p-10">  </div>
+            <div role="tabpanel" className="tab-content p-10"> <InventoryProduct/> </div>
           </div>
         </div>
     </div>

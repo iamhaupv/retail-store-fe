@@ -55,6 +55,7 @@ export default function StockIn() {
                 <th>Số phiếu</th>
                 <th>Ngày lập</th>
                 <th>Người lập</th>
+                <th>Trạng thái</th>
                 <th>Tổng SP</th>
                 <th>Tổng tiền (VNĐ)</th>
                 <th>Thao tác</th>
