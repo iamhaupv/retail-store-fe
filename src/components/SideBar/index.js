@@ -45,7 +45,7 @@ export default function SideBar() {
           <p>Nhà cung cấp</p>
           </div>
           <div><Link to={"/supply"}>[+] Thêm nhà cung cấp</Link></div>
-          <div><Link>Danh sách nhà cung cấp</Link></div>
+          <div><Link to={"/SupplierList"}>Danh sách nhà cung cấp</Link></div>
         </div>
         <div className="menubar">
           <div className="title">

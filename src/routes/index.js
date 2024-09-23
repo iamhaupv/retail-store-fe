@@ -13,6 +13,7 @@ import Order from "../pages/Order";
 import Product from "../pages/Product";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
+import SupplierList from "../pages/SupplierList";
 import Supply from "../pages/Supply";
 
 export const routes = [
@@ -24,6 +25,10 @@ export const routes = [
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/SupplierList",
+        element: <SupplierList/>,
       },
       {
         path: "list-product",
