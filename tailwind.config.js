@@ -12,6 +12,9 @@ module.exports = {
       // colors:{
       //   'ContentOutline':'#F5F5F5'
       // }
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+      },
     },
   },
   plugins: [

@@ -1,13 +1,11 @@
-import React from 'react'
-import HeaderRegisterLogin from '../../components/HeaderRegisterLogin'
-import ContentRegisterLogin from '../../components/ContentRegisterLogin'
-import FormLogin from '../../components/FormLogin'
+import React from "react";
+import FormLogin from "../../components/FormLogin";
 export default function SignIn() {
   return (
     <>
-        <HeaderRegisterLogin text={"Đăng nhập"}/>
-        {/* <ContentRegisterLogin component={FormLogin}/> */}
-        <FormLogin/>
+      <div className="bg-[#f5f5f5] w-[100%] h-screen flex justify-center items-center">
+        <FormLogin />
+      </div>
     </>
-  )
+  );
 }

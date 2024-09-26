@@ -1,11 +1,11 @@
 import axios from "../configs/axios";
-const LoginApi = (email, password) =>
+const ForgotPasswordApi = (email, password) =>
   axios({
-    url: "/user/login",
+    url: "/user/forgotpassword",
     method: "post",
     data:{
       email, password
     } 
   });
   
-export default LoginApi
+export default ForgotPasswordApi
