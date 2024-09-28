@@ -56,8 +56,8 @@ export default function SideBar() {
           <Link className="flex" to={"/order"}><span><FontAwesomeIcon icon={faCartPlus} /></span>
           <p>Đơn hàng</p></Link>
           </div>
-          <div><Link>[+] Thêm đơn hàng</Link></div>
-          <div><Link>Danh sách đơn hàng</Link></div>
+          {/* <div><Link>[+] Thêm đơn hàng</Link></div>
+          <div><Link>Danh sách đơn hàng</Link></div> */}
         </div>
         {/* <div className="menubar">
           <div className="title">

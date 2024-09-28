@@ -6,11 +6,14 @@ import Content from '../../components/Content'
 export default function Order() {
   return (
     <>
-        <Header title={"Danh sách đơn hàng"}/>
+        {/* <Header title={"Danh sách đơn hàng"}/>
         <div>
             <NavSideBar />
             <Content/>
-        </div>
+        </div> */}
+
+
+        n  
     </>
   )
 }
