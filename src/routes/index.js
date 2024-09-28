@@ -14,7 +14,9 @@ import Product from "../pages/Product";
 import ResetPassword from "../pages/ResetPassword";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
+import SupplierList from "../pages/SupplierList";
 import Supply from "../pages/Supply";
+import WarehouseReceipt from "../pages/WarehouseReceipt";
 
 export const routes = [
   { path: "/signin", element: <SignIn /> },
@@ -26,6 +28,10 @@ export const routes = [
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/SupplierList",
+        element: <SupplierList/>,
       },
       {
         path: "list-product",
@@ -54,6 +60,10 @@ export const routes = [
       {
         path: "/order",
         element: <Order />,
+      },
+      {
+        path: "/WarehouseReceipt",
+        element: <WarehouseReceipt/>,
       },
       {
         path: "/discount",

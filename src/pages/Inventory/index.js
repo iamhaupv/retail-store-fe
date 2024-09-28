@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 
 import "./Inventory.css";
 import StockIn from "../../components/StockIn";
+import InventoryProduct from "../../components/InventoryProduct";
 
 export default function Inventory() {
   return (
@@ -33,9 +34,9 @@ export default function Inventory() {
     </div> */}
     
     {/* Tab table */}
-    <div className='w-full h-sceen' style={{backgroundColor: '#F5F5F5'}}>
-    <div className='w-1130 '>   
-        <div className="card bg-white rounded-none left-14 top-7 grid  ">
+    <div className='w-11/12 h-sceen justify-center flex' style={{backgroundColor: '#F5F5F5'}}>
+    <div className='w-11/12 '>   
+        <div className="card bg-white rounded-none top-7 grid  ">
           <div role="tablist" className="tabs tabs-bordered ">
             <input type="radio" name="my_tabs_1" role="tab" className="tab " aria-label="Nhập kho" defaultChecked />
             <div role="tabpanel" className="tab-content p-10"> <StockIn/>  </div>
@@ -44,7 +45,7 @@ export default function Inventory() {
             <div role="tabpanel" className="tab-content p-10">  </div>
 
             <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Hàng tồn" />
-            <div role="tabpanel" className="tab-content p-10">  </div>
+            <div role="tabpanel" className="tab-content p-10"> <InventoryProduct/> </div>
           </div>
         </div>
     </div>

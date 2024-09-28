@@ -8,6 +8,38 @@ export default function StockInDetail
         <th>KNK0314322021-001</th>
         <td>04/01/2021 13:30PM</td>
         <td>VanHau Store</td>
+        <td>
+        
+              <div className="badge  gap-2" style={{backgroundColor:"#f2f1fa", color:"#bfb8c6"}}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    className="inline-block h-4 w-4 stroke-current" style={{color:"#bfb8c6"}}>
+                    <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                 Đang vận chuyển
+                </div>
+            {/* Nếu đã giao thì xài tag này */}
+             {/* <div className="badge  gap-2" style={{backgroundColor:"#c8f7f5", color:"#46d7d0"}}>
+             <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke-width="1.5" 
+                stroke="currentColor" 
+                class="size-6"
+                className="inline-block h-4 w-4 stroke-current" style={{color:"#46d7d0"}}>
+               <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+             </svg>
+                Đã giao
+              </div> */}
+            
+       </td>
         <td>10</td>
         <td>15.000.000</td>
 
