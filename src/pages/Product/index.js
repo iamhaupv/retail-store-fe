@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import Content from "../../components/Content"
-import Receipt from "../../components/Receipt"
 export default function Product() {
   
   const [image, setImage] = useState({});
@@ -23,7 +21,7 @@ export default function Product() {
   return (
     <>
         {/* <Content component={Receipt}/> */}
-        <div className='w-11/12 h-full justify-center flex' style={{backgroundColor: '#F5F5F5'}}>
+        <div className='w-11/12 h-full justify-center flex overflow-y-auto' style={{backgroundColor: '#F5F5F5'}}>
          <div className='w-8/12 mr-4'>
           <div className='w-full mr-4 rounded-sm'>
              {/* Thông tin sản phẩm */}
