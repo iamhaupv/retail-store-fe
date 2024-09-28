@@ -34,11 +34,11 @@ export default function ProductInventory() {
            </div>
          </div>
        </td>
-       <td>
+       {/* <td>
          Dior
          <br />
          <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
-       </td>
+       </td> */}
        <td>
         <select class="">
             <option> 

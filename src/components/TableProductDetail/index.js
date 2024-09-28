@@ -14,14 +14,14 @@ export default function TableProductDetail() {
    })
 
   return (
-    <div>
-     <tr className='z-40'>
-        <th>
+    <>
+     <tr>
+        <td>
           <div>
               <div className="font-bold">ASM001</div>
               <svg ref={inputRef} />
-            </div>
-        </th>
+          </div>
+        </td>  
         <td>
           <div className="flex items-center gap-3">
             <div className="avatar">
@@ -50,12 +50,12 @@ export default function TableProductDetail() {
           <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
         </td>
         <td>Đang bán</td>
-        <th>
+        <td>
           <button className="btn btn-ghost btn-xs">900</button>
-        </th>
+        </td>
 
-        <th>
-          
+        <td>
+          <div className='flex w-fit'>
           <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#ebf3fe", outline:''}}>
           <svg 
              xmlns="http://www.w3.org/2000/svg" 
@@ -89,10 +89,10 @@ export default function TableProductDetail() {
                         d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-             
+                </div>
              {/* Alert Delete */}
              
-        </th>
+        </td>
       </tr>  
       
              <dialog id="Delete" className="modal">
@@ -122,6 +122,6 @@ export default function TableProductDetail() {
                   </div>                 
                </div>
             </dialog>
-            </div>
+            </>
       )
 }

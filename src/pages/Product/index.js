@@ -23,7 +23,7 @@ export default function Product() {
   return (
     <>
         {/* <Content component={Receipt}/> */}
-        <div className='w-11/12 h-full justify-center flex' style={{backgroundColor: '#F5F5F5'}}>
+        <div className='w-11/12 h-full justify-center flex overflow-y-auto' style={{backgroundColor: '#F5F5F5'}}>
          <div className='w-8/12 mr-4'>
           <div className='w-full mr-4 rounded-sm'>
              {/* Thông tin sản phẩm */}
@@ -294,14 +294,17 @@ export default function Product() {
                     )}
                     
                   </div>
+                  
                 </div>
-                </div>
-              </div>
-                  {/* Button Thêm và Hủy */}
-                <div className='flex mt-5 mb-5'>
-                <button class="btn w-28 text-white" style={{backgroundColor:"#f13612"}}>Thêm</button>
-                <button class="btn w-28 ml-4" style={{backgroundColor:"#e0e0e0"}}>Hủy</button>
-                </div>
+
+                                    {/* Button Thêm và Hủy */}
+                    <div className='flex w-full h-28 mt-2 mb-5 ml-4'>
+                      <button class="btn w-28 text-white" style={{backgroundColor:"#f13612"}}>Thêm</button>
+                      <button class="btn w-28 ml-4" style={{backgroundColor:"#e0e0e0"}}>Hủy</button>
+                    </div>
+                
+                </div>   
+             </div>
             </div>
             
               <div className='w-3/12 rounded-md ml-7'>

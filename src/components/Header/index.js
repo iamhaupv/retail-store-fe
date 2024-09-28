@@ -7,13 +7,13 @@ import {
   faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
 import luck from "../../assets/luck.png";
-import logo_heineken from "../../assets/heineken.png";
+import logo_company from "../../Image/Logo-removebg-preview.png";
 export default function Header(props) {
   return (
     <>
       <div className="container__header">
-        <div className="header__lef">
-          <img src={logo_heineken} alt="logo HauPV Store" />
+        <div className="header__lef ">
+          <img src={logo_company} className="" alt="logo HauPV Store" />
         </div>
         <div className="header__mid">
           <div className="mid__title flex">
