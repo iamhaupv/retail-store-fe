@@ -12,14 +12,14 @@ import {
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBuffer } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 export default function SideBar() {
   return (
     <>
       <div className="container__nav ">
         <div className="dashboard ">
-          <div><FontAwesomeIcon className="gauge__high" icon={faGaugeHigh} /></div>
-          <div><h1>Dashboard</h1></div>
+          <NavLink className="flex" to={"/"}><div><FontAwesomeIcon className="gauge__high" icon={faGaugeHigh} /></div>
+          <div><h1>Dashboard</h1></div></NavLink>
         </div>
         <div className="menubar">
           <div className="title">
@@ -27,7 +27,7 @@ export default function SideBar() {
             <p>Sản Phẩm</p>
           </div>
           <div><Link to={"/product"}>[+] Thêm mới sản phẩm</Link></div>
-          <div><Link to={"/list-product"}>Danh sách sản phẩm</Link></div>
+          <div><Link to={"/product-list"}>Danh sách sản phẩm</Link></div>
         </div>
         <div className="menubar">
           <div className="title">
@@ -43,7 +43,7 @@ export default function SideBar() {
           <p>Nhà cung cấp</p>
           </div>
           <div><Link to={"/supply"}>[+] Thêm nhà cung cấp</Link></div>
-          <div><Link to={"/SupplierList"}>Danh sách nhà cung cấp</Link></div>
+          <div><Link to={"/supply-list"}>Danh sách nhà cung cấp</Link></div>
         </div>
         <div className="menubar">
           <div className="title">

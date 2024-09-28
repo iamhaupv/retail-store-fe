@@ -30,11 +30,11 @@ export const routes = [
         element: <Home />,
       },
       {
-        path: "/SupplierList",
+        path: "/supply-list",
         element: <SupplierList/>,
       },
       {
-        path: "list-product",
+        path: "product-list",
         element: <ListProduct />,
       },
       {

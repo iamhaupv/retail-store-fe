@@ -16,17 +16,26 @@ const LayoutDefault = () => {
       headerContent = <Header title={"Home"} />;
       break;
     case "/employee":
-      headerContent = <Header title={"Employee"} />;
+      headerContent = <Header title={"Thêm nhân viên"} />;
       break;
-    case "/list-product":
-      headerContent = <Header title={"List Product"} />;
+    case "/product-list":
+      headerContent = <Header title={"Danh sách sản phẩm"} />;
       break;
     case "/product":
-      headerContent = <Header title={"Product"} />;
+      headerContent = <Header title={"Thêm sản phẩm"} />;
       break;
     case "/signin":
       headerContent = <ContentRegisterLogin component={SignIn} />;
       break;
+    case "/supply":
+      headerContent = <Header title={"Thêm nhà cung cấp"} />;
+      break;
+    case "/supply-list":
+      headerContent = <Header title={"Danh sách nhà cung cấp"} />;
+      break;
+      case "/order":
+        headerContent = <Header title={"Danh sách đơn hàng"} />;
+        break;
     default:
       headerContent = <Header title={"Home"} />;
   }
@@ -35,7 +44,7 @@ const LayoutDefault = () => {
     <>
       {location.pathname === "/signin" ? (
         <div className="signin-layout">
-          <HeaderRegisterLogin/>
+          <HeaderRegisterLogin />
           {headerContent}
         </div>
       ) : (

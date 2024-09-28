@@ -20,7 +20,7 @@ export default function FormResetPassword() {
     const rs = await ResetPasswordApi({ password: password, token: token });
     if (rs.success) {
       Swal.fire("Congratulation!", "Cập nhật mật khẩu thành công!", "success").then(() => {
-        navigate("/login");
+        navigate("/signin");
       });
     } else {
       Swal.fire("Oops!", rs.mes, "error");
