@@ -1,10 +1,10 @@
 import axios from "../configs/axios";
-const ForgotPasswordApi = (email, password) =>
+const ForgotPasswordApi = (email) =>
   axios({
     url: "/user/forgotpassword",
     method: "post",
     data:{
-      email, password
+      email
     } 
   });
   

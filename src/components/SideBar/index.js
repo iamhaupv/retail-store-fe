@@ -28,8 +28,6 @@ export default function SideBar() {
           </div>
           <div><Link to={"/product"}>[+] Thêm mới sản phẩm</Link></div>
           <div><Link to={"/list-product"}>Danh sách sản phẩm</Link></div>
-          <div><Link>Danh mục sản phẩm</Link></div>
-          <div><Link>Ngành hàng</Link></div>
         </div>
         <div className="menubar">
           <div className="title">

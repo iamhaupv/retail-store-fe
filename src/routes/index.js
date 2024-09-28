@@ -11,12 +11,14 @@ import Inventory from "../pages/Inventory";
 import ListProduct from "../pages/ListProduct";
 import Order from "../pages/Order";
 import Product from "../pages/Product";
+import ResetPassword from "../pages/ResetPassword";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import Supply from "../pages/Supply";
 
 export const routes = [
   { path: "/signin", element: <SignIn /> },
+  { path: "/reset-password/:token", element: <ResetPassword /> },
   {
     path: "/",
     element: <LayoutDefault />,

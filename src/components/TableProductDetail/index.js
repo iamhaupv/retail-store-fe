@@ -14,7 +14,7 @@ export default function TableProductDetail() {
    })
 
   return (
-    <>
+    <div>
      <tr className='z-40'>
         <th>
           <div>
@@ -122,6 +122,6 @@ export default function TableProductDetail() {
                   </div>                 
                </div>
             </dialog>
-            </>
+            </div>
       )
 }
