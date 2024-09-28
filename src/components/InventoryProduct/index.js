@@ -31,7 +31,6 @@ export default function InventoryProduct() {
             <tr>
               <th>Modal</th>
               <th>Sản phẩm</th>
-              
               <th>Tình trạng</th>
               <th>Ngày Nhập</th>
               <th>Ngày hết hạn</th>
