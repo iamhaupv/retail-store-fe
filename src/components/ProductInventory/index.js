@@ -1,12 +1,23 @@
+import { useBarcode } from '@createnextapp/react-barcode'
 import React from 'react'
 
 export default function ProductInventory() {
+  const {inputRef} = useBarcode({
+    value:'ASM001',
+    options: {
+        displayValue: false,
+        background: '#ffffff',
+        width: 1,
+        height: 25,
+    }
+   })
   return (
     <>
     <tr className='z-40'>
        <th>
          <div>
              <div className="font-bold">ASM001</div>
+             <svg ref={inputRef} />
            </div>
        </th>
        <td>

@@ -16,8 +16,8 @@ import { Link } from "react-router-dom";
 export default function SideBar() {
   return (
     <>
-      <div className="container__nav">
-        <div className="dashboard">
+      <div className="container__nav ">
+        <div className="dashboard ">
           <div><FontAwesomeIcon className="gauge__high" icon={faGaugeHigh} /></div>
           <div><h1>Dashboard</h1></div>
         </div>
@@ -28,8 +28,6 @@ export default function SideBar() {
           </div>
           <div><Link to={"/product"}>[+] Thêm mới sản phẩm</Link></div>
           <div><Link to={"/list-product"}>Danh sách sản phẩm</Link></div>
-          <div><Link>Danh mục sản phẩm</Link></div>
-          <div><Link>Ngành hàng</Link></div>
         </div>
         <div className="menubar">
           <div className="title">
@@ -61,7 +59,7 @@ export default function SideBar() {
           <div><Link>[+] Thêm đơn hàng</Link></div>
           <div><Link>Danh sách đơn hàng</Link></div>
         </div>
-        <div className="menubar">
+        {/* <div className="menubar">
           <div className="title">
           <Link className="flex" to={"/discount"}><span><FontAwesomeIcon icon={faGift} /></span>
           <h1>Khuyến mãi</h1></Link>
@@ -74,7 +72,7 @@ export default function SideBar() {
           </div>
           <div><Link>[+] Thêm khách hàng</Link></div>
           <div><Link>Danh sách khách hàng</Link></div>
-        </div>
+        </div> */}
       </div>
     </>
   );

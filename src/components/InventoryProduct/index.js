@@ -3,8 +3,7 @@ import ProductInventory from '../ProductInventory'
 import ListProductInventory from '../ListProductInventory'
 
 export default function InventoryProduct() {
-  return (
-    <>
+  return ( 
     <div>
       <select className="select-sm select-bordered w-52">
         <option disabled selected>Kệ</option>
@@ -55,13 +54,13 @@ export default function InventoryProduct() {
           </tfoot>
         </table>
       </div>
-    </div>
+    
 
     {/* Thêm Hàng vào kệ */}
-    <dialog id="AddInventoryProduct" className="modal">
-      <div className="modal-box w-3/5 h-3/4">
-        <h3 className="font-bold text-lg mb-6">Chọn mặt hàng</h3>
-        <div className='flex items-center'>
+    <dialog id="AddInventoryProduct" className="modal ">
+      <div className="modal-box w-full max-w-4xl h-full overflow-y-hidden  ">
+        <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
+        <div className='flex items-center mb-4'>
            {/* Search Input  */}
            <label className="input input-bordered w-52 h-12 flex  items-center gap-2">
               <input type="text" className="grow" placeholder="Tên sản phẩm" />
@@ -89,28 +88,52 @@ export default function InventoryProduct() {
               <option>Pepsi</option>
             </select>
         </div>
-        <div className="divider"/>
+        {/* table product  */}
+        <div className=" overflow-y-scroll h-4/6">
+        <table className="table">
+              {/* head */}
+              <thead>
+                <tr>
+                  {/* <div className='w-7'> */}
+                  <th></th>
+                  {/* </div> */}
+                  <th>Modal</th>
+                  <th>Sản phẩm</th>
+                  <th>Thương hiệu</th>
+                  <th>Số lượng</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* row 1 */}
+                <ListProductInventory/>
+                {/* row 2 */}
+                <ListProductInventory/>
+                {/* row 3 */}
+                <ListProductInventory/>
+                {/* row 4 */}
+                <ListProductInventory/>
+                {/* row 5 */}
+                <ListProductInventory/>
+              </tbody>
+              {/* foot */}
+              <tfoot>
+              
+              </tfoot>
+            </table>
+          </div>    
 
-        <div className="overflow-x-auto h-3/5">
-              <ListProductInventory/>
-              <ListProductInventory/>
-              <ListProductInventory/>
-              <ListProductInventory/>
-              <ListProductInventory/>
-              <ListProductInventory/>
-              <ListProductInventory/>
-              <ListProductInventory/>
-              <ListProductInventory/>
-              <ListProductInventory/>
-        </div>
-        <div className="modal-action">
-          <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
-            <button className="btn">Close</button>
-          </form>
-        </div>
+          <div className="modal-action ">
+                    <div className='flex w-full'> 
+                      <button class="btn w-28 text-white" style={{backgroundColor:"#f13612"}}>Thêm</button>
+                      <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        
+                        <button class="btn w-28 ml-4" style={{backgroundColor:"#e0e0e0"}}>Hủy</button>
+                      </form>
+                    </div>
+                    </div>
       </div>
     </dialog>
-    </>
+    </div>
   )
 }

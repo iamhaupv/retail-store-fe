@@ -1,5 +1,6 @@
 import React from 'react'
 import TableProductDetail from '../TableProductDetail'
+import { Link } from 'react-router-dom'
 
 export default function ListProductTable() {
   return (
@@ -39,13 +40,15 @@ export default function ListProductTable() {
 
         <div className='flex justify-between mt-6 items-center'>
              <h4 className='font-bold text-xl w-32 ml-4'>30 sản phẩm</h4>
-           
-             <button className="btn btn-success text-white w-36">
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-               </svg>
-               Thêm mới
-             </button>
+             <Link to ="/product">
+                <button className="btn btn-success text-white w-36"
+                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  Thêm mới
+                </button>
+             </Link>
         </div>
         {/* table Product */}
 
