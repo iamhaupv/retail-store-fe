@@ -39,9 +39,9 @@ const LayoutDefault = () => {
           {headerContent}
         </div>
       ) : (
-        <div className="container__layout">
-          <header>{headerContent}</header>
-          <main className="flex">
+        <div className="container__layout  ">
+          <header className="">{headerContent}</header>
+          <main className="flex h-screen">
             <SideBar />
             <Outlet />
           </main>

@@ -1,4 +1,5 @@
 import { useBarcode } from '@createnextapp/react-barcode'
+import {CarouselProduct} from '../CarouselProduct'
 import React from 'react'
 
 export default function TableProductDetail() {
@@ -14,14 +15,14 @@ export default function TableProductDetail() {
    })
 
   return (
-    <div>
-     <tr className='z-40'>
-        <th>
+    <>
+     <tr>
+        <td>
           <div>
               <div className="font-bold">ASM001</div>
               <svg ref={inputRef} />
-            </div>
-        </th>
+          </div>
+        </td>  
         <td>
           <div className="flex items-center gap-3">
             <div className="avatar">
@@ -50,12 +51,29 @@ export default function TableProductDetail() {
           <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
         </td>
         <td>Đang bán</td>
-        <th>
+        <td>
           <button className="btn btn-ghost btn-xs">900</button>
-        </th>
+        </td>
 
-        <th>
-          
+        <td>
+          <div className='flex w-fit'>
+          <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#e2f2ea", outline:''}}
+          onClick={()=>document.getElementById('modal_Quick_View').showModal()}>
+          <svg 
+             xmlns="http://www.w3.org/2000/svg" 
+             fill="none" 
+             viewBox="0 0 24 24" 
+             stroke-width="1.5" 
+             stroke="currentColor" 
+             class="size-6"
+             style={{color: "#19b563"}}>
+          <path 
+             stroke-linecap="round" 
+             stroke-linejoin="round"
+             d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+    </svg>
+        </button>
           <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#ebf3fe", outline:''}}>
           <svg 
              xmlns="http://www.w3.org/2000/svg" 
@@ -89,10 +107,10 @@ export default function TableProductDetail() {
                         d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-             
+                </div>
              {/* Alert Delete */}
              
-        </th>
+        </td>
       </tr>  
       
              <dialog id="Delete" className="modal">
@@ -122,6 +140,43 @@ export default function TableProductDetail() {
                   </div>                 
                </div>
             </dialog>
-            </div>
+
+            {/* Product Detail */}
+            <dialog id="modal_Quick_View" className="modal">
+      <div className="modal-box w-10/12 max-w-4xl h-auto">
+        <div className="card lg:card-side bg-base-100 ">
+       {/* Card */}
+      <figure>
+          <CarouselProduct/>
+      </figure>
+      <div className="card-body">
+        <h1 className="card-title text-3xl font-medium">Ibanez RG470DX-SFM Electric Guitar,Sea Foam Green Matte</h1>
+        <h1>Body Body Type: Solidbody Body Material: Meranti Body Shape: RG Color:Sea Foam Green Matte NECK... </h1>
+        <h1 className="text-xl font-medium">14.600.000đ</h1>
+        <u href="" className="">View details</u>
+        
+        <div className="card-actions justify-start">
+          <div>
+          <h3 className="font-medium">Quantity</h3>
+          <div className="flex justify-center">
+          <div className="join mr-6">
+              <button className="join-item btn">+</button>
+              <button className="join-item btn">1</button>
+              <button className="join-item btn">-</button>
+          </div>
+          <button className="btn btn-neutral btn-wide">Add to cart</button>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+        </div>   
+                <form method="dialog" className="modal-backdrop">
+                  <button>close</button>
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 ">✕</button>
+                </form>
+    </dialog>
+
+            </>
       )
 }

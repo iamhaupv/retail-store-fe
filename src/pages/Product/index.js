@@ -292,14 +292,17 @@ export default function Product() {
                     )}
                     
                   </div>
+                  
                 </div>
-                </div>
-              </div>
-                  {/* Button Thêm và Hủy */}
-                <div className='flex mt-5 mb-5'>
-                <button class="btn w-28 text-white" style={{backgroundColor:"#f13612"}}>Thêm</button>
-                <button class="btn w-28 ml-4" style={{backgroundColor:"#e0e0e0"}}>Hủy</button>
-                </div>
+
+                                    {/* Button Thêm và Hủy */}
+                    <div className='flex w-full h-28 mt-2 mb-5 ml-4'>
+                      <button class="btn w-28 text-white" style={{backgroundColor:"#f13612"}}>Thêm</button>
+                      <button class="btn w-28 ml-4" style={{backgroundColor:"#e0e0e0"}}>Hủy</button>
+                    </div>
+                
+                </div>   
+             </div>
             </div>
             
               <div className='w-3/12 rounded-md ml-7'>

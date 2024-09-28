@@ -38,7 +38,7 @@ export default function Inventory() {
     <div className='w-11/12 '>   
         <div className="card bg-white rounded-none top-7 grid  ">
           <div role="tablist" className="tabs tabs-bordered ">
-            <input type="radio" name="my_tabs_1" role="tab" className="tab " aria-label="Nhập kho" defaultChecked />
+            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Nhập kho" defaultChecked />
             <div role="tabpanel" className="tab-content p-10"> <StockIn/>  </div>
 
             <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Xuất kho"  />

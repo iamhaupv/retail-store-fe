@@ -4,8 +4,8 @@ import ListProductInventory from '../ListProductInventory'
 
 export default function InventoryProduct() {
   return ( 
-    <div>
-      <select className="select-sm select-bordered w-52">
+    <div className='w-auto'>
+      <select className="select-sm select-bordered w-32">
         <option disabled selected>Kệ</option>
         <option>Kệ 1</option>
         <option>Kệ 2</option>
@@ -31,7 +31,6 @@ export default function InventoryProduct() {
             <tr>
               <th>Modal</th>
               <th>Sản phẩm</th>
-              <th>Thương hiệu</th>
               <th>Tình trạng</th>
               <th>Ngày Nhập</th>
               <th>Ngày hết hạn</th>

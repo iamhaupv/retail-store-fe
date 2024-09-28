@@ -5,7 +5,7 @@ import Guitar1Hover2 from "../../Image/3_1650a47b-d6f2-4222-a587-2c35daa21176.jp
 import Guitar1Hover3 from "../../Image/4_241ef2ab-6593-44df-984b-77d242c5a2ef.jpg";
 
 
-export default function CarouselProduct() {
+export  function CarouselProduct() {
   return (
     <div className="carousel w-full">
       <div id="slideProduct1" className="carousel-item relative w-full">
