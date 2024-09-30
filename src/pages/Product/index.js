@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import apiGetListBrand from '../../apis/apiGetListBrand';
 export default function Product() {
-  
+  const [brands, setBrands] = useState([])
   const [image, setImage] = useState({});
 
   const handleChange = (event, id) => {
@@ -17,7 +18,18 @@ export default function Product() {
     }
   };
   
-
+  const fetchBrands = async() => {
+    try {
+      const response = await apiGetListBrand()
+      setBrands(response.brands)
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+  useEffect(() => {
+    fetchBrands()
+  }, [])
+  
   return (
     <>
         {/* <Content component={Receipt}/> */}
@@ -312,9 +324,10 @@ export default function Product() {
                 {/* Select type  */}
                 <select className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
                   <option disabled selected>Chọn thương hiệu</option>
-                  <option>KFC</option>
-                  <option>Pepsi</option>
-                </select>
+                  {brands.map((brand) => (
+                          <option key={brand._id} value={brand._id}>{brand.name}</option>
+                  ))}
+                </select> 
  
                 <h4 className='font-sans text-base w-6/12 h-10 ml-4 pt-2'>Loại sản phẩm</h4>
                 {/* Select type  */}
