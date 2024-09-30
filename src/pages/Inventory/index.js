@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../components/Header";
 
 import "./Inventory.css";
@@ -6,6 +6,11 @@ import StockIn from "../../components/StockIn";
 import InventoryProduct from "../../components/InventoryProduct";
 
 export default function Inventory() {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabClick = (index) => {
+    setActiveTab(index);
+  };
   return (
     <>
     {/* Thông tin kho */}
@@ -34,17 +39,30 @@ export default function Inventory() {
     </div> */}
     
     {/* Tab table */}
-    <div className='w-11/12 h-sceen justify-center flex' style={{backgroundColor: '#F5F5F5'}}>
-    <div className='w-11/12 '>   
+    <div className='w-11/12 h-sceen justify-center flex overflow-y-auto' style={{backgroundColor: '#F5F5F5'}}>
+    
+    {/* <div className=" w-11/12 h-fit mb-2 animate__animated animate__fadeInRight ">
+        <div className="card bg-white rounded-none top-7  grid ">
+           <h4 className='font-bold text-xl w-32 ml-4 mt-2'>Thông tin kho</h4>
+
+        </div>
+    </div> */}
+    <div className='w-11/12 animate__animated animate__fadeInRight '>   
         <div className="card bg-white rounded-none top-7 grid  ">
           <div role="tablist" className="tabs tabs-bordered ">
-            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Nhập kho" defaultChecked />
+            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Nhập kho" defaultChecked 
+            style={activeTab === 0 ? { borderColor: '#f89a88' } : {}}
+            onClick={() => handleTabClick(0)}/>
             <div role="tabpanel" className="tab-content p-10"> <StockIn/>  </div>
 
-            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Xuất kho"  />
+            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Xuất kho"  
+            style={activeTab === 1 ? { borderColor: '#f89a88' } : {}}
+            onClick={() => handleTabClick(1)}/>
             <div role="tabpanel" className="tab-content p-10">  </div>
 
-            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Hàng tồn" />
+            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Hàng tồn" 
+            style={activeTab === 2 ? { borderColor: '#f89a88' } : {}}
+            onClick={() => handleTabClick(2)}/>
             <div role="tabpanel" className="tab-content p-10"> <InventoryProduct/> </div>
           </div>
         </div>

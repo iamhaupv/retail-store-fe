@@ -49,7 +49,7 @@ export default function StockIn() {
            </Link>
         </div>
         {/* Table StockIn */}
-        <div className="overflow-x-auto mt-7">
+        <div className="overflow-y-auto h-80 mt-7">
           <table className="table table-zebra">
             {/* head */}
             <thead>
@@ -70,7 +70,12 @@ export default function StockIn() {
             <StockInDetail/>
             {/* row 3 */}
             <StockInDetail/>
-            
+            {/* row 1 */}
+            <StockInDetail/>
+            {/* row 2 */}
+            <StockInDetail/>
+            {/* row 3 */}
+            <StockInDetail/>
             </tbody>
         </table>
         </div>

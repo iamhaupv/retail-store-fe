@@ -24,7 +24,7 @@ export default function InventoryProduct() {
          </button>
       </div>
       {/* TableInventory */}
-            <div className="overflow-x-auto">
+            <div className="overflow-y-auto h-80 mt-7">
         <table className="table">
           {/* head */}
           <thead>
@@ -42,11 +42,19 @@ export default function InventoryProduct() {
             {/* row 1 */}
             <ProductInventory/>
             {/* row 2 */}
-            
+            <ProductInventory/>
             {/* row 3 */}
-            
+            <ProductInventory/>
             {/* row 4 */}
-            
+            <ProductInventory/>
+            {/* row 1 */}
+            <ProductInventory/>
+            {/* row 2 */}
+            <ProductInventory/>
+            {/* row 3 */}
+            <ProductInventory/>
+            {/* row 4 */}
+            <ProductInventory/>
           </tbody>
           <tfoot>
             <tr></tr>

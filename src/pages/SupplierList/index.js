@@ -6,7 +6,7 @@ export default function SupplierList() {
   return (
     <>
         <div className='w-11/12 h-sceen justify-center flex' style={{backgroundColor: '#F5F5F5'}}>
-         <div className='w-11/12 '>   
+         <div className='w-11/12 animate__animated animate__fadeInRight'>   
             <div className="card bg-white rounded-none top-7 grid  ">
          {/* search Input */}
               <div className='ml-4 mt-4 w-4/12'>
@@ -39,7 +39,7 @@ export default function SupplierList() {
         </div>
           {/* table Product */}
 
-          <div className="overflow-x-auto">
+          <div className="overflow-y-auto h-96 mt-7">
   <table className="table">
     {/* head */}
     <thead>
@@ -53,6 +53,14 @@ export default function SupplierList() {
       </tr>
     </thead>
     <tbody>
+      {/* row 1 */}
+      <SupplyTableDetail/>
+      {/* row 2 */}
+      <SupplyTableDetail/>
+      {/* row 3 */}
+      <SupplyTableDetail/>
+      {/* row 4 */}
+      <SupplyTableDetail/>
       {/* row 1 */}
       <SupplyTableDetail/>
       {/* row 2 */}

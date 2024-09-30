@@ -23,9 +23,9 @@ export default function ListProductTable() {
   //  })
   return (
     <>
-      <div>
+      <div className=''>
         {/* filter */}
-        <div className="flex overflow-y-hidden ">
+        <div className="flex ">
           {/* search Input */}
           <label className="input input-bordered input-sm	 flex items-center gap-2 mr-5 ">
             <input type="text" className="grow " placeholder="Search" />
@@ -74,8 +74,8 @@ export default function ListProductTable() {
         </div>
         {/* table Product */}
 
-        <div className="overflow-y-auto">
-  <table className="table">
+        <div className="overflow-y-auto h-80 mt-7">
+  <table className="table  ">
     {/* head */}
     <thead>
       <tr>
@@ -97,11 +97,19 @@ export default function ListProductTable() {
       {/* row 1 */}
       <TableProductDetail/>
       {/* row 2 */}
-      {/* <TableProductDetail/> */}
+      <TableProductDetail/>
       {/* row 3 */}
-      {/* <TableProductDetail/> */}
+      <TableProductDetail/>
       {/* row 4 */}
-      {/* <TableProductDetail/> */}
+      <TableProductDetail/>
+      {/* row 1 */}
+      <TableProductDetail/>
+      {/* row 2 */}
+      <TableProductDetail/>
+      {/* row 3 */}
+      <TableProductDetail/>
+      {/* row 4 */}
+      <TableProductDetail/>
     </tbody>
     <tfoot>
       <tr></tr>

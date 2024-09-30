@@ -20,8 +20,7 @@ export default function SupplyTableDetail() {
             </div>
             <td className='font-bold'>
               PepsiCo 
-              <br />
-          <span className="badge badge-ghost badge-sm">Nước giải khát</span>         
+              
             </td>
           </div>
         </td>
