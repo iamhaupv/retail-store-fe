@@ -7,7 +7,7 @@ import Receipt from '../../components/Receipt'
 export default function Employee() {
   return (
     <>
-        <Content component={Receipt}/>
+        Employee
     </>
   )
 }
