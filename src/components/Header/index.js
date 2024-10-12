@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import luck from "../../assets/luck.png";
 import logo_company from "../../Image/Logo-removebg-preview.png";
+import ButtonLogout from "../ButtonLogout";
 export default function Header(props) {
   const [username, setUsername] = useState("")
   useEffect(() => {
@@ -24,6 +25,7 @@ export default function Header(props) {
           <div className="mid__title flex">
             <FontAwesomeIcon icon={faArrowLeft} />
             <p>{props.title}</p>
+            <ButtonLogout/>
           </div>
         </div>
         <div className="header__rig">
@@ -34,7 +36,7 @@ export default function Header(props) {
             <h1>{username}</h1>
             <FontAwesomeIcon className="caret__down" icon={faCaretDown} />
           </div>
-          <div className="inventory__announce">
+          <div className="inventory__announce flex">
             <FontAwesomeIcon className="inventory__bell" icon={faBell} />
           </div>
         </div>
