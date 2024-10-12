@@ -1,7 +1,12 @@
 import axios from "axios";
 const apiGetListCategory = async() => {
     try {
-        const response = await axios.get("http://localhost:2002/api/v1/category")
+        const url = process.env.REACT_APP_API_URL
+        console.log(url);
+        
+        const response = await axios.get(`${url}category`)
+        console.log(response);
+        
         return response.data
     } catch (error) {
         throw new Error(error)

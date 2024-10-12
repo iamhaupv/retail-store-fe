@@ -1,7 +1,8 @@
 import axios from "axios";
 const apiCreateProduct = async(token, payload) =>{
     try {
-        const response = await axios.post("http://localhost:2002/api/v1/product/", payload, {
+        const url = process.env.REACT_APP_API_URL
+        const response = await axios.post(`${url}product`, payload, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
