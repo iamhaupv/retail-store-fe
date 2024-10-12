@@ -3,7 +3,6 @@ import apiGetListBrand from "../../apis/apiGetListBrand";
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
-import apiUploadImage from "../../apis/apiUploadImage";
 import { useParams } from "react-router-dom";
 export default function Product() {
   const params = useParams
@@ -39,7 +38,6 @@ export default function Product() {
       reader.readAsDataURL(file);
     }
   };
-
   const fetchBrands = async () => {
     try {
       const response = await apiGetListBrand();
@@ -60,10 +58,12 @@ export default function Product() {
     fetchBrands();
     fetchCategories();
   }, []);
+  console.log(image);
+  
   const handleSubmit = async () => {
     try {
-      const { title, price, description, brand, category, images } = payload;
-      if (!title || !price || !description || !brand || !category || images.length === 0) {
+      const { title, price, description, expires, brand, category } = payload;
+      if (!title || !price || !description ||  !expires || !brand) {
         Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
         return;
       }
@@ -83,18 +83,19 @@ export default function Product() {
           throw new Error("Token is valid!");
         }
   
-        // Tạo form data để gửi
         const formData = new FormData();
         formData.append('title', title);
         formData.append('price', price);
         formData.append('description', description);
         formData.append('brand', brand);
         formData.append('category', category);
-        images.forEach((image) => {
-          formData.append('images', image.data); // Có thể thêm nhiều hình ảnh
-        });
-  
-        const response = await apiCreateProduct(token, formData); // Sử dụng formData để gửi
+        for (const key in image) {
+          if (image[key]) {
+            const file = await fetch(image[key]).then(res => res.blob());
+            formData.append('images', file, `image-${key}.jpg`);
+          }
+        }
+        const response = await apiCreateProduct(token, formData);
         if (response.success) {
           Swal.fire("Success", "Thêm thành công!", "success");
         } else {
@@ -105,8 +106,6 @@ export default function Product() {
       Swal.fire("Error", "Thêm không thành công", "error");
     }
   };
-  console.log(image);
-  
   return (
     <>
       <div
@@ -129,6 +128,9 @@ export default function Product() {
               </div>
               <div className="flex items-center pt-2">
                 <input
+                  name="title"
+                  value={payload.title}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Tên sản phẩm"
                   className="input input-bordered w-6/12 h-10 ml-4"
@@ -146,11 +148,17 @@ export default function Product() {
               </div>
               <div className="flex items-center pt-2">
                 <input
+                  name="price"
+                  value={payload.price}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Đơn giá"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
                 <input
+                  name="expires"
+                  value={payload.expires}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Hạn sử dụng"
                   className="input input-bordered w-5/12 h-10 ml-4"
@@ -158,6 +166,9 @@ export default function Product() {
               </div>
               <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>
               <textarea
+                name="description"
+                value={payload.description}
+                onChange={handleChangeInput}
                 placeholder="Bio"
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
               ></textarea>
@@ -178,7 +189,6 @@ export default function Product() {
                   className="hidden"
                   id="FileMain"
                   name="imgMain"
-
                 />
 
                 {image && image["inputMain"] ? (
@@ -747,7 +757,7 @@ export default function Product() {
               Thương hiệu
             </h4>
             {/* Select type  */}
-            <select className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
+            <select name="brand" onChange={handleChangeInput} value={payload.brand} className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
             <option disabled selected>
                 Chọn thương hiệu
               </option>
@@ -760,7 +770,7 @@ export default function Product() {
               Loại sản phẩm
             </h4>
             {/* Select type  */}
-            <select className="select select-bordered w-11/12 h-11 ml-4 mb-8">
+            <select name="category" onChange={handleChangeInput} value={payload.category} className="select select-bordered w-11/12 h-11 ml-4 mb-8">
               <option disabled selected>
                 Loại sản phẩm
               </option>
