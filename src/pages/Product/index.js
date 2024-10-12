@@ -738,11 +738,12 @@ export default function Product() {
             </h4>
             {/* Select type  */}
             <select className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
-              <option disabled selected>
+            <option disabled selected>
                 Chọn thương hiệu
               </option>
-              <option>KFC</option>
-              <option>Pepsi</option>
+            {brands.map((product) => (
+              <option key={product._id} value={product._id}>{product.name}</option>
+            ))}
             </select>
 
             <h4 className="font-sans text-base w-6/12 h-10 ml-4 pt-2">
@@ -753,8 +754,9 @@ export default function Product() {
               <option disabled selected>
                 Loại sản phẩm
               </option>
-              <option>Đồ ăn</option>
-              <option>Nước ngọt</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category._id}>{category.name}</option>
+              ))}
             </select>
           </div>
         </div>

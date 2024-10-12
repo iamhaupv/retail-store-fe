@@ -28,7 +28,6 @@ export default function Employee() {
   };
   return (
     <>
-<<<<<<< HEAD
         {/* <Content component={Receipt}/> */}
         <div className='w-11/12 h-screen justify-center flex' style={{backgroundColor: '#F5F5F5'}}>
      <div className='w-8/12 mr-4 animate__animated animate__fadeInRight'>
@@ -135,10 +134,6 @@ export default function Employee() {
 
 
       </div>
-
-=======
-        Employee
->>>>>>> cdd14531f35c506c0702d1e6921475fc221f58b3
     </>
   )
 }
