@@ -36,8 +36,7 @@ export default function Supply() {
   };
   const handleSubmit = async () => {
     const { name, supplyName, address, phone, description } = payload;
-
-    if (!name || !supplyName || !address || !phone || !description) {
+    if (!name || !supplyName || !address || !phone || !description || !image) {
       Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin.", "error");
       return;
     }
@@ -54,11 +53,27 @@ export default function Supply() {
     if (result.isConfirmed) {
       try {
         const token = localStorage.getItem("accessToken");
-        const response = await apiCreateBrand(token, payload);
+        if (!token) {
+          throw new Error("Token is valid!");
+        }
+  
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('supplyName', supplyName);
+        formData.append('description', description);
+        formData.append('phone', phone);
+        formData.append('address', address);
+        for (const key in image) {
+          if (image[key]) {
+            const file = await fetch(image[key]).then(res => res.blob());
+            formData.append('images', file, `image-${key}.jpg`);
+          }
+        }
+        const response = await apiCreateBrand(token, formData);
         if (response.success) {
-          Swal.fire("Thêm nhà cung cấp thành công!", response.mes, "success");
+          Swal.fire("Success", "Thêm thành công!", "success");
         } else {
-          Swal.fire("Không thể thêm nhà cung cấp", response.mes, "error");
+          Swal.fire("Error", "Thêm không thành công!", "error");
         }
       } catch (error) {
         Swal.fire("Lỗi xảy ra!", "Tên thương hiệu đã tồn tại!", "error");
@@ -92,6 +107,9 @@ export default function Supply() {
               </div>
               <div className="flex items-center pt-2">
                 <input
+                  name="name"
+                  value={payload.name}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Tên thương hiệu"
                   className="input input-bordered w-6/12 h-10 ml-4"
@@ -113,11 +131,17 @@ export default function Supply() {
               </div>
               <div className="flex items-center pt-2">
                 <input
+                  name = "supplyName"
+                  value={payload.supplyName}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Tên nhà cung cấp"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
                 <input
+                  name="phone"
+                  value={payload.phone}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Số điện thoại"
                   className="input input-bordered w-5/12 h-10 ml-4"
@@ -130,6 +154,9 @@ export default function Supply() {
               </div>
               <div className="flex items-center pt-2">
                 <input
+                  name="address"
+                  value={payload.address}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Địa chỉ"
                   className="input input-bordered w-6/12 h-10 ml-4"
@@ -138,6 +165,9 @@ export default function Supply() {
 
               <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>
               <textarea
+                name="description"
+                value={payload.description}
+                onChange={handleChangeInput}
                 placeholder="Bio"
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
               ></textarea>
@@ -146,6 +176,7 @@ export default function Supply() {
             {/* Button Thêm và Hủy */}
             <div className="flex mt-10 mb-5 ml-4">
               <button
+              onClick={handleSubmit}
                 class="btn w-28 text-white"
                 style={{ backgroundColor: "#f13612" }}
               >

@@ -58,12 +58,11 @@ export default function Product() {
     fetchBrands();
     fetchCategories();
   }, []);
-  console.log(image);
   
   const handleSubmit = async () => {
     try {
       const { title, price, description, expires, brand, category } = payload;
-      if (!title || !price || !description ||  !expires || !brand) {
+      if (!title || !price || !description ||  !expires || !brand || !image) {
         Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
         return;
       }
