@@ -1,8 +1,9 @@
 import axios from "axios";
 const apiCreateBrand = async (token, payload) => {
   try {
+    const url = process.env.REACT_APP_API_URL
     const response = await axios.post(
-      "http://localhost:2002/api/v1/brand",
+      `${url}brand`,
       payload,
       {
         headers: {

@@ -3,10 +3,13 @@ import apiGetListBrand from "../../apis/apiGetListBrand";
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
+import apiUploadImage from "../../apis/apiUploadImage";
+import { useParams } from "react-router-dom";
 export default function Product() {
+  const params = useParams
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [image, setImage] = useState({});
+  const [image, setImage] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
 
   const handleClose = (inputKey) => {
@@ -14,7 +17,7 @@ export default function Product() {
     setImage((prevImages) => ({
       ...prevImages,
       [inputKey]: null,
-    })); // Reset image to null to show the label again
+    }));
   };
 
   const [payload, setPayload] = useState({});
@@ -23,6 +26,7 @@ export default function Product() {
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
   const handleChange = (event, id) => {
+    
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -58,31 +62,39 @@ export default function Product() {
   }, []);
   const handleSubmit = async () => {
     try {
-      const { title, price, description, brand, category } = payload;
-      if (!title || !price || !description || !brand || !category) {
-        Swal.fire(
-          "Thiếu thông tin!",
-          "Vui lòng điền đầy đủ thông tin!",
-          "error"
-        );
+      const { title, price, description, brand, category, images } = payload;
+      if (!title || !price || !description || !brand || !category || images.length === 0) {
+        Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
         return;
       }
+      
       const result = await Swal.fire({
         title: "Xác nhận",
-        text: "Bạn có chắc chắn muốn thêm nhà cung cấp này không?",
+        text: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Có",
         cancelButtonText: "Không",
       });
+      
       if (result.isConfirmed) {
         const token = localStorage.getItem("accessToken");
-        console.log(token);
-
         if (!token) {
           throw new Error("Token is valid!");
         }
-        const response = await apiCreateProduct(token, payload);
+  
+        // Tạo form data để gửi
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('price', price);
+        formData.append('description', description);
+        formData.append('brand', brand);
+        formData.append('category', category);
+        images.forEach((image) => {
+          formData.append('images', image.data); // Có thể thêm nhiều hình ảnh
+        });
+  
+        const response = await apiCreateProduct(token, formData); // Sử dụng formData để gửi
         if (response.success) {
           Swal.fire("Success", "Thêm thành công!", "success");
         } else {
@@ -90,18 +102,13 @@ export default function Product() {
         }
       }
     } catch (error) {
-      Swal.fire(
-        "Error",
-        "Thêm không thành công do trùng tên sản phẩm",
-        "error"
-      );
+      Swal.fire("Error", "Thêm không thành công", "error");
     }
   };
-  console.log(payload.brand, payload.category);
-
+  console.log(image);
+  
   return (
     <>
-      {/* <Content component={Receipt}/> */}
       <div
         className="w-11/12 h-full justify-center flex overflow-y-auto "
         style={{ backgroundColor: "#F5F5F5" }}
@@ -170,6 +177,8 @@ export default function Product() {
                   onChange={(e) => handleChange(e, "inputMain")}
                   className="hidden"
                   id="FileMain"
+                  name="imgMain"
+
                 />
 
                 {image && image["inputMain"] ? (
@@ -293,6 +302,7 @@ export default function Product() {
                     onChange={(e) => handleChange(e, "input2")}
                     className="hidden"
                     id="ImgDetail2"
+                    
                   />
 
                   {image && image["input2"] ? (
@@ -711,7 +721,7 @@ export default function Product() {
 
               {/* Button Thêm và Hủy */}
               <div className="flex w-full h-28 mt-2 mb-5 ml-4">
-                <button
+                <button onClick={handleSubmit}
                   class="btn w-28 text-white"
                   style={{ backgroundColor: "#f13612" }}
                 >

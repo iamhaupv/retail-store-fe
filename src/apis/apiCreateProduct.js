@@ -1,16 +1,17 @@
 import axios from "axios";
-const apiCreateProduct = async(token, payload) =>{
+const apiCreateProduct = async (token, payload) => {
     try {
-        const url = process.env.REACT_APP_API_URL
+        const url = process.env.REACT_APP_API_URL;
         const response = await axios.post(`${url}product`, payload, {
             headers: {
-                Authorization: `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
             }
-        })
-        return response.data
+        });
+        return response.data;
     } catch (error) {
-        throw new Error(error)
+        throw new Error(error.response ? error.response.data : error.message);
     }
-}
+};
 
 export default apiCreateProduct;
