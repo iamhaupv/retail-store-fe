@@ -8,6 +8,7 @@ import Employee from "../pages/Employee";
 import Error404 from "../pages/Error404";
 import Home from "../pages/Home";
 import Inventory from "../pages/Inventory";
+import ListEmployee from "../pages/ListEmployee";
 import ListProduct from "../pages/ListProduct";
 import Order from "../pages/Order";
 import Product from "../pages/Product";
@@ -30,11 +31,11 @@ export const routes = [
         element: <Home />,
       },
       {
-        path: "/SupplierList",
+        path: "/supply-list",
         element: <SupplierList/>,
       },
       {
-        path: "list-product",
+        path: "product-list",
         element: <ListProduct />,
       },
       {
@@ -48,6 +49,10 @@ export const routes = [
       {
         path: "/employee",
         element: <Employee />,
+      },
+      {
+        path: "/employeelist",
+        element: <ListEmployee />,
       },
       {
         path: "/supply",

@@ -1,7 +1,7 @@
 import { useBarcode } from "@createnextapp/react-barcode";
 import React from "react";
 
-export default function ListProductInventory() {
+export default function ListProductWareHouse() {
   const { inputRef } = useBarcode({
     value: "ASM001",
     options: {
@@ -11,7 +11,6 @@ export default function ListProductInventory() {
       height: 25,
     },
   });
-
   return (
     <>
       <tr>
@@ -47,9 +46,7 @@ export default function ListProductInventory() {
           <br />
           <span class="badge badge-ghost badge-sm">Nước giải khát</span>
         </td>
-        <th>
-          <h3 class="">30</h3>
-        </th>
+        
       </tr>
     </>
   );

@@ -6,7 +6,6 @@ export default function ListProductTable() {
   const [products, setProducts] = useState([]);
   const fetch = async () => {
     const response = await apiGetListProduct();
-    console.log(response.products);
     setProducts(response.products);
   };
   useEffect(() => {

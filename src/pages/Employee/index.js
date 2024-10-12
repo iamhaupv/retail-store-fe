@@ -58,7 +58,7 @@ export default function Employee() {
         </div>
         <div className='flex items-center pt-2'>
         <input type="text" placeholder="Địa chỉ" className="input input-bordered w-6/12 h-10 ml-4"/>
-        <input type="text" placeholder="Ngày sinh" className="input input-bordered w-5/12 h-10 ml-4" />
+        <input type="date" placeholder="Ngày sinh" className="input input-bordered w-5/12 h-10 ml-4" />
         </div>
 
             <h4 className='font-sans text-base w-6/12 ml-4 mb-2 mt-2'>Giới tính</h4>

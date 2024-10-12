@@ -4,6 +4,7 @@ export default function CreateProduct() {
   return (
     <>
         <HeaderDetailStockReceipt/>
+        
     </>
   )
 }

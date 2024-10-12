@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,6 +9,11 @@ import {
 import luck from "../../assets/luck.png";
 import logo_company from "../../Image/Logo-removebg-preview.png";
 export default function Header(props) {
+  const [username, setUsername] = useState("")
+  useEffect(() => {
+    const user = localStorage.getItem("username")
+    setUsername(user)
+  }, [])
   return (
     <>
       <div className="container__header">
@@ -26,7 +31,7 @@ export default function Header(props) {
             <img src={luck} alt="logo HauPV Store" />
           </div>
           <div className="inventory__name">
-            <h1>fgnmk Haupv</h1>
+            <h1>{username}</h1>
             <FontAwesomeIcon className="caret__down" icon={faCaretDown} />
           </div>
           <div className="inventory__announce">

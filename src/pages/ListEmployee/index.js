@@ -1,8 +1,8 @@
 import React from "react";
-import SupplyTableDetail from "../../components/SupplyTableDetail";
 import { Link } from "react-router-dom";
+import EmployeeTableDetail from "../../components/EmployeeTableDetail";
 
-export default function SupplierList() {
+export default function ListEmployee() {
   return (
     <>
       <div
@@ -33,7 +33,7 @@ export default function SupplierList() {
 
             <div className="flex justify-between mt-6 items-center">
               <h4 className="font-bold text-xl w-32 ml-4">30 sản phẩm</h4>
-              <Link to="/supply">
+              <Link to="/employee">
                 <button className="btn btn-success text-white w-36 mr-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -60,31 +60,29 @@ export default function SupplierList() {
                 {/* head */}
                 <thead>
                   <tr>
-                    <th>Modal</th>
-                    <th>Thương hiệu</th>
-                    <th>Địa chỉ</th>
+                    <th>Mã nhân viên</th>
+                    <th>Tên nhân viên</th>
+                    <th>Email</th>
                     <th>Số điện thoại</th>
-                    <th>Tên nhà cung cấp</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày sinh</th>
+                    <th>Giới tính</th>
                     <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
                   {/* row 1 */}
-                  <SupplyTableDetail />
+                  <EmployeeTableDetail/>
                   {/* row 2 */}
-                  <SupplyTableDetail />
+                  <EmployeeTableDetail/>
                   {/* row 3 */}
-                  <SupplyTableDetail />
+                  <EmployeeTableDetail/>
+                  <EmployeeTableDetail/>
+                  <EmployeeTableDetail/>
+                  <EmployeeTableDetail/>
+                  <EmployeeTableDetail/>
                   {/* row 4 */}
-                  <SupplyTableDetail />
-                  {/* row 1 */}
-                  <SupplyTableDetail />
-                  {/* row 2 */}
-                  <SupplyTableDetail />
-                  {/* row 3 */}
-                  <SupplyTableDetail />
-                  {/* row 4 */}
-                  <SupplyTableDetail />
+                  
                 </tbody>
                 <tfoot>
                   <tr></tr>

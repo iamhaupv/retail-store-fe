@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import LoginApi from "../../apis/LoginApi";
@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function FormLogin() {
+
   const navigate = useNavigate();
   const [payload, setPayload] = useState({ email: "", password: "" });
   const [isLogin, setIsLogin] = useState(true)
@@ -15,7 +16,6 @@ export default function FormLogin() {
     const { name, value } = e.target;
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleLogin = async () => {
     const { email, password } = payload;
     const rs = await LoginApi(email, password);
@@ -23,6 +23,9 @@ export default function FormLogin() {
       setPayload({ email: "", password: "" });
       navigate("/dashboard");
       localStorage.setItem("accessToken", rs.accessToken)
+      const username = rs.userData.username;
+      localStorage.setItem("username", username)
+      localStorage.setItem("refreshToken", rs.userData.refreshToken)
     } else {
       Swal.fire("Oops!", rs.mes, "error");
     }
