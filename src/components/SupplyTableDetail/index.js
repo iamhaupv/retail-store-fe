@@ -1,91 +1,107 @@
 import React from 'react'
+import { useState } from 'react'
+import apiGetListBrand from '../../apis/apiGetListBrand'
+import { useEffect } from 'react'
 
 export default function SupplyTableDetail() {
+  const [brands, setBrands] = useState([])
+  const fetchBrands = async () => {
+    try {
+      const response = await apiGetListBrand()
+      setBrands(response.brands)
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+  useEffect(()=> {
+    fetchBrands()
+  }, [])
   return (
     <>
-    <tr className='z-40'>
-        <th>
-          <div>
-              <div className="font-bold">ASM001</div>
-            </div>
-        </th>
-        <td>
-          <div className="flex items-center gap-3">
-            <div className="avatar">
-              <div className="mask rounded h-12 w-12">
-                <img
-                  src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                  alt="Avatar Tailwind CSS Component" />
-              </div>
-            </div>
-            <td className='font-bold'>
-              PepsiCo 
-              
-            </td>
+    {brands.map((brand)=> (
+      <tr className='z-40'>
+      <th>
+        <div>
+            <div className="font-bold">ASM001</div>
           </div>
-        </td>
-        <td>222/14 Nơ Trang Long P12 Q.BinhThanh</td>
-        <th>03124434623</th>
-        <th>Nguyễn Thanh Khoa</th>
+      </th>
+      <td>
+        <div className="flex items-center gap-3">
+          <div className="avatar">
+            <div className="mask rounded h-12 w-12">
+              <img
+                src={brand.images[0]}
+                alt={`Logo brand ${brand.name}`} />
+            </div>
+          </div>
+          <td className='font-bold'>
+            {brand.name}
+          </td>
+        </div>
+      </td>
+      <td>{brand.address}</td>
+      <th>{brand.phone}</th>
+      <th>{brand.supplyName}</th>
 
-        <th>
-          
-        {/* <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#e2f2ea", outline:''}}
-        onClick={()=>document.getElementById('Modal_ProductDetail').showModal()}>
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke-width="1.5" 
-              stroke="currentColor" 
-              class="size-6"
-              style={{color: "#19b563"}}>
-            <path 
-              stroke-linecap="round" 
-              stroke-linejoin="round"
-              d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-          </svg>
-        </button> */}
-
-          <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#ebf3fe", outline:''}}>
+      <th>
+        
+      {/* <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#e2f2ea", outline:''}}
+      onClick={()=>document.getElementById('Modal_ProductDetail').showModal()}>
           <svg 
-             xmlns="http://www.w3.org/2000/svg" 
-             fill="none" 
-             viewBox="0 0 24 24" 
-             stroke-width="1.5" 
-             stroke="currentColor" 
-             class="size-6"
-             style={{color: "#2f80ed"}}>
-            <path 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke-width="1.5" 
+            stroke="currentColor" 
+            class="size-6"
+            style={{color: "#19b563"}}>
+          <path 
             stroke-linecap="round" 
-            stroke-linejoin="round" 
-            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-          </svg>
+            stroke-linejoin="round"
+            d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+      </button> */}
 
-        </button>
-          
-                <button id="btn__delete" className="w-6 h-6 rounded-sm " style={{backgroundColor: "#feebe8", outline:''}}
-                   onClick={()=>document.getElementById('DeleteSupplyDetail').showModal()}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        style={{color: "#f13612"}}>
-                        <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-             
-             {/* Alert Delete */}
-             
-        </th>
-      </tr>  
+        <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#ebf3fe", outline:''}}>
+        <svg 
+           xmlns="http://www.w3.org/2000/svg" 
+           fill="none" 
+           viewBox="0 0 24 24" 
+           stroke-width="1.5" 
+           stroke="currentColor" 
+           class="size-6"
+           style={{color: "#2f80ed"}}>
+          <path 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+        </svg>
+
+      </button>
+        
+              <button id="btn__delete" className="w-6 h-6 rounded-sm " style={{backgroundColor: "#feebe8", outline:''}}
+                 onClick={()=>document.getElementById('DeleteSupplyDetail').showModal()}>
+                  <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      style={{color: "#f13612"}}>
+                      <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+              </button>
+           
+           {/* Alert Delete */}
+           
+      </th>
+    </tr>
+    ))}  
              {/* Delete Modal */}
              <dialog id="DeleteSupplyDetail" className="modal">
               <div className="modal-box w-3/12 ">

@@ -24,8 +24,7 @@ export default function Product() {
     const { name, value } = e.target;
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
-  const handleChange = (event, id) => {
-    
+  const handleChange = (event, id) => {  
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
