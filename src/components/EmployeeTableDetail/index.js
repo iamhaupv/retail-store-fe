@@ -3,7 +3,7 @@ import React from "react";
 export default function EmployeeTableDetail() {
   return (
     <>
-      <tr>
+      <tr className="hover:bg-slate-100">
         <td>
           <div>
             <div className="font-bold">ASM001</div>
@@ -32,14 +32,14 @@ export default function EmployeeTableDetail() {
           <div className="font-bold">nguyenthanhkhoa8888@gmail.com</div>
         </td>
         <td>
-          <div className="flex">
+          <div className="flex justify-center items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-6"
+              class="size-5"
             >
               <path
                 stroke-linecap="round"
@@ -64,7 +64,7 @@ export default function EmployeeTableDetail() {
           <div className="flex w-fit">
             <button
               id="btn__delete"
-              className="w-6 h-6 rounded-sm "
+              className="w-6 h-6 rounded-lg "
               style={{ backgroundColor: "#feebe8", outline: "" }}
               onClick={() => document.getElementById("Delete").showModal()}
             >

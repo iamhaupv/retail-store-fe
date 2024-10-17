@@ -74,7 +74,7 @@ export default function ListProductTable() {
         {/* table Product */}
 
         <div className="overflow-y-auto h-80 mt-7">
-  <table className="table  ">
+  <table className="table table-pin-rows ">
     {/* head */}
     <thead>
       <tr>
@@ -87,7 +87,7 @@ export default function ListProductTable() {
         <th>Sản phẩm</th>
         <th>Thương hiệu</th>
         <th>Tình trạng</th>
-        <th>Đã bán</th>
+        <th>Số lượng</th>
         <th>Thao tác</th>
       </tr>
     </thead>

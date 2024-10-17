@@ -1,10 +1,16 @@
 import axios from "axios";
-const apiGetListBrand = async() => {
+const apiGetListBrands = async() => {
     try {
-        const response = await axios.get("http://localhost:2002/api/v1/brand/")
+        const url = process.env.REACT_APP_API_URL
+        console.log(url);
+        
+        const response = await axios.get(`${url}brand`)
+        console.log(response);
+        
         return response.data
     } catch (error) {
         throw new Error(error)
     }
 }
-export default apiGetListBrand
+
+export default apiGetListBrands

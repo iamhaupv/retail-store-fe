@@ -28,7 +28,7 @@ export default function TableProductDetail() {
   return (
     <>
       {products.map((product) => (
-        <tr key={product._id}>
+        <tr key={product._id} className="hover:bg-slate-100">
           <td>
             <div>
               <div className="font-bold">ASM001</div>
@@ -46,9 +46,7 @@ export default function TableProductDetail() {
                 </div>
               </div>
               <div>
-                <div className="font-bold">
-                  {product.title}
-                </div>
+                <div className="font-bold">{product.title}</div>
                 {/* Rating */}
                 <div className="rating rating-sm">
                   <input
@@ -82,11 +80,10 @@ export default function TableProductDetail() {
             </div>
           </td>
           <td>
+            PepsiCo
             {product.brand}
             <br />
-            <span className="badge badge-ghost badge-sm">
-              Desktop Support Technician
-            </span>
+            <span className="badge badge-ghost badge-sm">Nước giải khát</span>
           </td>
           <td>Đang bán</td>
           <td>
@@ -96,7 +93,7 @@ export default function TableProductDetail() {
           <td>
             <div className="flex w-fit">
               <button
-                className=" w-6 h-6 rounded-sm mr-2"
+                className=" w-6 h-6 rounded-lg mr-2"
                 style={{ backgroundColor: "#e2f2ea", outline: "" }}
                 onClick={() =>
                   document.getElementById("modal_Quick_View").showModal()
@@ -124,7 +121,7 @@ export default function TableProductDetail() {
                 </svg>
               </button>
               <button
-                className=" w-6 h-6 rounded-sm mr-2"
+                className=" w-6 h-6 rounded-lg mr-2"
                 style={{ backgroundColor: "#ebf3fe", outline: "" }}
               >
                 <svg
@@ -146,7 +143,7 @@ export default function TableProductDetail() {
 
               <button
                 id="btn__delete"
-                className="w-6 h-6 rounded-sm "
+                className="w-6 h-6 rounded-lg "
                 style={{ backgroundColor: "#feebe8", outline: "" }}
                 onClick={() => document.getElementById("Delete").showModal()}
               >
@@ -228,14 +225,14 @@ export default function TableProductDetail() {
 
               <div className="card-actions justify-start">
                 <div>
-                  <h3 className="font-medium">Quantity</h3>
+                  {/* <h3 className="font-medium">Quantity</h3> */}
                   <div className="flex justify-center">
-                    <div className="join mr-6">
+                    <div className="join mr-6" >
                       <button className="join-item btn">+</button>
                       <button className="join-item btn">1</button>
                       <button className="join-item btn">-</button>
                     </div>
-                    <button className="btn btn-neutral btn-wide">
+                    <button className="btn btn-neutral btn-wide" hidden>
                       Add to cart
                     </button>
                   </div>

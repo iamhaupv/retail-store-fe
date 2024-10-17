@@ -54,28 +54,9 @@ export default function WarehouseReceipt() {
               <input
                 type="text"
                 placeholder="Người lập"
-                className="input input-bordered w-11/12 h-10 ml-4"
+                className="input input-bordered w-11/12 h-10 ml-4 mb-4"
                 disabled
               />
-              <h4 className="font-medium text-base w-11/12 ml-4 mb-2 mt-3">
-                Nhập về kho
-              </h4>
-              {/* Select type  */}
-              <select className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
-                <option disabled selected>
-                  Chọn kho nhập
-                </option>
-                <option>Tp.HCM</option>
-                <option>Hà Nội</option>
-                <option>Đà nẵng</option>
-              </select>
-              <h4 className="font-medium text-base w-6/12 ml-4 mb-2 mt-3">
-                Ghi chú
-              </h4>
-              <textarea
-                placeholder=""
-                className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
-              ></textarea>
             </div>
           </div>
           {/* Hình ảnh sản phẩm */}
@@ -98,14 +79,15 @@ export default function WarehouseReceipt() {
 
                 {isClicked ? 
                   // tableWareHouseReceipt
-                  <div className="overflow-x-auto w-full h-96">
-                  <table className="table">
+                  <div className="overflow-y-auto w-full h-96">
+                  <table className="table table-pin-rows">
                     {/* head */}
                     <thead>
                       <tr>
                         <th>Mã sản phẩm</th>
                         <th>Tên sản phẩm</th>
                         <th>Số lượng</th>
+                        <th>Đơn vị tính</th>
                         <th>Giá nhập</th>
                         <th>Ngày hết hạn</th>
                         <th>Thao tác</th>
@@ -174,7 +156,6 @@ export default function WarehouseReceipt() {
             <button
               class="btn w-28 ml-4"
               style={{ backgroundColor: "#e0e0e0" }}
-
             >
               Hủy
             </button>
@@ -194,7 +175,7 @@ export default function WarehouseReceipt() {
             {/* Brand */}
             <select className="select select-bordered w-52 ">
               <option disabled selected>
-                Thương hiệu
+                Nhà cung cấp
               </option>
               <option>KFC</option>
               <option>Pepsi</option>
@@ -226,16 +207,15 @@ export default function WarehouseReceipt() {
           </div>
           {/* table product  */}
           <div className=" overflow-y-scroll h-4/6">
-            <table className="table">
+            <table className="table table-pin-rows">
               {/* head */}
               <thead>
                 <tr>
                   {/* <div className='w-7'> */}
                   <th></th>
                   {/* </div> */}
-                  <th>Modal</th>
+                  <th>Mã sản phẩm</th>
                   <th>Sản phẩm</th>
-                  <th>Thương hiệu</th>
                 </tr>
               </thead>
               <tbody>

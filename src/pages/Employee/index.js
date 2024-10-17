@@ -35,33 +35,48 @@ export default function Employee() {
          {/* Thông tin sản phẩm */}
          
         <div className="card bg-white rounded-sm top-7 grid  ">
-        <h4 className='font-bold text-xl w-full ml-4 mt-2'>Thêm nhân viên</h4>
+        <h4 className='font-bold text-xl w-full ml-4 mt-2'>Thêm nhân viên
+        </h4>
         <div className='flex items-center pt-8'>
-            <h4 className='font-sans text-base w-6/12 ml-4'>Tên nhân viên</h4>
-            <h4 className='font-sans text-base w-5/12 ml-4'>Mã nhân viên</h4>
+            <h4 className='flex font-sans text-base w-6/12 ml-4'>Tên nhân viên
+            <h5 className="ml-1 text-red-600">(*)</h5>
+            </h4>
+            <h4 className='flex font-sans text-base w-5/12 ml-4'>Mã nhân viên
+            <h5 className="ml-1 text-red-600">(*)</h5>
+            </h4>
         </div>
         <div className='flex items-center pt-2'>
             <input type="text" placeholder="Tên nhân viên" className="input input-bordered w-6/12 h-10 ml-4" />
             <input type="text" placeholder="" className="input input-bordered w-5/12 h-10 ml-4" disabled />
         </div>
         <div className='flex items-center pt-2'>
-            <h4 className='font-sans text-base w-6/12 ml-4'>Email</h4>
-            <h4 className='font-sans text-base w-5/12 ml-4'>Số điện thoại</h4>
+            <h4 className='flex font-sans text-base w-6/12 ml-4'>Email
+            <h5 className="ml-1 text-red-600">(*)</h5>
+            </h4>
+            <h4 className='flex font-sans text-base w-5/12 ml-4'>Số điện thoại
+            <h5 className="ml-1 text-red-600">(*)</h5>
+            </h4>
         </div>
         <div className='flex items-center pt-2'>
             <input type="text" placeholder="Email" className="input input-bordered w-6/12 h-10 ml-4" />
             <input type="text" placeholder="Số điện thoại" className="input input-bordered w-5/12 h-10 ml-4" />
         </div>
         <div className='flex items-center pt-2'>
-        <h4 className='font-sans text-base w-6/12 ml-4 mb-2'>Địa chỉ</h4>
-        <h4 className='font-sans text-base w-5/12 ml-4'>Ngày sinh</h4>
+        <h4 className='flex font-sans text-base w-6/12 ml-4 mb-2'>Địa chỉ
+        <h5 className="ml-1 text-red-600">(*)</h5>
+        </h4>
+        <h4 className='flex font-sans text-base w-5/12 ml-4'>Ngày sinh
+        <h5 className="ml-1 text-red-600">(*)</h5>
+        </h4>
         </div>
         <div className='flex items-center pt-2'>
         <input type="text" placeholder="Địa chỉ" className="input input-bordered w-6/12 h-10 ml-4"/>
         <input type="date" placeholder="Ngày sinh" className="input input-bordered w-5/12 h-10 ml-4" />
         </div>
 
-            <h4 className='font-sans text-base w-6/12 ml-4 mb-2 mt-2'>Giới tính</h4>
+            <h4 className='flex font-sans text-base w-6/12 ml-4 mb-2 mt-2'>Giới tính
+            <h5 className="ml-1 text-red-600">(*)</h5>
+            </h4>
             <select className="select select-bordered w-full max-w-xs ml-4 mb-2">
               <option disabled selected>Giới tính</option>
               <option>Nam</option>
@@ -84,7 +99,7 @@ export default function Employee() {
         <div className='w-3/12 rounded-md ml-7 animate__animated animate__fadeInRight '>
               <div className="card bg-white rounded-sm top-7 grid  ">
                 <h4 className='font-bold text-xl w-full ml-4 mt-2'>Thông tin đính kèm</h4>
-                <h4 className='font-sans text-base w-6/12 h-10 ml-4 pt-2'>Logo Thương hiệu</h4>
+                <h4 className='font-sans text-base w-6/12 h-10 ml-4 pt-2'>Ảnh đại diện</h4>
                 {/* Logo img  */}
                 <input
                 type="file"

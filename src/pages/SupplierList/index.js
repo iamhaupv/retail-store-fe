@@ -56,7 +56,7 @@ export default function SupplierList() {
             {/* table Product */}
 
             <div className="overflow-y-auto h-96 mt-7">
-              <table className="table">
+              <table className="table table-pin-rows">
                 {/* head */}
                 <thead>
                   <tr>

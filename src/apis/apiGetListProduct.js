@@ -1,7 +1,9 @@
 import axios from "axios";
 const apiGetListProduct = async() =>{
     try {
-        const response = await axios.get("http://localhost:2002/api/v1/product/")
+        const url = process.env.REACT_APP_API_URL
+        
+        const response = await axios.get(`${url}product`)
         return response.data
     } catch (error) {
         throw new Error(error)

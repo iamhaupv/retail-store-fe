@@ -42,11 +42,12 @@ export default function InventoryProduct() {
       </div>
       {/* TableInventory */}
       <div className="overflow-y-auto h-80 mt-7">
-        <table className="table">
+        <table className="table table-pin-rows">
           {/* head */}
           <thead>
             <tr>
-              <th>Modal</th>
+              <th>Mã sản phẩm</th>
+              <th>Mã phiếu</th>
               <th>Sản phẩm</th>
               <th>Tình trạng</th>
               <th>Ngày Nhập</th>

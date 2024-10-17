@@ -19,7 +19,7 @@ export default function TableDetailWarehouse() {
   return (
     <>
       {products.map((product) => (
-        <tr key={product._id}>
+        <tr key={product._id} className="hover:bg-slate-100">
           <td>
             <div>
               <div className="font-bold">ASM001</div>
@@ -39,7 +39,7 @@ export default function TableDetailWarehouse() {
               <div>
                 <div className="font-bold">{product.title}</div>
                 <span className="badge badge-ghost badge-sm">
-                  Desktop Support Technician
+                  Nước tăng lực
                 </span>
               </div>
             </div>
@@ -50,6 +50,12 @@ export default function TableDetailWarehouse() {
               placeholder="10"
               className="input input-bordered w-36 h-10"
             />
+          </td>
+          <td>
+            <select className="select select-bordered w-full max-w-xs">
+              <option>chai</option>
+              <option>Thùng 24</option>
+            </select>
           </td>
           <td>
             <input

@@ -79,36 +79,17 @@ export default function Supply() {
             {/* Thông tin sản phẩm */}
 
             <div className="card bg-white rounded-sm top-7 grid  ">
-              <h4 className="font-bold text-xl w-full ml-4 mt-2">
+              <h4 className=" font-bold text-xl w-full ml-4 mt-2">
                 Thêm nhà cung cấp
               </h4>
               <div className="flex items-center pt-8">
-                <h4 className="font-sans text-base w-6/12 ml-4">
-                  Tên thương hiệu
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
+                  Tên 
+                  <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">
-                  Mã thương hiệu
-                </h4>
-              </div>
-              <div className="flex items-center pt-2">
-                <input
-                  type="text"
-                  placeholder="Tên thương hiệu"
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                />
-                <input
-                  type="text"
-                  placeholder="Mã thương hiệu"
-                  className="input input-bordered w-5/12 h-10 ml-4"
-                  disabled
-                />
-              </div>
-              <div className="flex items-center pt-2">
-                <h4 className="font-sans text-base w-6/12 ml-4">
-                  Tên nhà cung cấp
-                </h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">
-                  Số điện thoại
+                <h4 className="flex font-sans text-base w-5/12 ml-4">
+                  Mã nhà cung cấp
+                  <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
               </div>
               <div className="flex items-center pt-2">
@@ -119,13 +100,37 @@ export default function Supply() {
                 />
                 <input
                   type="text"
+                  placeholder="Mã nhà cung cấp"
+                  className="input input-bordered w-5/12 h-10 ml-4"
+                  disabled
+                />
+              </div>
+              <div className="flex items-center pt-2">
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
+                  Tên người cung cấp
+                  <h5 className="ml-1 text-red-600">(*)</h5>
+                </h4>
+                <h4 className="flex font-sans text-base w-5/12 ml-4">
+                  Số điện thoại
+                  <h5 className="ml-1 text-red-600">(*)</h5>
+                </h4>
+              </div>
+              <div className="flex items-center pt-2">
+                <input
+                  type="text"
+                  placeholder="Tên người cung cấp"
+                  className="input input-bordered w-6/12 h-10 ml-4"
+                />
+                <input
+                  type="text"
                   placeholder="Số điện thoại"
                   className="input input-bordered w-5/12 h-10 ml-4"
                 />
               </div>
               <div className="flex items-center pt-2">
-                <h4 className="font-sans text-base w-6/12 ml-4 mb-2">
+                <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
                   Địa chỉ
+                  <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
               </div>
               <div className="flex items-center pt-2">
@@ -166,8 +171,9 @@ export default function Supply() {
             <h4 className="font-bold text-xl w-full ml-4 mt-2">
               Thông tin đính kèm
             </h4>
-            <h4 className="font-sans text-base w-6/12 h-10 ml-4 pt-2">
+            <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
               Logo Thương hiệu
+              <h5 className="ml-1 text-red-600">(*)</h5>
             </h4>
             {/* Logo img  */}
             <input

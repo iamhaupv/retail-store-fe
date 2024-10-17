@@ -135,18 +135,12 @@ export default function Product() {
               </div>
               <div className="flex items-center pt-8">
                 <h4 className="font-sans text-base w-6/12 ml-4">Đơn giá</h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">Hạn sử dụng</h4>
               </div>
               <div className="flex items-center pt-2">
                 <input
                   type="text"
                   placeholder="Đơn giá"
                   className="input input-bordered w-6/12 h-10 ml-4"
-                />
-                <input
-                  type="text"
-                  placeholder="Hạn sử dụng"
-                  className="input input-bordered w-5/12 h-10 ml-4"
                 />
               </div>
               <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>

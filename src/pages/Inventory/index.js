@@ -13,30 +13,6 @@ export default function Inventory() {
   };
   return (
     <>
-      {/* Thông tin kho */}
-      {/* <div className='w-full h-sceen' style={{backgroundColor: '#F5F5F5'}}>
-    <div className='w-1130 '>   
-        <div className="card bg-white rounded-none left-14 top-7 grid  ">
-         <div className="ml-10">
-           <h3 className=" font-bold text-lg rounded-sm">Thông tin kho</h3>
-           <div className="card card-side shadow-xl rounded-none top-6 grid  w-11/12 h-32 " style={{backgroundColor: '#F5F5F5'}}> 
-              <div className="avatar">
-                <div className="w-100 h-100 rounded-full">
-                  <img src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp" />
-                </div>
-              </div>
-            <div className="card-body">
-              <h2 className="card-title">New movie is released!</h2>
-              <p>Click the button to watch on Jetflix app.</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary">Watch</button>
-              </div>
-            </div>
-           </div>
-          </div>
-        </div>
-    </div>
-    </div> */}
 
       {/* Tab table */}
       <div
@@ -44,7 +20,7 @@ export default function Inventory() {
         style={{ backgroundColor: "#F5F5F5" }}
       >
         <div className="w-11/12 justify-center  ">
-          <div className=" w-11/12 h-fit mb-2 animate__animated animate__fadeInRight ">
+          <div className=" w-full h-fit mb-2 animate__animated animate__fadeInRight ">
             <div className="card bg-white rounded-lg top-7  grid h-52 ">
               <h4 className="font-bold text-xl w-32 ml-4 mt-4 h-fit">
                 Thông tin kho
@@ -138,7 +114,7 @@ export default function Inventory() {
               </div>
             </div>
           </div>
-          <div className="w-11/12 mb-7 animate__animated animate__fadeInRight ">
+          <div className="w-full mb-7 animate__animated animate__fadeInRight ">
             <div className="card bg-white rounded-lg top-7  grid   ">
               <div role="tablist" className="tabs tabs-bordered order-b border-gray-200 ">
                 

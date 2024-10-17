@@ -1,13 +1,13 @@
-import React from 'react'
+import React from "react";
 
 export default function SupplyTableDetail() {
   return (
     <>
-    <tr className='z-40'>
+      <tr className="hover:bg-slate-100 ">
         <th>
           <div>
-              <div className="font-bold">ASM001</div>
-            </div>
+            <div className="font-bold">ASM001</div>
+          </div>
         </th>
         <td>
           <div className="flex items-center gap-3">
@@ -15,22 +15,37 @@ export default function SupplyTableDetail() {
               <div className="mask rounded h-12 w-12">
                 <img
                   src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                  alt="Avatar Tailwind CSS Component" />
+                  alt="Avatar Tailwind CSS Component"
+                />
               </div>
             </div>
-            <td className='font-bold'>
-              PepsiCo 
-              
-            </td>
+            <td className="font-bold">PepsiCo</td>
           </div>
         </td>
         <td>222/14 Nơ Trang Long P12 Q.BinhThanh</td>
-        <th>03124434623</th>
-        <th>Nguyễn Thanh Khoa</th>
+        <td>
+          <div className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"
+              />
+            </svg>
+            03124434623
+          </div>
+        </td>
+        <td>Nguyễn Thanh Khoa</td>
 
-        <th>
-          
-        {/* <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#e2f2ea", outline:''}}
+        <td>
+          {/* <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#e2f2ea", outline:''}}
         onClick={()=>document.getElementById('Modal_ProductDetail').showModal()}>
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
@@ -48,59 +63,70 @@ export default function SupplyTableDetail() {
           </svg>
         </button> */}
 
-          <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#ebf3fe", outline:''}}>
-          <svg 
-             xmlns="http://www.w3.org/2000/svg" 
-             fill="none" 
-             viewBox="0 0 24 24" 
-             stroke-width="1.5" 
-             stroke="currentColor" 
-             class="size-6"
-             style={{color: "#2f80ed"}}>
-            <path 
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-          </svg>
+          <button
+            className=" w-6 h-6 rounded-lg mr-2"
+            style={{ backgroundColor: "#ebf3fe", outline: "" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+              style={{ color: "#2f80ed" }}
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+              />
+            </svg>
+          </button>
 
-        </button>
-          
-                <button id="btn__delete" className="w-6 h-6 rounded-sm " style={{backgroundColor: "#feebe8", outline:''}}
-                   onClick={()=>document.getElementById('DeleteSupplyDetail').showModal()}>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        style={{color: "#f13612"}}>
-                        <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-             
-             {/* Alert Delete */}
-             
-        </th>
-      </tr>  
-             {/* Delete Modal */}
-             <dialog id="DeleteSupplyDetail" className="modal">
-              <div className="modal-box w-3/12 ">
-                <h3 className="font-bold text-lg">Bạn muốn xóa thương hiệu này khỏi danh sách bán?</h3>          
-                  <div className="flex modal-action justify-between ">
-                  <button className="btn w-20 bg-orange-500"> Đồng ý</button>
-                    <form method="dialog ">
-                      {/* if there is a button, it will close the modal */}
-                      <button className="btn w-20">Hủy</button>
-                    </form>
-                  </div>                 
-               </div>
-            </dialog>
+          <button
+            id="btn__delete"
+            className="w-6 h-6 rounded-lg "
+            style={{ backgroundColor: "#feebe8", outline: "" }}
+            onClick={() =>
+              document.getElementById("DeleteSupplyDetail").showModal()
+            }
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              style={{ color: "#f13612" }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
 
-            
+          {/* Alert Delete */}
+        </td>
+      </tr>
+      {/* Delete Modal */}
+      <dialog id="DeleteSupplyDetail" className="modal">
+        <div className="modal-box w-3/12 ">
+          <h3 className="font-bold text-lg">
+            Bạn muốn xóa thương hiệu này khỏi danh sách bán?
+          </h3>
+          <div className="flex modal-action justify-between ">
+            <button className="btn w-20 bg-orange-500"> Đồng ý</button>
+            <form method="dialog ">
+              {/* if there is a button, it will close the modal */}
+              <button className="btn w-20">Hủy</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </>
-  )
+  );
 }

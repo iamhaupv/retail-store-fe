@@ -64,14 +64,13 @@ export default function StockIn() {
       </div>
       {/* Table StockIn */}
       <div className="overflow-y-auto h-80 mt-7">
-        <table className="table table-zebra">
+        <table className="table  table-pin-rows">
           {/* head */}
           <thead>
             <tr>
               <th>Số phiếu</th>
               <th>Ngày lập</th>
               <th>Người lập</th>
-              <th>Trạng thái</th>
               <th>Tổng SP</th>
               <th>Tổng tiền (VNĐ)</th>
               <th>Thao tác</th>
