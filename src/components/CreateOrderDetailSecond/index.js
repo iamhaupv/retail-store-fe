@@ -28,7 +28,7 @@ export default function CreateOrderDetailSecond() {
             </div>
           </div>
           <div className="flex w-full">
-            <div className="flex w-fit h-fit justify-center items-center ml-2 mt-2">
+            <div className="flex w-fit h-fit justify-center items-center ml-2 mt-5">
               <h1 className="font-medium w-24 text-sm ">Mã nhân viên:</h1>
               <input
                 type="text"

@@ -1,25 +1,34 @@
 import React from "react";
+import Autocomplete from "../AutoComplete";
 
 export default function CreateOrderTableDetail() {
+  const suggestions = [
+    "Nước ngọt pepsi dung tích 120ml",
+    "Snack Khoai tây lays",
+    "Nước khoáng aquafina",
+  ];
+  const DonViTinh = [
+    "Thùng 30",
+    "Thùng 24",
+    "Lóc",
+    "Chai"
+  ];
   return (
     <>
       <tr className="hover:bg-slate-100">
         <td>SP034213</td>
         <td>
-          <select className="select select-ghost w-full max-w-xs">
-            <option>Nước ngọt pepsi dung tích 120ml</option>
-            <option>Snack Khoai tây lays</option>
-            <option>Nước khoáng aquafina</option>
-          </select>
+            <div className="w-56">
+                <Autocomplete suggestions={suggestions} placeholder=""/>
+            </div>
         </td>
         <td>
-          <input type="number" placeholder="1" className="input w-32 " />
+          <input type="number" placeholder="1" className="input w-32 h-8 " />
         </td>
         <td>
-          <select className="select select-bordered w-full max-w-xs">
-            <option>chai</option>
-            <option>Thùng 24</option>
-          </select>
+        <div className="w-56">
+                <Autocomplete suggestions={DonViTinh} placeholder=""/>
+            </div>
         </td>
         <td>10.000</td>
         <td>10.000</td>

@@ -1,6 +1,5 @@
 .container__nav{
     height: 100%;
-    width: 273px;
     background-color: #fff;
     box-sizing: border-box;
     border-radius: 4px;
@@ -10,6 +9,7 @@
     margin-left: 20px;
     display: flex;
     align-items: center;
+    white-space: nowrap;
 }
 .dashboard h1{
     display: flex;

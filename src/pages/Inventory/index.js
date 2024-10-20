@@ -116,19 +116,23 @@ export default function Inventory() {
           </div>
           <div className="w-full mb-7 animate__animated animate__fadeInRight ">
             <div className="card bg-white rounded-lg top-7  grid   ">
-              <div role="tablist" className="tabs tabs-bordered order-b border-gray-200 ">
+              <div role="tablist" className="tabs tabs-bordered order-b border-gray-200" style={{
+                
+              }}>
                 
                 <input
                   type="radio"
                   name="my_tabs_1"
                   role="tab"
-                  className="tab"
+                  className="tab whitespace-nowrap"
                   aria-label="Nhập kho"
                   defaultChecked
-                  style={activeTab === 0 ? { borderColor: "#f89a88" } : {}}
+                  style={activeTab === 0 ? { borderColor: "#f89a88"  } : {}}
                   onClick={() => handleTabClick(0)}
                 />
-                <div role="tabpanel" className="tab-content mb-20 p-10 ">
+                <div role="tabpanel" className="tab-content mb-20 p-10 " style={{
+                  borderTop: "2px solid #ededed",
+                }}>
                   {" "}
                   <StockIn />{" "}
                 </div>
@@ -137,12 +141,14 @@ export default function Inventory() {
                   type="radio"
                   name="my_tabs_1"
                   role="tab"
-                  className="tab"
+                  className="tab whitespace-nowrap"
                   aria-label="Hàng tồn"
                   style={activeTab === 2 ? { borderColor: "#f89a88" } : {}}
                   onClick={() => handleTabClick(2)}
                 />
-                <div role="tabpanel" className="tab-content mb-20 p-10">
+                <div role="tabpanel" className="tab-content mb-20 p-10" style={{
+                  borderTop: "2px solid #ededed",
+                }}>
                   {" "}
                   <InventoryProduct />{" "}
                 </div>
