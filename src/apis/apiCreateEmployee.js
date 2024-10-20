@@ -1,9 +1,9 @@
 import axios from "axios";
-const apiCreateBrand = async (token, payload) => {
+const apiCreateEmployee = async (token, payload) => {
   try {
     const url = process.env.REACT_APP_API_URL
     const response = await axios.post(
-      `${url}brand`,
+      `${url}employee`,
       payload,
       {
         headers: {
@@ -17,4 +17,4 @@ const apiCreateBrand = async (token, payload) => {
     throw new Error(error);
   }
 };
-export default apiCreateBrand;
+export default apiCreateEmployee;

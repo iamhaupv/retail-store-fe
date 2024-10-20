@@ -1,6 +1,7 @@
 import { useBarcode } from "@createnextapp/react-barcode";
 import { CarouselProduct } from "../CarouselProduct";
 import React, { useEffect, useState } from "react";
+import apiGetAllProduct from "../../apis/apiGetAllProducts";
 import apiGetListProduct from "../../apis/apiGetListProduct";
 
 export default function TableProductDetail() {
@@ -16,7 +17,7 @@ export default function TableProductDetail() {
   // });
   const fetchPrducts = async () => {
     try {
-      const response = await apiGetListProduct();
+      const response = await apiGetAllProduct();
       setProducts(response.products);
     } catch (error) {
       throw new Error(error);
@@ -40,8 +41,8 @@ export default function TableProductDetail() {
               <div className="avatar">
                 <div className="mask rounded h-12 w-12">
                   <img
-                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                    alt="Avatar Tailwind CSS Component"
+                    src={product.images[0]}
+                    alt={`${product.name}`}
                   />
                 </div>
               </div>
@@ -80,8 +81,7 @@ export default function TableProductDetail() {
             </div>
           </td>
           <td>
-            PepsiCo
-            {product.brand}
+            {product.brand.name}
             <br />
             <span className="badge badge-ghost badge-sm">Nước giải khát</span>
           </td>

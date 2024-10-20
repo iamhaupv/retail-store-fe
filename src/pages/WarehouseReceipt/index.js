@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ListProductInventory from "../../components/ListProductInventory";
+// import ListProductInventory from "../../components/ListProductInventory";
 import ListProductWareHouse from "../../components/ListProductWareHouse";
 import TableDetailWarehouse from "../../components/TableDetailWarehouse";
 

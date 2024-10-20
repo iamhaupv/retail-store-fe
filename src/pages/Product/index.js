@@ -3,10 +3,12 @@ import apiGetListBrand from "../../apis/apiGetListBrand";
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
+import { useParams } from "react-router-dom";
 export default function Product() {
+  const params = useParams
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [image, setImage] = useState({});
+  const [image, setImage] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
 
   const handleClose = (inputKey) => {
@@ -14,7 +16,7 @@ export default function Product() {
     setImage((prevImages) => ({
       ...prevImages,
       [inputKey]: null,
-    })); // Reset image to null to show the label again
+    }));
   };
 
   const [payload, setPayload] = useState({});
@@ -22,7 +24,7 @@ export default function Product() {
     const { name, value } = e.target;
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
-  const handleChange = (event, id) => {
+  const handleChange = (event, id) => {  
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -35,7 +37,6 @@ export default function Product() {
       reader.readAsDataURL(file);
     }
   };
-
   const fetchBrands = async () => {
     try {
       const response = await apiGetListBrand();
@@ -56,33 +57,43 @@ export default function Product() {
     fetchBrands();
     fetchCategories();
   }, []);
+  
   const handleSubmit = async () => {
     try {
-      const { title, price, description, brand, category } = payload;
-      if (!title || !price || !description || !brand || !category) {
-        Swal.fire(
-          "Thiếu thông tin!",
-          "Vui lòng điền đầy đủ thông tin!",
-          "error"
-        );
+      const { title, price, description, expires, brand, category } = payload;
+      if (!title || !price || !description ||  !expires || !brand || !image) {
+        Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
         return;
       }
+      
       const result = await Swal.fire({
         title: "Xác nhận",
-        text: "Bạn có chắc chắn muốn thêm nhà cung cấp này không?",
+        text: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Có",
         cancelButtonText: "Không",
       });
+      
       if (result.isConfirmed) {
         const token = localStorage.getItem("accessToken");
-        console.log(token);
-
         if (!token) {
           throw new Error("Token is valid!");
         }
-        const response = await apiCreateProduct(token, payload);
+  
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('price', price);
+        formData.append('description', description);
+        formData.append('brand', brand);
+        formData.append('category', category);
+        for (const key in image) {
+          if (image[key]) {
+            const file = await fetch(image[key]).then(res => res.blob());
+            formData.append('images', file, `image-${key}.jpg`);
+          }
+        }
+        const response = await apiCreateProduct(token, formData);
         if (response.success) {
           Swal.fire("Success", "Thêm thành công!", "success");
         } else {
@@ -90,18 +101,11 @@ export default function Product() {
         }
       }
     } catch (error) {
-      Swal.fire(
-        "Error",
-        "Thêm không thành công do trùng tên sản phẩm",
-        "error"
-      );
+      Swal.fire("Error", "Thêm không thành công", "error");
     }
   };
-  console.log(payload.brand, payload.category);
-
   return (
     <>
-      {/* <Content component={Receipt}/> */}
       <div
         className="w-11/12 h-full justify-center flex overflow-y-auto "
         style={{ backgroundColor: "#F5F5F5" }}
@@ -122,6 +126,9 @@ export default function Product() {
               </div>
               <div className="flex items-center pt-2">
                 <input
+                  name="title"
+                  value={payload.title}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Tên sản phẩm"
                   className="input input-bordered w-6/12 h-10 ml-4"
@@ -138,6 +145,9 @@ export default function Product() {
               </div>
               <div className="flex items-center pt-2">
                 <input
+                  name="price"
+                  value={payload.price}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Đơn giá"
                   className="input input-bordered w-6/12 h-10 ml-4"
@@ -145,6 +155,9 @@ export default function Product() {
               </div>
               <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>
               <textarea
+                name="description"
+                value={payload.description}
+                onChange={handleChangeInput}
                 placeholder="Bio"
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
               ></textarea>
@@ -164,6 +177,7 @@ export default function Product() {
                   onChange={(e) => handleChange(e, "inputMain")}
                   className="hidden"
                   id="FileMain"
+                  name="imgMain"
                 />
 
                 {image && image["inputMain"] ? (
@@ -287,6 +301,7 @@ export default function Product() {
                     onChange={(e) => handleChange(e, "input2")}
                     className="hidden"
                     id="ImgDetail2"
+                    
                   />
 
                   {image && image["input2"] ? (
@@ -705,7 +720,7 @@ export default function Product() {
 
               {/* Button Thêm và Hủy */}
               <div className="flex w-full h-28 mt-2 mb-5 ml-4">
-                <button
+                <button onClick={handleSubmit}
                   class="btn w-28 text-white"
                   style={{ backgroundColor: "#f13612" }}
                 >
@@ -721,7 +736,6 @@ export default function Product() {
             </div>
           </div>
         </div>
-
         <div className="w-3/12 rounded-md ml-7 animate__animated animate__fadeInRight">
           <div className="card bg-white rounded-sm top-7 grid  ">
             <h4 className="font-bold text-xl w-full ml-4 mt-2">
@@ -731,7 +745,7 @@ export default function Product() {
               Thương hiệu
             </h4>
             {/* Select type  */}
-            <select className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
+            <select name="brand" onChange={handleChangeInput} value={payload.brand} className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
             <option disabled selected>
                 Chọn thương hiệu
               </option>
@@ -744,7 +758,7 @@ export default function Product() {
               Loại sản phẩm
             </h4>
             {/* Select type  */}
-            <select className="select select-bordered w-11/12 h-11 ml-4 mb-8">
+            <select name="category" onChange={handleChangeInput} value={payload.category} className="select select-bordered w-11/12 h-11 ml-4 mb-8">
               <option disabled selected>
                 Loại sản phẩm
               </option>

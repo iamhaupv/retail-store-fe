@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
+import apiGetListEmployee from "../../apis/apiGetListEmployee";
+import { useEffect } from "react";
 
 export default function EmployeeTableDetail() {
+  const [employees, setEmployees] = useState([])
+  const fetchEmployees = async() => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token){
+        throw new Error("Token is invalid!")
+      }
+      const response = await apiGetListEmployee(token)
+      setEmployees(response.data)
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+  useEffect(() => {
+    fetchEmployees()
+  }, [])
   return (
     <>
-      <tr className="hover:bg-slate-100">
+      {employees.map((employee) => (
+        <tr key={employee._id} className="hover:bg-slate-100">
         <td>
           <div>
             <div className="font-bold">ASM001</div>
@@ -15,21 +34,18 @@ export default function EmployeeTableDetail() {
             <div className="avatar">
               <div className="mask rounded h-12 w-12">
                 <img
-                  src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                  alt="Avatar Tailwind CSS Component"
+                  src={employee.images[0]}
+                  alt={`Avatar ${employee._id}`}
                 />
               </div>
             </div>
             <div>
-              <div className="font-bold">Nguyễn Thanh Khoa</div>
-              {/* <span className="badge badge-ghost badge-sm">
-                Desktop Support Technician
-              </span> */}
+              <div className="font-bold">{employee.name}</div>
             </div>
           </div>
         </td>
         <td>
-          <div className="font-bold">nguyenthanhkhoa8888@gmail.com</div>
+          <div className="font-bold">{employee.email}</div>
         </td>
         <td>
           <div className="flex justify-center items-center">
@@ -48,17 +64,17 @@ export default function EmployeeTableDetail() {
               />
             </svg>
 
-            <div className="font-bold">0378251351</div>
+            <div className="font-bold">{employee.phone}</div>
           </div>
         </td>
         <td>
-          <div className="font-bold">200 phan van tri,p12 TpHCM</div>
+          <div className="font-bold">{employee.address}</div>
         </td>
         <td>
-          <div className="font-bold">01/01/2002</div>
+          <div className="font-bold">{employee.birthday}</div>
         </td>
         <td>
-          <div className="font-bold">Nam</div>
+          <div className="font-bold">{employee.gender}</div>
         </td>
         <td>
           <div className="flex w-fit">
@@ -88,6 +104,7 @@ export default function EmployeeTableDetail() {
           {/* Alert Delete */}
         </td>
       </tr>
+      ))}
     </>
   );
 }
