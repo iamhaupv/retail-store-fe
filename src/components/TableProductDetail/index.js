@@ -2,10 +2,13 @@ import { useBarcode } from "@createnextapp/react-barcode";
 import { CarouselProduct } from "../CarouselProduct";
 import React, { useEffect, useState } from "react";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
-import apiGetListProduct from "../../apis/apiGetListProduct";
+import { wait } from "@testing-library/user-event/dist/utils";
+import apiIsDisplay from "../../apis/apiIsDisplay";
 
 export default function TableProductDetail() {
   const [products, setProducts] = useState([]);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   // const { inputRef } = useBarcode({
   //   value: "ASM001",
   //   options: {
@@ -17,7 +20,9 @@ export default function TableProductDetail() {
   // });
   const fetchPrducts = async () => {
     try {
-      const response = await apiGetAllProduct();
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid!")
+      const response = await apiGetAllProduct(token);
       setProducts(response.products);
     } catch (error) {
       throw new Error(error);
@@ -26,6 +31,21 @@ export default function TableProductDetail() {
   useEffect(() => {
     fetchPrducts();
   }, []);
+  const handleChangeIsDisplay = async(pid, isDisplay ) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid")
+      await apiIsDisplay(token, pid, {isDisplay })
+      fetchPrducts()
+      
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+    document.getElementById("modal_Quick_View").showModal();
+  };
   return (
     <>
       {products.map((product) => (
@@ -51,7 +71,7 @@ export default function TableProductDetail() {
                   {product.title}
                 </div>
                 {/* Rating */}
-                <div className="rating rating-sm">
+                <div className="rating rating-sm"s>
                   <input
                     type="radio"
                     name="rating-4"
@@ -89,9 +109,9 @@ export default function TableProductDetail() {
               Desktop Support Technician
             </span>
           </td>
-          <td>Đang bán</td>
+          <td>{product.status === "in_stock" ? "Đang bán" : "Hết hàng"}</td>
           <td>
-            <button className="btn btn-ghost btn-xs">900</button>
+            <button className="btn btn-ghost btn-xs">{product.sold}</button>
           </td>
 
           <td>
@@ -99,9 +119,7 @@ export default function TableProductDetail() {
               <button
                 className=" w-6 h-6 rounded-sm mr-2"
                 style={{ backgroundColor: "#e2f2ea", outline: "" }}
-                onClick={() =>
-                  document.getElementById("modal_Quick_View").showModal()
-                }
+                onClick={() => handleOpenModal(product)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -146,10 +164,10 @@ export default function TableProductDetail() {
               </button>
 
               <button
+                onClick={()=>handleChangeIsDisplay(product._id, false)}
                 id="btn__delete"
                 className="w-6 h-6 rounded-sm "
                 style={{ backgroundColor: "#feebe8", outline: "" }}
-                onClick={() => document.getElementById("Delete").showModal()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -169,11 +187,42 @@ export default function TableProductDetail() {
               </button>
             </div>
             {/* Alert Delete */}
+            <dialog id="Delete" className="modal" open={isDeleteModalOpen}>
+        <div className="modal-box w-3/12 ">
+          <h3 className="font-bold text-lg">
+            Bạn muốn xóa sản phẩm này khỏi danh sách bán?
+          </h3>
+          <div className="flex items-center ">
+            <label className="mr-2">
+              <input type="checkbox" className="checkbox" />
+            </label>
+            <p className="py-4">Hàng chưa về</p>
+          </div>
+          <div className="flex items-center ">
+            <label className="mr-2">
+              <input type="checkbox" className="checkbox" />
+            </label>
+            <p className="py-4">Không còn kinh doanh</p>
+          </div>
+          {/* Text Area */}
+          <textarea
+            placeholder="Bio"
+            className="textarea textarea-bordered textarea-lg w-full max-w-xs"
+          ></textarea>
+
+          <div className="flex modal-action justify-between ">
+            <button  className="btn w-20 bg-orange-500"> Đồng ý</button>
+            <form method="dialog ">
+              <button onClick={() => setDeleteModalOpen(false)} className="btn w-20">Hủy</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
           </td>
         </tr>
       ))}
 
-      <dialog id="Delete" className="modal">
+      <dialog id="Delete" className="modal" open={isDeleteModalOpen}>
         <div className="modal-box w-3/12 ">
           <h3 className="font-bold text-lg">
             Bạn muốn xóa sản phẩm này khỏi danh sách bán?
@@ -199,8 +248,7 @@ export default function TableProductDetail() {
           <div className="flex modal-action justify-between ">
             <button className="btn w-20 bg-orange-500"> Đồng ý</button>
             <form method="dialog ">
-              {/* if there is a button, it will close the modal */}
-              <button className="btn w-20">Hủy</button>
+              <button onClick={() => setDeleteModalOpen(false)} className="btn w-20">Hủy</button>
             </form>
           </div>
         </div>
@@ -212,7 +260,7 @@ export default function TableProductDetail() {
           <div className="card lg:card-side bg-base-100 ">
             {/* Card */}
             <figure>
-              <CarouselProduct />
+              {selectedProduct && <CarouselProduct product={selectedProduct} />}
             </figure>
             <div className="card-body">
               <h1 className="card-title text-3xl font-medium">

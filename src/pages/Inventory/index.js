@@ -13,30 +13,6 @@ export default function Inventory() {
   };
   return (
     <>
-      {/* Thông tin kho */}
-      {/* <div className='w-full h-sceen' style={{backgroundColor: '#F5F5F5'}}>
-    <div className='w-1130 '>   
-        <div className="card bg-white rounded-none left-14 top-7 grid  ">
-         <div className="ml-10">
-           <h3 className=" font-bold text-lg rounded-sm">Thông tin kho</h3>
-           <div className="card card-side shadow-xl rounded-none top-6 grid  w-11/12 h-32 " style={{backgroundColor: '#F5F5F5'}}> 
-              <div className="avatar">
-                <div className="w-100 h-100 rounded-full">
-                  <img src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp" />
-                </div>
-              </div>
-            <div className="card-body">
-              <h2 className="card-title">New movie is released!</h2>
-              <p>Click the button to watch on Jetflix app.</p>
-              <div className="card-actions justify-end">
-                <button className="btn btn-primary">Watch</button>
-              </div>
-            </div>
-           </div>
-          </div>
-        </div>
-    </div>
-    </div> */}
 
       {/* Tab table */}
       <div
@@ -44,7 +20,7 @@ export default function Inventory() {
         style={{ backgroundColor: "#F5F5F5" }}
       >
         <div className="w-11/12 justify-center  ">
-          <div className=" w-11/12 h-fit mb-2 animate__animated animate__fadeInRight ">
+          <div className=" w-full h-fit mb-2 animate__animated animate__fadeInRight ">
             <div className="card bg-white rounded-lg top-7  grid h-52 ">
               <h4 className="font-bold text-xl w-32 ml-4 mt-4 h-fit">
                 Thông tin kho
@@ -56,7 +32,7 @@ export default function Inventory() {
                 <div className="flex w-12/12">
                   <div className="avatar">
                     <div className="size-28 rounded-full  mt-4 mb-4 ml-4 mr-4">
-                      <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                      <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="ảnh đại diện" />
                     </div>
                   </div>
                   <div className="w-9/12">
@@ -138,21 +114,25 @@ export default function Inventory() {
               </div>
             </div>
           </div>
-          <div className="w-11/12 mb-7 animate__animated animate__fadeInRight ">
+          <div className="w-full mb-7 animate__animated animate__fadeInRight ">
             <div className="card bg-white rounded-lg top-7  grid   ">
-              <div role="tablist" className="tabs tabs-bordered order-b border-gray-200 ">
+              <div role="tablist" className="tabs tabs-bordered order-b border-gray-200" style={{
+                
+              }}>
                 
                 <input
                   type="radio"
                   name="my_tabs_1"
                   role="tab"
-                  className="tab"
+                  className="tab whitespace-nowrap"
                   aria-label="Nhập kho"
                   defaultChecked
-                  style={activeTab === 0 ? { borderColor: "#f89a88" } : {}}
+                  style={activeTab === 0 ? { borderColor: "#f89a88"  } : {}}
                   onClick={() => handleTabClick(0)}
                 />
-                <div role="tabpanel" className="tab-content mb-20 p-10 ">
+                <div role="tabpanel" className="tab-content mb-20 p-10 " style={{
+                  borderTop: "2px solid #ededed",
+                }}>
                   {" "}
                   <StockIn />{" "}
                 </div>
@@ -161,12 +141,14 @@ export default function Inventory() {
                   type="radio"
                   name="my_tabs_1"
                   role="tab"
-                  className="tab"
+                  className="tab whitespace-nowrap"
                   aria-label="Hàng tồn"
                   style={activeTab === 2 ? { borderColor: "#f89a88" } : {}}
                   onClick={() => handleTabClick(2)}
                 />
-                <div role="tabpanel" className="tab-content mb-20 p-10">
+                <div role="tabpanel" className="tab-content mb-20 p-10" style={{
+                  borderTop: "2px solid #ededed",
+                }}>
                   {" "}
                   <InventoryProduct />{" "}
                 </div>
@@ -184,7 +166,7 @@ export default function Inventory() {
               <p className="py-4 w-20">Avatar</p>
               <div className="avatar">
                 <div className="size-24 rounded-full">
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="ảnh đại diện chỉnh sửa" />
                 </div>
               </div>
             </div>

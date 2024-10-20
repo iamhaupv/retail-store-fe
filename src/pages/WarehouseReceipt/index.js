@@ -2,6 +2,7 @@ import React, { useState } from "react";
 // import ListProductInventory from "../../components/ListProductInventory";
 import ListProductWareHouse from "../../components/ListProductWareHouse";
 import TableDetailWarehouse from "../../components/TableDetailWarehouse";
+import Autocomplete from "../../components/AutoComplete";
 
 export default function WarehouseReceipt() {
   // const [image, setImage] = useState({});
@@ -21,6 +22,18 @@ export default function WarehouseReceipt() {
   // };
 
   const [isClicked, setIsClicked] = useState(false);
+ const placeHolderBrand='Nhà cung cấp..'
+ const placeHolderCategory='loại sản phẩm..'
+
+  const suggestions = [
+    "Nước ngọt ",
+    "Nước ép trái cây",
+    "Nước tăng lực",
+    "Nước trà",
+    "Cà phê hòa tan",
+    "Cà phê pha phin",
+    "Cà phê lon",
+  ];
 
   return (
     <>
@@ -54,28 +67,9 @@ export default function WarehouseReceipt() {
               <input
                 type="text"
                 placeholder="Người lập"
-                className="input input-bordered w-11/12 h-10 ml-4"
+                className="input input-bordered w-11/12 h-10 ml-4 mb-4"
                 disabled
               />
-              <h4 className="font-medium text-base w-11/12 ml-4 mb-2 mt-3">
-                Nhập về kho
-              </h4>
-              {/* Select type  */}
-              <select className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
-                <option disabled selected>
-                  Chọn kho nhập
-                </option>
-                <option>Tp.HCM</option>
-                <option>Hà Nội</option>
-                <option>Đà nẵng</option>
-              </select>
-              <h4 className="font-medium text-base w-6/12 ml-4 mb-2 mt-3">
-                Ghi chú
-              </h4>
-              <textarea
-                placeholder=""
-                className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
-              ></textarea>
             </div>
           </div>
           {/* Hình ảnh sản phẩm */}
@@ -96,46 +90,45 @@ export default function WarehouseReceipt() {
                   id="FileMain"
                 />
 
-                {isClicked ? 
+                {isClicked ? (
                   // tableWareHouseReceipt
-                  <div className="overflow-x-auto w-full h-96">
-                  <table className="table">
-                    {/* head */}
-                    <thead>
-                      <tr>
-                        <th>Mã sản phẩm</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Số lượng</th>
-                        <th>Giá nhập</th>
-                        <th>Ngày hết hạn</th>
-                        <th>Thao tác</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <TableDetailWarehouse/>
-                      {/* row 2 */}
-                      <TableDetailWarehouse/>
-                      {/* row 3 */}
-                      <TableDetailWarehouse/>
-                      {/* row 4 */}
-                      <TableDetailWarehouse/>
-                      <TableDetailWarehouse/>
-                      {/* row 2 */}
-                      <TableDetailWarehouse/>
-                      {/* row 3 */}
-                      <TableDetailWarehouse/>
-                      {/* row 4 */}
-                      <TableDetailWarehouse/>
-                    </tbody>
-                    {/* foot */}
-                    <tfoot>
-                      <tr>
-                        
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-                 : 
+                  <div className="overflow-y-auto w-full h-96">
+                    <table className="table table-pin-rows">
+                      {/* head */}
+                      <thead>
+                        <tr>
+                          <th>Mã sản phẩm</th>
+                          <th>Tên sản phẩm</th>
+                          <th>Số lượng</th>
+                          <th>Đơn vị tính</th>
+                          <th>Giá nhập</th>
+                          <th>Ngày hết hạn</th>
+                          <th>Thao tác</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <TableDetailWarehouse />
+                        {/* row 2 */}
+                        <TableDetailWarehouse />
+                        {/* row 3 */}
+                        <TableDetailWarehouse />
+                        {/* row 4 */}
+                        <TableDetailWarehouse />
+                        <TableDetailWarehouse />
+                        {/* row 2 */}
+                        <TableDetailWarehouse />
+                        {/* row 3 */}
+                        <TableDetailWarehouse />
+                        {/* row 4 */}
+                        <TableDetailWarehouse />
+                      </tbody>
+                      {/* foot */}
+                      <tfoot>
+                        <tr></tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                ) : (
                   <label
                     htmlFor="FileMain"
                     className=" border-2 border-dashed w-full h-1/6 ml-4 mr-4 "
@@ -158,7 +151,7 @@ export default function WarehouseReceipt() {
                       />
                     </svg>
                   </label>
-                }
+                )}
                 {/* </div> */}
               </div>
             </div>
@@ -174,7 +167,6 @@ export default function WarehouseReceipt() {
             <button
               class="btn w-28 ml-4"
               style={{ backgroundColor: "#e0e0e0" }}
-
             >
               Hủy
             </button>
@@ -192,50 +184,29 @@ export default function WarehouseReceipt() {
           <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
           <div className="flex items-center mb-4">
             {/* Brand */}
-            <select className="select select-bordered w-52 ">
-              <option disabled selected>
-                Thương hiệu
-              </option>
-              <option>KFC</option>
-              <option>Pepsi</option>
-            </select>
+            <div className="w-52">
+              <Autocomplete suggestions={suggestions} placeholder="Nhà cung cấp.." />
+            </div>
             {/* Product */}
-            <select className="select select-bordered w-52 ml-3 mr-3">
-              <option disabled selected>
-                Loại sản phẩm
-              </option>
-              <option>Đồ ăn</option>
-              <option>Thức uống</option>
-            </select>
+            <div className="w-52 ml-3 mr-3">
+              <Autocomplete suggestions={suggestions} placeholder="Loại sản phẩm.." />
+            </div>
             {/* Search Input  */}
-            <label className="input input-bordered w-52 h-12 flex  items-center gap-2">
-              <input type="text" className="grow" placeholder="Tên sản phẩm" />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </label>
+            <div className="w-52  mr-3">
+              <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm" />
+            </div>
           </div>
           {/* table product  */}
           <div className=" overflow-y-scroll h-4/6">
-            <table className="table">
+            <table className="table table-pin-rows">
               {/* head */}
               <thead>
                 <tr>
                   {/* <div className='w-7'> */}
                   <th></th>
                   {/* </div> */}
-                  <th>Modal</th>
+                  <th>Mã sản phẩm</th>
                   <th>Sản phẩm</th>
-                  <th>Thương hiệu</th>
                 </tr>
               </thead>
               <tbody>
@@ -259,14 +230,14 @@ export default function WarehouseReceipt() {
 
           <div className="modal-action ">
             <div className="flex w-full">
-              
               <form method="dialog">
-              <button
-                class="btn w-28 text-white"
-                style={{ backgroundColor: "#f13612" }}
-                onClick={() => setIsClicked(true)}              >
-                Thêm
-              </button>
+                <button
+                  class="btn w-28 text-white"
+                  style={{ backgroundColor: "#f13612" }}
+                  onClick={() => setIsClicked(true)}
+                >
+                  Thêm
+                </button>
                 {/* if there is a button in form, it will close the modal */}
                 <button
                   class="btn w-28 ml-4"
