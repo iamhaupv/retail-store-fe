@@ -42,7 +42,7 @@ export default function ListProductTable() {
             </div>
 
           {/* status Option */}
-          <select className="select select-bordered h-11 w-52 ml-4">
+          <select className="select select-bordered h-4 w-52 ml-4">
             <option disabled selected>
               Trạng thái
             </option>
@@ -74,9 +74,9 @@ export default function ListProductTable() {
             <input type="checkbox" className="checkbox" />
           </label>
         </th> */}
-        <th>Modal</th>
+        <th>Mã sản phẩm</th>
         <th>Sản phẩm</th>
-        <th>Thương hiệu</th>
+        <th>Nhà cung cấp</th>
         <th>Tình trạng</th>
         <th>Số lượng</th>
         <th>Thao tác</th>
