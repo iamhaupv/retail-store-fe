@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 export default function Supply() {
   const [image, setImage] = useState({});
   const [isVisible, setIsVisible] = useState(true);
-
+  const [error, setError] = useState(false)
   const handleClose = () => {
     setIsVisible(false);
     setImage(null); // Reset image to null to show the label again
@@ -17,6 +17,64 @@ export default function Supply() {
     phone: "",
     description: "",
   });
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    if (!payload[name]) {
+      setError((prev) => ({ ...prev, [name]: `Không được để trống!` })); 
+    }
+  };
+  const handleChangeInput = (e) => {
+    const { name, value } = e.target;
+    const nameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/; 
+    const supplyNameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/; 
+    const descriptionRegex = /^.{10,}$/  // min 10 character
+    const phoneRegex =
+      /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
+    const addressRegex = /^\d+\s[A-Za-zÀ-ỹ0-9\s.,'-]+$/;
+    let errorMessage;
+    // title
+    if(name === 'name') {
+      if(!value){
+        errorMessage = 'Không được để trống!'
+      }else if(!nameRegex.test(value)){
+        errorMessage = 'Tên không hợp lệ. Vui lòng nhập tên hợp lệ!'
+      }
+    }
+    // price
+    if(name === 'supplyName') {
+      if(!value){
+        errorMessage = 'Không được để trống!'
+      }else if(!supplyNameRegex.test(value)){
+        errorMessage = 'Giá không hợp lệ. Vui lòng nhập số hợp lệ!'
+      }
+    }
+    // description
+    if(name === 'description') {
+      if(!value){
+        errorMessage = 'Không được để trống!'
+      }else if(!descriptionRegex.test(value)){
+        errorMessage = 'Mô tả phải nhập ít nhất 10 kí tự!'
+      }
+    }
+    // 
+    if(name === 'phone') {
+      if(!value){
+        errorMessage = 'Không được để trống!'
+      }else if(!phoneRegex.test(value)){
+        errorMessage = 'Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại hợp lệ!'
+      }
+    }
+    // 
+    if (name === "address") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!addressRegex.test(value)) {
+        errorMessage = "Địa không hợp lệ. Vui lòng nhập địa chỉ hợp lệ!";
+      }
+    }
+    setError((prev) => ({ ...prev, [name]: errorMessage }));
+    setPayload((prev) => ({ ...prev, [name]: value }));
+  };
   const handleChange = (event, id) => {
     const file = event.target.files[0];
     if (file) {
@@ -29,10 +87,6 @@ export default function Supply() {
       };
       reader.readAsDataURL(file);
     }
-  };
-  const handleChangeInput = (e) => {
-    const { name, value } = e.target;
-    setPayload((prev) => ({ ...prev, [name]: value }));
   };
   const handleSubmit = async () => {
     const { name, supplyName, address, phone, description } = payload;
@@ -111,11 +165,13 @@ export default function Supply() {
                 <input
                   name="name"
                   value={payload.name}
+                  onBlur={handleBlur}
                   onChange={handleChangeInput}
                   type="text"
                   placeholder="Tên nhà cung cấp"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
+                {error && <div className="text-red-500">{error.name}</div>}
                 <input
                   type="text"
                   placeholder="Mã thương hiệu"
@@ -139,17 +195,21 @@ export default function Supply() {
                   value={payload.supplyName}
                   onChange={handleChangeInput}
                   type="text"
+                  onBlur={handleBlur}
                   placeholder="Tên người cung cấp"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
+                {error && <div className="text-red-500" >{error.supplyName}</div>} 
                 <input
                   name="phone"
                   value={payload.phone}
                   onChange={handleChangeInput}
                   type="text"
+                  onBlur={handleBlur}
                   placeholder="Số điện thoại"
                   className="input input-bordered w-5/12 h-10 ml-4"
                 />
+                {error && <div className="text-red-500" >{error.phone}</div>}
               </div>
               <div className="flex items-center pt-2">
                 <h4 className="flex font-sans text-base w-6/12 ml-4 ">
@@ -165,7 +225,9 @@ export default function Supply() {
                   type="text"
                   placeholder="Địa chỉ"
                   className="input input-bordered w-6/12 h-10 ml-4"
+                  onBlur={handleBlur}
                 />
+                {error && <div className="text-red-500" >{error.address}</div>}
               </div>
 
               <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>
@@ -174,8 +236,10 @@ export default function Supply() {
                 value={payload.description}
                 onChange={handleChangeInput}
                 placeholder="Bio"
+                onBlur={handleBlur}
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
-              ></textarea>
+              />
+              {error && <div className="text-red-500" >{error.description}</div>}
             </div>
 
             {/* Button Thêm và Hủy */}
