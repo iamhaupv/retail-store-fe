@@ -1,5 +1,5 @@
 import axios from "axios";
-const apiGetListBrand = async() => {
+const apiGetListBrands = async() => {
     try {
         const url = process.env.REACT_APP_API_URL        
         const response = await axios.get(`${url}brand`)
@@ -8,4 +8,5 @@ const apiGetListBrand = async() => {
         throw new Error(error)
     }
 }
-export default apiGetListBrand
+
+export default apiGetListBrands

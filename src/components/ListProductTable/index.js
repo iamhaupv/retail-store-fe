@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import TableProductDetail from '../TableProductDetail'
 import apiGetListProduct from '../../apis/apiGetListProduct';
+
 import apiGetListBrand from '../../apis/apiGetListBrand';
+
+import Autocomplete from '../AutoComplete';
 
 export default function ListProductTable() {
   const [products, setProducts] = useState([]);
@@ -31,39 +34,39 @@ export default function ListProductTable() {
   //       height: 25,
   //   }
   //  })
+  const suggestions = [
+    "Thùng 24 ",
+    "Thùng 30",
+    "Lốc",
+    "Chai",
+  ];
   return (
     <>
       <div className=''>
         {/* filter */}
         <div className="flex ">
           {/* search Input */}
-          <label className="input input-bordered input-sm	 flex items-center gap-2 mr-5 ">
-            <input type="text" className="grow " placeholder="Search" />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 18 18"
-              fill="currentColor"
-              className="h-4 w-4 opacity-70"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </label>
+          <div className="ml-3 mt-2 w-52 h-3 ">
+                <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm"/>
+            </div>
           {/* Brand Option */}
-          <select className="select select-bordered select-sm w-52  mr-5">
+
+          {/* <select className="select select-bordered select-sm w-52  mr-5">
             <option disabled selected>
               Thương hiệu
             </option>
             {brands.map((brand) => (
               <option key={brand._id}>{brand.name}</option>
             ))}
-          </select>
+          </select> */}
+
+           <div className="ml-4 mt-2 w-52 h-11">
+                <Autocomplete suggestions={suggestions} placeholder="Nhà cung cấp"/>
+            </div>
+
 
           {/* status Option */}
-          <select className="select select-bordered select-sm w-52">
+          <select className="select select-bordered h-11 w-52 ml-4">
             <option disabled selected>
               Trạng thái
             </option>
@@ -86,7 +89,7 @@ export default function ListProductTable() {
         {/* table Product */}
 
         <div className="overflow-y-auto h-80 mt-7">
-  <table className="table  ">
+  <table className="table table-pin-rows ">
     {/* head */}
     <thead>
       <tr>
@@ -99,7 +102,7 @@ export default function ListProductTable() {
         <th>Sản phẩm</th>
         <th>Thương hiệu</th>
         <th>Tình trạng</th>
-        <th>Đã bán</th>
+        <th>Số lượng</th>
         <th>Thao tác</th>
       </tr>
     </thead>

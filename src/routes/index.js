@@ -2,11 +2,15 @@ import ContentRegisterLogin from "../components/ContentRegisterLogin";
 import FormRegister from "../components/FormRegister";
 import LayoutDefault from "../layout/LayoutDefault";
 import AuthOTP from "../pages/AuthOTP";
+import Category from "../pages/Category";
+import ChangePassWord from "../pages/ChangePassWord";
+import CreateOrder from "../pages/CreateOrder";
 import CreateProduct from "../pages/CreateProduct";
 import Discount from "../pages/Discount";
 import Employee from "../pages/Employee";
 import Error404 from "../pages/Error404";
 import Home from "../pages/Home";
+import Information from "../pages/Information";
 import Inventory from "../pages/Inventory";
 import ListEmployee from "../pages/ListEmployee";
 import ListProduct from "../pages/ListProduct";
@@ -47,6 +51,10 @@ export const routes = [
         element: <CreateProduct />,
       },
       {
+        path: "/category",
+        element: <Category />,
+      },
+      {
         path: "/employee",
         element: <Employee />,
       },
@@ -66,6 +74,11 @@ export const routes = [
         path: "/order",
         element: <Order />,
       },
+      
+      {
+        path: "/createOrder",
+        element: <CreateOrder />,
+      },
       {
         path: "/WarehouseReceipt",
         element: <WarehouseReceipt/>,
@@ -73,6 +86,14 @@ export const routes = [
       {
         path: "/discount",
         element: <Discount />,
+      },
+      {
+        path: "/changePassWord",
+        element: <ChangePassWord />,
+      },
+      {
+        path: "/information",
+        element: <Information />,
       },
       {
         path: "signup",

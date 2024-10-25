@@ -133,8 +133,8 @@ export default function Inventory() {
                 <div role="tabpanel" className="tab-content mb-20 p-10 " style={{
                   borderTop: "2px solid #ededed",
                 }}>
-                  {" "}
-                  <StockIn />{" "}
+                 
+                  <StockIn />
                 </div>
 
                 <input
@@ -149,8 +149,8 @@ export default function Inventory() {
                 <div role="tabpanel" className="tab-content mb-20 p-10" style={{
                   borderTop: "2px solid #ededed",
                 }}>
-                  {" "}
-                  <InventoryProduct />{" "}
+                  
+                  {/* <InventoryProduct /> */}
                 </div>
               </div>
             </div>

@@ -56,17 +56,17 @@ export default function Supply() {
         if (!token) {
           throw new Error("Token is valid!");
         }
-  
+
         const formData = new FormData();
-        formData.append('name', name);
-        formData.append('supplyName', supplyName);
-        formData.append('description', description);
-        formData.append('phone', phone);
-        formData.append('address', address);
+        formData.append("name", name);
+        formData.append("supplyName", supplyName);
+        formData.append("description", description);
+        formData.append("phone", phone);
+        formData.append("address", address);
         for (const key in image) {
           if (image[key]) {
-            const file = await fetch(image[key]).then(res => res.blob());
-            formData.append('images', file, `image-${key}.jpg`);
+            const file = await fetch(image[key]).then((res) => res.blob());
+            formData.append("images", file, `image-${key}.jpg`);
           }
         }
         const response = await apiCreateBrand(token, formData);
@@ -81,7 +81,8 @@ export default function Supply() {
       }
     }
   };
-
+  console.log(payload.name);
+  
   return (
     <>
       {/* <Content component={Receipt}/> */}
@@ -94,15 +95,16 @@ export default function Supply() {
             {/* Thông tin sản phẩm */}
 
             <div className="card bg-white rounded-sm top-7 grid  ">
-              <h4 className="font-bold text-xl w-full ml-4 mt-2">
+              <h4 className=" font-bold text-xl w-full ml-4 mt-2">
                 Thêm nhà cung cấp
               </h4>
               <div className="flex items-center pt-8">
-                <h4 className="font-sans text-base w-6/12 ml-4">
-                  Tên thương hiệu
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
+                  Tên nhà cung cấp
+                  <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
                 <h4 className="font-sans text-base w-5/12 ml-4">
-                  Mã thương hiệu
+                  Mã nhà cung cấp
                 </h4>
               </div>
               <div className="flex items-center pt-2">
@@ -111,7 +113,7 @@ export default function Supply() {
                   value={payload.name}
                   onChange={handleChangeInput}
                   type="text"
-                  placeholder="Tên thương hiệu"
+                  placeholder="Tên nhà cung cấp"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
                 <input
@@ -122,20 +124,22 @@ export default function Supply() {
                 />
               </div>
               <div className="flex items-center pt-2">
-                <h4 className="font-sans text-base w-6/12 ml-4">
-                  Tên nhà cung cấp
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
+                  Tên người cung cấp
+                  <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">
+                <h4 className="flex font-sans text-base w-5/12 ml-4">
                   Số điện thoại
+                  <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
               </div>
               <div className="flex items-center pt-2">
                 <input
-                  name = "supplyName"
+                  name="supplyName"
                   value={payload.supplyName}
                   onChange={handleChangeInput}
                   type="text"
-                  placeholder="Tên nhà cung cấp"
+                  placeholder="Tên người cung cấp"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
                 <input
@@ -148,8 +152,9 @@ export default function Supply() {
                 />
               </div>
               <div className="flex items-center pt-2">
-                <h4 className="font-sans text-base w-6/12 ml-4 mb-2">
+                <h4 className="flex font-sans text-base w-6/12 ml-4 ">
                   Địa chỉ
+                  <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
               </div>
               <div className="flex items-center pt-2">
@@ -176,7 +181,7 @@ export default function Supply() {
             {/* Button Thêm và Hủy */}
             <div className="flex mt-10 mb-5 ml-4">
               <button
-              onClick={handleSubmit}
+                onClick={handleSubmit}
                 class="btn w-28 text-white"
                 style={{ backgroundColor: "#f13612" }}
               >
@@ -197,8 +202,9 @@ export default function Supply() {
             <h4 className="font-bold text-xl w-full ml-4 mt-2">
               Thông tin đính kèm
             </h4>
-            <h4 className="font-sans text-base w-6/12 h-10 ml-4 pt-2">
-              Logo Thương hiệu
+            <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
+              Logo nhà cung cấp
+              <h5 className="ml-1 text-red-600">(*)</h5>
             </h4>
             {/* Logo img  */}
             <input

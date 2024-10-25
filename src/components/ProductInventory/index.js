@@ -14,13 +14,16 @@ export default function ProductInventory() {
    })
   return (
     <>
-    <tr className='z-40'>
-       <th>
+    <tr className='hover:bg-slate-100'>
+       <td>
          <div>
              <div className="font-bold">ASM001</div>
              <svg ref={inputRef} />
            </div>
-       </th>
+       </td>
+       <td>
+       <div className="font-bold">P0212421</div>
+       </td>
        <td>
          <div className="flex items-center gap-3">
            <div className="avatar">
@@ -98,7 +101,7 @@ export default function ProductInventory() {
          <button className="btn btn-ghost btn-xs">900</button>
        </th>
        <th>
-       <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#e2f2ea", outline:''}}
+       <button className=" w-6 h-6 rounded-lg mr-2" style={{backgroundColor: "#e2f2ea", outline:''}}
        onClick={()=>document.getElementById('modal_Quick_View').showModal()}>
           <svg 
              xmlns="http://www.w3.org/2000/svg" 
@@ -116,7 +119,7 @@ export default function ProductInventory() {
     </svg>
         </button>
 
-         <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#ebf3fe", outline:''}}>
+         <button className=" w-6 h-6 rounded-lg mr-2" style={{backgroundColor: "#ebf3fe", outline:''}}>
          <svg 
             xmlns="http://www.w3.org/2000/svg" 
             fill="none" 
@@ -133,7 +136,7 @@ export default function ProductInventory() {
 
        </button>
          
-               <button id="btn__delete" className="w-6 h-6 rounded-sm " style={{backgroundColor: "#feebe8", outline:''}}
+               <button id="btn__delete" className="w-6 h-6 rounded-lg " style={{backgroundColor: "#feebe8", outline:''}}
                   onClick={()=>document.getElementById('Delete').showModal()}>
                    <svg
                        xmlns="http://www.w3.org/2000/svg"

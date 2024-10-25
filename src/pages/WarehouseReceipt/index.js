@@ -210,20 +210,8 @@ export default function WarehouseReceipt() {
                 </tr>
               </thead>
               <tbody>
-                {/* row 1 */}
-                <ListProductWareHouse />
-                {/* row 2 */}
-                <ListProductWareHouse />
-                {/* row 3 */}
-                <ListProductWareHouse />
-                {/* row 4 */}
-                <ListProductWareHouse />
-                {/* row 5 */}
-                <ListProductWareHouse />
-                <ListProductWareHouse />
                 <ListProductWareHouse />
               </tbody>
-              {/* foot */}
               <tfoot></tfoot>
             </table>
           </div>

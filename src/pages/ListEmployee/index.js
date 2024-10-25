@@ -1,8 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import EmployeeTableDetail from "../../components/EmployeeTableDetail";
+import Autocomplete from "../../components/AutoComplete";
 
 export default function ListEmployee() {
+  const suggestions = [
+    "Nguyễn Thanh Khoa",
+    "Phạm Văn Hậu",
+    "Nguyễn Đức Long",
+    "Lê Trọng Nghĩa",
+  ];
   return (
     <>
       <div
@@ -13,26 +20,12 @@ export default function ListEmployee() {
           <div className="card bg-white rounded-none top-7 grid  ">
             {/* search Input */}
             <div className="ml-4 mt-4 w-4/12">
-              <label className="input input-bordered input-sm	 flex items-center gap-2 mr-5 ">
-                <input type="text" className="grow " placeholder="Search" />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 18 18"
-                  fill="currentColor"
-                  className="h-4 w-4 opacity-70"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </label>
+                <Autocomplete suggestions={suggestions} placeholder="Tên nhân viên.."/>
             </div>
             {/* Nofication and Button Add */}
 
             <div className="flex justify-between mt-6 items-center">
-              <h4 className="font-bold text-xl w-32 ml-4">30 sản phẩm</h4>
+              <h4 className="font-bold text-xl w-32 ml-4">30 Nhân viên</h4>
               <Link to="/employee">
                 <button className="btn btn-success text-white w-36 mr-4">
                   <svg
@@ -56,7 +49,7 @@ export default function ListEmployee() {
             {/* table Product */}
 
             <div className="overflow-y-auto h-96 mt-7">
-              <table className="table">
+              <table className="table table-pin-rows">
                 {/* head */}
                 <thead>
                   <tr>
@@ -71,18 +64,7 @@ export default function ListEmployee() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* row 1 */}
-                  <EmployeeTableDetail/>
-                  {/* row 2 */}
-                  <EmployeeTableDetail/>
-                  {/* row 3 */}
-                  <EmployeeTableDetail/>
-                  <EmployeeTableDetail/>
-                  <EmployeeTableDetail/>
-                  <EmployeeTableDetail/>
-                  <EmployeeTableDetail/>
-                  {/* row 4 */}
-                  
+                  <EmployeeTableDetail/>      
                 </tbody>
                 <tfoot>
                   <tr></tr>

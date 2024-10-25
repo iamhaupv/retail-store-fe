@@ -4,7 +4,7 @@ export default function OrderTableList() {
   return (
     <>
       {/* row 1 */}
-      <tr>
+      <tr className="hover:bg-slate-100">
         <td>
           {/* <div className="flex items-center gap-3">
             <div className="avatar">
@@ -20,7 +20,7 @@ export default function OrderTableList() {
               <div className="text-sm opacity-50">United States</div>
             </div>
           </div> */}
-          <div className="flex w-fit">
+          <div className="flex w-fit hover:bg-slate-100">
             <h1 className="w-fit mr-2 font-bold text-sm">BR023191</h1>
             <div className="w-20 flex items-center">
               <svg
@@ -46,17 +46,32 @@ export default function OrderTableList() {
         <td>
           2.000.000 VNĐ
           <br />
-          <span className="badge badge-ghost badge-sm">
-            Desktop Support Technician
+          <span className="badge badge-sm" style={{backgroundColor:"#e2f2ea"}}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-4"
+              style={{color:"#19b563"}}
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m4.5 12.75 6 6 9-13.5"
+              />
+            </svg>
+            <h1 className="ml-1" style={{color:"#19b563"}}>Thành công</h1>  
           </span>
         </td>
         <td>
-        <div className="lg:tooltip" data-tip="Nguyễn Thanh Khoa">
-          <div className="avatar">
-            <div className="size-6 rounded-full">
-              <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+          <div className="lg:tooltip" data-tip="Nguyễn Thanh Khoa">
+            <div className="avatar">
+              <div className="size-6 rounded-full">
+                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+              </div>
             </div>
-          </div>
           </div>
         </td>
       </tr>

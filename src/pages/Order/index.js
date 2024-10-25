@@ -4,12 +4,20 @@ import NavSideBar from "../../components/SideBar";
 import Content from "../../components/Content";
 import OrderTableList from "../../components/OrderTableList";
 import Datepicker from "react-tailwindcss-datepicker";
+import StatOrderDetail from "../../components/statOrderDetail";
+import OrderTableDetail from "../../components/OrderTableDetail";
+import { Link } from "react-router-dom";
 
 export default function Order() {
   const [value, setValue] = useState({
     startDate: null,
     endDate: null,
   });
+
+  const [isClicked, setIsClicked] = useState(true);
+  const toggleClicked = () => {
+    setIsClicked((prev) => !prev);
+  };
   return (
     <>
       {/* <Header title={"Danh sách đơn hàng"}/>
@@ -19,14 +27,15 @@ export default function Order() {
         </div> */}
 
       <div
-        className="w-11/12 h-auto justify-center flex overflow-y-auto"
+        className="w-11/12 h-auto justify-center flex "
         style={{ backgroundColor: "#F5F5F5" }}
       >
         <div className="w-full animate__animated animate__fadeInRight">
           <div className=" mt-3 mr-3 flex justify-between">
             <h4 className="font-bold text-xl w-full ml-4">Tạo hóa đơn</h4>
             <div className="flex w-fit">
-              <button className="btn btn-success text-white w-32">
+              <Link to="/createOrder">
+              <button className="drawer-button btn btn-success text-white w-32">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -43,6 +52,7 @@ export default function Order() {
                 </svg>
                 Thêm
               </button>
+              </Link>
               <button className="btn btn-success text-white ml-2 w-32">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +73,7 @@ export default function Order() {
             </div>
           </div>
           <div className=" mt-2 mr-3 flex justify-between">
-            <select className="select select-bordered ml-4 w-44  max-w-xs">
+            <select className="select select-bordered ml-4 w-44 h-10  max-w-xs">
               <option disabled selected>
                 Người tạo
               </option>
@@ -77,8 +87,8 @@ export default function Order() {
                   onChange={(newValue) => setValue(newValue)}
                 />
               </div>
-              <label className="input input-bordered flex items-center gap-2">
-                <input type="text" className="grow " placeholder="Search" />
+              <label className="input input-bordered h-10 flex items-center gap-2">
+                <input type="text" className="  grow " placeholder="Search" />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
@@ -119,7 +129,7 @@ export default function Order() {
                   className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
                 >
                   <li>
-                    <a>
+                    <a onClick={toggleClicked}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -134,11 +144,11 @@ export default function Order() {
                           d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"
                         />
                       </svg>
-                      Danh sách hóa đơn 
+                      Danh sách hóa đơn
                     </a>
                   </li>
                   <li>
-                    <a>
+                    <a onClick={toggleClicked}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -160,35 +170,187 @@ export default function Order() {
               </div>
             </div>
           </div>
-          {/* table  */}
-          <div className="card bg-white h-3/4 rounded-lg ml-4 mr-4 top-7 grid overflow-x-auto">
-            <table className="table ">
-              {/* head */}
-              <thead>
-                <tr>
-                  <th>Hóa đơn</th>
-                  <th>Tổng tiền</th>
-                  <th>Người lập</th>
-                </tr>
-              </thead>
-              <tbody>
-                <OrderTableList />
-                <OrderTableList />
-                <OrderTableList />
-                <OrderTableList />
-                <OrderTableList />
-                <OrderTableList />
-                <OrderTableList />
-                <OrderTableList />
-                <OrderTableList />
-                <OrderTableList />
-              </tbody>
-              {/* foot */}
-              <tfoot>
-                <tr></tr>
-              </tfoot>
-            </table>
-          </div>
+          {isClicked ? (
+            <div className="w-full h-dvh">
+              <div className="card bg-white h-4/6 rounded-lg ml-4 mr-4 mt-2 grid overflow-y-auto animate__animated animate__fadeInRight">
+                <table className="table table-pin-rows ">
+                  {/* head */}
+                  <thead>
+                    <tr>
+                      <th>Hóa đơn</th>
+                      <th>Tổng tiền</th>
+                      <th>Người lập</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                    <OrderTableList />
+                  </tbody>
+                  {/* foot */}
+                  <tfoot>
+                    <tr></tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          ) : (
+            <div className="flex w-full h-dvh animate__animated animate__fadeInRight">
+              <div className="card bg-white w-3/12 h-5/6 rounded-none ml-4 mr-2 mt-2 grid overflow-y-auto ">
+                {/* <div className="card bg-white w-3/12 h-2/6 overflow-y-auto grid"> */}
+                {/* <div className="stats stats-vertical shadow   "> */}
+                {/* <div className="overflow-y-auto w-3/12 h-4/6"> */}
+                <table className="table table-pin-rows">
+                  {/* head */}
+                  <thead>
+                    <tr></tr>
+                  </thead>
+                  <tbody>
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                    <StatOrderDetail />
+                  </tbody>
+                  {/* foot */}
+                  <tfoot>
+                    <tr></tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div className="card bg-white w-9/12 h-5/6 rounded-none  mr-4 mt-2 grid ">
+                <div>
+                  <div className="flex w-fit h-8 mt-2 ml-2">
+                    <div className="flex justify-center items-center">
+                      <h2 className="font-medium text-sm">Mã hóa đơn:</h2>
+                      <h2 className=" font-sans text-xs ml-1">H3231091</h2>
+                    </div>
+                    <div className="flex ml-3 justify-center items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="size-5"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+                        />
+                      </svg>
+                      <h2 className="font-medium text-sm">Ngày tạo:</h2>
+                      <h2 className=" font-sans text-xs ml-1">21/10/2024</h2>
+                    </div>
+                  </div>
+                  <div className="flex w-fit h-8 justify-center items-center ml-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-5"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                      />
+                    </svg>
+                    <h3 className="font-medium text-base w-fit ml-1">
+                      Cửa hàng 24 Hour
+                    </h3>
+                  </div>
+                  <div className="flex ml-2 items-center">
+                    <h2 className="font-medium text-sm">Thu ngân:</h2>
+                    <h2 className=" font-sans text-xs ml-1">
+                      Nguyễn Thanh Khoa
+                    </h2>
+                  </div>
+                  <div className="flex ml-2 items-center">
+                    <h2 className="font-medium text-sm">Mã nhân viên:</h2>
+                    <h2 className=" font-sans text-xs ml-1">H7003241</h2>
+                  </div>
+                  <div className=" h-72 overflow-y-auto">
+                    <table className="table table-pin-rows">
+                      {/* head */}
+                      <thead>
+                        <tr>
+                          <th>Mã sản phẩm</th>
+                          <th>Tên sản phẩm</th>
+                          <th>Số lượng</th>
+                          <th>Đơn giá</th>
+                          <th>Thành tiền</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                        <OrderTableDetail />
+                      </tbody>
+                      {/* foot */}
+                      <tfoot>
+                        <tr></tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                  <div className="flex w-full h-auto">
+                   <div className="w-9/12"></div> 
+                  <div className="w-3/12 h-auto justify-end items-end mt-4">
+                    <div className="flex justify-between items-center">
+                      <h2 className="font-bold text-lg">Thuế VAT:</h2>
+                      <h2 className=" font-sans text-sm mr-2">30.000 VNĐ</h2>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h2 className="font-bold text-lg">Tiền nhận:</h2>
+                      <h2 className=" font-sans text-sm mr-2">350.000 VNĐ</h2>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h2 className="font-bold text-lg">Tiền thừa:</h2>
+                      <h2 className=" font-sans text-sm mr-2 ">20.000 VNĐ</h2>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h2 className="font-bold text-lg">Tổng tiền:</h2>
+                      <h2 className=" font-sans text-lg mr-2" style={{color:"#f13612"}}>330.000 VNĐ</h2>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

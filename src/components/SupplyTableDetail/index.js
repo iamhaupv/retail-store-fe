@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { useState } from 'react'
 import apiGetListBrand from '../../apis/apiGetListBrand'
@@ -19,7 +20,7 @@ export default function SupplyTableDetail() {
   return (
     <>
     {brands.map((brand)=> (
-      <tr className='z-40'>
+      <tr className='z-20 hover:bg-slate-100'>
       <th>
         <div>
             <div className="font-bold">ASM001</div>
@@ -115,8 +116,6 @@ export default function SupplyTableDetail() {
                   </div>                 
                </div>
             </dialog>
-
-            
     </>
-  )
+  );
 }

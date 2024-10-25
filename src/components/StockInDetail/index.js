@@ -21,7 +21,7 @@ export default function StockInDetail() {
   return (
     <>
       {receipts.map((receipt) => (
-        <tr key={receipt._id}>
+        <tr key={receipt._id} className="hover:bg-slate-100">
           <th>KNK0314322021-001</th>
           <td>{receipt.user}</td>
           <td>{receipt.user}</td>

@@ -3,26 +3,71 @@ import apiGetListBrand from "../../apis/apiGetListBrand";
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
-import { useParams } from "react-router-dom";
 export default function Product() {
-  const params = useParams
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
+  const [error, setError] = useState({})
+  const [payload, setPayload] = useState({});
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    if (!payload[name]) {
+      setError((prev) => ({ ...prev, [name]: `Không được để trống!` })); 
+    }
+  };
+  const handleChangeInput = (e) => {
+    const { name, value } = e.target;
+    const titleRegex = /^[a-zA-Z\s]+$/; 
+    const priceRegex = /^\d+(\.\d{1,2})?$/ // cho nhập số nguyên và số thập phân
+    const descriptionRegex = /^.{10,}$/  // min 10 character
 
+    let errorMessage;
+    // title
+    if(name === 'title') {
+      if(!value){
+        errorMessage = 'Không được để trống!'
+      }else if(!titleRegex.test(value)){
+        errorMessage = 'Tên không hợp lệ. Vui lòng nhập tên hợp lệ!'
+      }
+    }
+    // price
+    if(name === 'price') {
+      if(!value){
+        errorMessage = 'Không được để trống!'
+      }else if(!priceRegex.test(value)){
+        errorMessage = 'Giá không hợp lệ. Vui lòng nhập số hợp lệ!'
+      }
+    }
+    // description
+    if(name === 'description') {
+      if(!value){
+        errorMessage = 'Không được để trống!'
+      }else if(!descriptionRegex.test(value)){
+        errorMessage = 'Mô tả phải nhập ít nhất 10 kí tự!'
+      }
+    }
+    // brand
+    if (name === 'brand') {
+      if (!value || value === ' ') { 
+        errorMessage = 'Vui lòng chọn thương hiệu!';
+      }
+    }
+    // category
+    if (name === 'category') {
+      if (!value || value === ' ') { 
+        errorMessage = 'Vui lòng chọn loại!';
+      }
+    }
+    setError((prev) => ({ ...prev, [name]: errorMessage }));
+    setPayload((prev) => ({ ...prev, [name]: value }));
+  };
   const handleClose = (inputKey) => {
     setIsVisible(false);
     setImage((prevImages) => ({
       ...prevImages,
       [inputKey]: null,
     }));
-  };
-
-  const [payload, setPayload] = useState({});
-  const handleChangeInput = (e) => {
-    const { name, value } = e.target;
-    setPayload((prev) => ({ ...prev, [name]: value }));
   };
   const handleChange = (event, id) => {  
     const file = event.target.files[0];
@@ -60,8 +105,8 @@ export default function Product() {
   
   const handleSubmit = async () => {
     try {
-      const { title, price, description, expires, brand, category } = payload;
-      if (!title || !price || !description ||  !expires || !brand || !image) {
+      const { title, price, description, brand, category } = payload;
+      if (!title || !price || !description || !brand || !image) {
         Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
         return;
       }
@@ -131,8 +176,10 @@ export default function Product() {
                   onChange={handleChangeInput}
                   type="text"
                   placeholder="Tên sản phẩm"
+                  onBlur={handleBlur}
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
+                {error && <div className="text-red-500">{error.title}</div>}
                 <input
                   type="text"
                   placeholder="Mã sản phẩm"
@@ -142,25 +189,18 @@ export default function Product() {
               </div>
               <div className="flex items-center pt-8">
                 <h4 className="font-sans text-base w-6/12 ml-4">Đơn giá</h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">Hạn sử dụng</h4>
               </div>
               <div className="flex items-center pt-2">
                 <input
                   name="price"
                   value={payload.price}
+                  onBlur={handleBlur}
                   onChange={handleChangeInput}
                   type="text"
                   placeholder="Đơn giá"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
-                <input
-                  name="expires"
-                  value={payload.expires}
-                  onChange={handleChangeInput}
-                  type="text"
-                  placeholder="Hạn sử dụng"
-                  className="input input-bordered w-5/12 h-10 ml-4"
-                />
+                {error && <div className="text-red-500">{error.price}</div>}
               </div>
               <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>
               <textarea
@@ -168,8 +208,10 @@ export default function Product() {
                 value={payload.description}
                 onChange={handleChangeInput}
                 placeholder="Bio"
+                onBlur={handleBlur}
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
-              ></textarea>
+              />
+              {error && <div className="text-red-500">{error.description}</div>}
             </div>
           </div>
           {/* Hình ảnh sản phẩm */}
@@ -745,7 +787,6 @@ export default function Product() {
             </div>
           </div>
         </div>
-
         <div className="w-3/12 rounded-md ml-7 animate__animated animate__fadeInRight">
           <div className="card bg-white rounded-sm top-7 grid  ">
             <h4 className="font-bold text-xl w-full ml-4 mt-2">
@@ -755,27 +796,28 @@ export default function Product() {
               Thương hiệu
             </h4>
             {/* Select type  */}
-            <select name="brand" onChange={handleChangeInput} value={payload.brand} className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
-            <option disabled selected>
+            <select name="brand" onChange={handleChangeInput} onBlur={handleBlur} value={payload.brand || ""}  className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
+            <option value="" disabled selected>
                 Chọn thương hiệu
               </option>
             {brands.map((product) => (
               <option key={product._id} value={product._id}>{product.name}</option>
             ))}
             </select>
-
+            {error && <div className="text-red-500">{error.brand}</div>} 
             <h4 className="font-sans text-base w-6/12 h-10 ml-4 pt-2">
               Loại sản phẩm
             </h4>
             {/* Select type  */}
-            <select name="category" onChange={handleChangeInput} value={payload.category} className="select select-bordered w-11/12 h-11 ml-4 mb-8">
-              <option disabled selected>
+            <select name="category" onBlur={handleBlur} onChange={handleChangeInput} value={payload.category || ""} className="select select-bordered w-11/12 h-11 ml-4 mb-8">
+              <option value="" disabled selected>
                 Loại sản phẩm
               </option>
               {categories.map((category) => (
                 <option key={category._id} value={category._id}>{category.name}</option>
               ))}
             </select>
+            {error && <div className="text-red-500">{error.category}</div>} 
           </div>
         </div>
       </div>

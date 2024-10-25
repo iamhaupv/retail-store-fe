@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiGetListProduct from "../../apis/apiGetListProduct";
+import Autocomplete from "../AutoComplete";
 
 export default function TableDetailWarehouse() {
   const [products, setProducts] = useState([]);
@@ -16,10 +17,16 @@ export default function TableDetailWarehouse() {
   }, []);
   //datePicker
   const [startDate, setStartDate] = useState(new Date());
+  const suggestions = [
+    "Thùng 24 ",
+    "Thùng 30",
+    "Lốc",
+    "Chai",
+  ];
   return (
     <>
       {products.map((product) => (
-        <tr key={product._id}>
+        <tr key={product._id} className="hover:bg-slate-100">
           <td>
             <div>
               <div className="font-bold">ASM001</div>
@@ -39,7 +46,7 @@ export default function TableDetailWarehouse() {
               <div>
                 <div className="font-bold">{product.title}</div>
                 <span className="badge badge-ghost badge-sm">
-                  Desktop Support Technician
+                  Nước tăng lực
                 </span>
               </div>
             </div>
@@ -50,6 +57,11 @@ export default function TableDetailWarehouse() {
               placeholder="10"
               className="input input-bordered w-36 h-10"
             />
+          </td>
+          <td>
+          <div className="w-52  mr-3">
+              <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm" />
+            </div>
           </td>
           <td>
             <input
