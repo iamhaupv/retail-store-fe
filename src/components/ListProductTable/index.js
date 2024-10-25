@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import TableProductDetail from '../TableProductDetail'
-import apiGetListProduct from '../../apis/apiGetListProduct';
+import React, { useEffect, useState } from "react";
+import TableProductDetail from "../TableProductDetail";
+import apiGetListProduct from "../../apis/apiGetListProduct";
 
-import apiGetListBrand from '../../apis/apiGetListBrand';
+import apiGetListBrand from "../../apis/apiGetListBrand";
 
-import Autocomplete from '../AutoComplete';
+import Autocomplete from "../AutoComplete";
+import { Link } from "react-router-dom";
 
 export default function ListProductTable() {
   const [products, setProducts] = useState([]);
-  const [brands, setBrands] = useState([])
+  const [brands, setBrands] = useState([]);
   const fetch = async () => {
     const response = await apiGetListProduct();
     setProducts(response.products);
@@ -16,13 +17,13 @@ export default function ListProductTable() {
   const fetchBrans = async () => {
     try {
       const response = await apiGetListBrand();
-      setBrands(response.brands)
+      setBrands(response.brands);
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error);
     }
-  }
+  };
   useEffect(() => {
-    fetchBrans()
+    fetchBrans();
     fetch();
   }, []);
   // const {inputRef} = useBarcode({
@@ -34,21 +35,16 @@ export default function ListProductTable() {
   //       height: 25,
   //   }
   //  })
-  const suggestions = [
-    "Thùng 24 ",
-    "Thùng 30",
-    "Lốc",
-    "Chai",
-  ];
+  const suggestions = ["Thùng 24 ", "Thùng 30", "Lốc", "Chai"];
   return (
     <>
-      <div className=''>
+      <div className="">
         {/* filter */}
         <div className="flex ">
           {/* search Input */}
           <div className="ml-3 mt-2 w-52 h-3 ">
-                <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm"/>
-            </div>
+            <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm" />
+          </div>
           {/* Brand Option */}
 
           {/* <select className="select select-bordered select-sm w-52  mr-5">
@@ -60,10 +56,12 @@ export default function ListProductTable() {
             ))}
           </select> */}
 
-           <div className="ml-4 mt-2 w-52 h-11">
-                <Autocomplete suggestions={suggestions} placeholder="Nhà cung cấp"/>
-            </div>
-
+          <div className="ml-4 mt-2 w-52 h-11">
+            <Autocomplete
+              suggestions={suggestions}
+              placeholder="Nhà cung cấp"
+            />
+          </div>
 
           {/* status Option */}
           <select className="select select-bordered h-4 w-52 ml-4">
@@ -76,47 +74,57 @@ export default function ListProductTable() {
         </div>
         {/* Nofication and Button Add */}
 
-        <div className='flex justify-between mt-6'>
-             <h4 className='font-bold text-xl w-32 ml-4'>30 sản phẩm</h4>
-           
-             <button className="btn btn-success text-white w-36">
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-               </svg>
-               Thêm mới
-             </button>
+        <div className="flex justify-between mt-6">
+          <h4 className="font-bold text-xl w-32 ml-4">30 sản phẩm</h4>
+          <Link to="/product">
+            <button className="btn btn-success text-white w-36">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              Thêm mới
+            </button>
+          </Link>
         </div>
         {/* table Product */}
 
         <div className="overflow-y-auto h-80 mt-7">
-  <table className="table table-pin-rows ">
-    {/* head */}
-    <thead>
-      <tr>
-        {/* <th>
+          <table className="table table-pin-rows ">
+            {/* head */}
+            <thead>
+              <tr>
+                {/* <th>
           <label>
             <input type="checkbox" className="checkbox" />
           </label>
         </th> */}
-        <th>Mã sản phẩm</th>
-        <th>Sản phẩm</th>
-        <th>Nhà cung cấp</th>
-        <th>Tình trạng</th>
-        <th>Số lượng</th>
-        <th>Thao tác</th>
-      </tr>
-    </thead>
-    <tbody>
-      <TableProductDetail/>
-    </tbody>
-    <tfoot>
-      <tr></tr>
-    </tfoot>
-  </table>
-</div>
-    </div>
-
-    
+                <th>Mã sản phẩm</th>
+                <th>Sản phẩm</th>
+                <th>Nhà cung cấp</th>
+                <th>Tình trạng</th>
+                <th>Số lượng</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <TableProductDetail />
+            </tbody>
+            <tfoot>
+              <tr></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </>
   );
 }

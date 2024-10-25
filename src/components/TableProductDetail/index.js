@@ -63,46 +63,17 @@ export default function TableProductDetail() {
               </div>
               <div>
                 <div className="font-bold">{product.title}</div>
-                {/* Rating */}
-                <div className="rating rating-sm" s>
-                  <input
-                    type="radio"
-                    name="rating-4"
-                    className="mask mask-star-2 bg-green-500"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-4"
-                    className="mask mask-star-2 bg-green-500"
-                    defaultChecked
-                  />
-                  <input
-                    type="radio"
-                    name="rating-4"
-                    className="mask mask-star-2 bg-green-500"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-4"
-                    className="mask mask-star-2 bg-green-500"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-4"
-                    className="mask mask-star-2 bg-green-500"
-                  />
-                </div>
+                <span className="badge badge-ghost badge-sm">Nước giải khát</span>
               </div>
             </div>
           </td>
           <td>
             {product.brand.name}
             <br />
-            <span className="badge badge-ghost badge-sm">Nước giải khát</span>
           </td>
           <td>{product.status === "in_stock" ? "Đang bán" : "Hết hàng"}</td>
           <td>
-            <button className="btn btn-ghost btn-xs">{product.sold}</button>
+            <h1 className="">{product.quantity}</h1>
           </td>
 
           <td>
@@ -257,31 +228,61 @@ export default function TableProductDetail() {
 
       {/* Product Detail */}
       <dialog id="modal_Quick_View" className="modal">
-      <div className="modal-box w-10/12 max-w-4xl h-auto">
-        <div className="card lg:card-side bg-base-100 ">
-          {/* Card */}
-          {/* <figure> */}
-            {selectedProduct && <div><CarouselProduct product={selectedProduct} />
-            
-            </div> }
-          {/* </figure> */}
-          
-            <div className="card-body">
-            <h1 className="card-title text-3xl font-medium">
-              Ibanez RG470DX-SFM Electric Guitar,Sea Foam Green Matte
-            </h1>
-            <h1>
-              Body Body Type: Solidbody Body Material: Meranti Body Shape: RG
-              Color:Sea Foam Green Matte NECK...{" "}
-            </h1>
-            <h1 className="text-xl font-medium">14.600.000đ</h1>
-            <u href="" className="">
-              View details
-            </u>
+        <div className="modal-box w-10/12 max-w-4xl h-3/5 overflow-y-hidden  ">
+          <div className="card lg:card-side bg-base-100 h-full items-center">
+            {/* <figure> */}
+            {selectedProduct && (
+              <div className="w-3/6 h-full">
+                {/* <CarouselProduct product={selectedProduct} /> */}
+                <div className="carousel w-full h-full">
+                  {selectedProduct.images.map((image, index) => (
+                    <div
+                      key={index}
+                      id={`slideProduct${index + 1}`}
+                      className="carousel-item relative w-full"
+                    >
+                      <img
+                        src={image}
+                        className="w-full"
+                        alt={`Product image ${index + 1}`}
+                      />
+                      <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                        <a
+                          href={`#slideProduct${
+                            index === 0 ? selectedProduct.images.length : index
+                          }`}
+                          className="btn btn-circle"
+                        >
+                          ❮
+                        </a>
+                        <a
+                          href={`#slideProduct${
+                            index + 2 > selectedProduct.images.length ? 1 : index + 2
+                          }`}
+                          className="btn btn-circle"
+                        >
+                          ❯
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* </figure> */}
 
-            <div className="card-actions justify-start">
-              <div>
-                {/* <h3 className="font-medium">Quantity</h3> */}
+            <div className="card-body w-3/6 h-full">
+              <h1 className="card-title text-3xl font-medium">
+                Ibanez RG470DX-SFM Electric Guitar,Sea Foam Green Matte
+              </h1>
+              <h1>
+                Body Body Type: Solidbody Body Material: Meranti Body Shape: RG
+                Color:Sea Foam Green Matte NECK...{" "}
+              </h1>
+              <h1 className="text-xl font-medium">14.600.000đ</h1>
+
+              <div className="card-actions justify-start">
+                {/* <div>
                 <div className="flex justify-center">
                   <div className="join mr-6">
                     <button className="join-item btn">+</button>
@@ -292,18 +293,17 @@ export default function TableProductDetail() {
                     Add to cart
                   </button>
                 </div>
+              </div> */}
               </div>
             </div>
           </div>
-          ))}
         </div>
-      </div>
-      <form method="dialog" className="modal-backdrop">
-        <button>close</button>
-        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 ">
-          ✕
-        </button>
-      </form>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 ">
+            ✕
+          </button>
+        </form>
       </dialog>
     </>
   );

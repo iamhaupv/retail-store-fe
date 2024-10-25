@@ -7,6 +7,7 @@ export default function CreateOrderTableDetail() {
     "Snack Khoai tây lays",
     "Nước khoáng aquafina",
   ];
+  
   const DonViTinh = [
     "Thùng 30",
     "Thùng 24",
