@@ -3,7 +3,7 @@ import React from "react";
 export function CarouselProduct({ product }) {
   return (
     <>
-      <div className="carousel w-full">
+      <div className="carousel w-full hfull">
         {product.images.map((image, index) => (
           <div
             key={index}

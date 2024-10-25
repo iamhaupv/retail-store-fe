@@ -3,60 +3,67 @@ import apiGetListBrand from "../../apis/apiGetListBrand";
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
+import Autocomplete from "../../components/AutoComplete";
 export default function Product() {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
-  const [error, setError] = useState({})
+  const [error, setError] = useState({});
   const [payload, setPayload] = useState({});
+  const suggestions = [
+    "Nước suối ",
+    "Nước khoáng",
+    "Nước có gas",
+    "Nước tăng lực",
+  ];
   const handleBlur = (e) => {
     const { name } = e.target;
     if (!payload[name]) {
-      setError((prev) => ({ ...prev, [name]: `Không được để trống!` })); 
+      setError((prev) => ({ ...prev, [name]: `Không được để trống!` }));
     }
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const titleRegex = /^[a-zA-Z\s]+$/; 
-    const priceRegex = /^\d+(\.\d{1,2})?$/ // cho nhập số nguyên và số thập phân
-    const descriptionRegex = /^.{10,}$/  // min 10 character
+    const titleRegex = /^[a-zA-Z\s]+$/;
+    const priceRegex = /^\d+(\.\d{1,2})?$/; // cho nhập số nguyên và số thập phân
+    const descriptionRegex = /^.{10,}$/; // min 10 character
 
     let errorMessage;
     // title
-    if(name === 'title') {
-      if(!value){
-        errorMessage = 'Không được để trống!'
-      }else if(!titleRegex.test(value)){
-        errorMessage = 'Tên không hợp lệ. Vui lòng nhập tên hợp lệ!'
+    if (name === "title") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!titleRegex.test(value)) {
+        errorMessage = "Tên không hợp lệ. Vui lòng nhập tên hợp lệ!";
       }
     }
     // price
-    if(name === 'price') {
-      if(!value){
-        errorMessage = 'Không được để trống!'
-      }else if(!priceRegex.test(value)){
-        errorMessage = 'Giá không hợp lệ. Vui lòng nhập số hợp lệ!'
+    if (name === "price") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!priceRegex.test(value)) {
+        errorMessage = "Giá không hợp lệ. Vui lòng nhập số hợp lệ!";
       }
     }
     // description
-    if(name === 'description') {
-      if(!value){
-        errorMessage = 'Không được để trống!'
-      }else if(!descriptionRegex.test(value)){
-        errorMessage = 'Mô tả phải nhập ít nhất 10 kí tự!'
+    if (name === "description") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!descriptionRegex.test(value)) {
+        errorMessage = "Mô tả phải nhập ít nhất 10 kí tự!";
       }
     }
     // brand
-    if (name === 'brand') {
-      if (!value || value === ' ') { 
-        errorMessage = 'Vui lòng chọn thương hiệu!';
+    if (name === "brand") {
+      if (!value || value === " ") {
+        errorMessage = "Vui lòng chọn nhà cung cấp!";
       }
     }
     // category
-    if (name === 'category') {
-      if (!value || value === ' ') { 
-        errorMessage = 'Vui lòng chọn loại!';
+    if (name === "category") {
+      if (!value || value === " ") {
+        errorMessage = "Vui lòng chọn loại!";
       }
     }
     setError((prev) => ({ ...prev, [name]: errorMessage }));
@@ -69,7 +76,7 @@ export default function Product() {
       [inputKey]: null,
     }));
   };
-  const handleChange = (event, id) => {  
+  const handleChange = (event, id) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -102,15 +109,19 @@ export default function Product() {
     fetchBrands();
     fetchCategories();
   }, []);
-  
+
   const handleSubmit = async () => {
     try {
       const { title, price, description, brand, category } = payload;
       if (!title || !price || !description || !brand || !image) {
-        Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
+        Swal.fire(
+          "Thiếu thông tin!",
+          "Vui lòng điền đầy đủ thông tin!",
+          "error"
+        );
         return;
       }
-      
+
       const result = await Swal.fire({
         title: "Xác nhận",
         text: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
@@ -119,23 +130,23 @@ export default function Product() {
         confirmButtonText: "Có",
         cancelButtonText: "Không",
       });
-      
+
       if (result.isConfirmed) {
         const token = localStorage.getItem("accessToken");
         if (!token) {
           throw new Error("Token is valid!");
         }
-  
+
         const formData = new FormData();
-        formData.append('title', title);
-        formData.append('price', price);
-        formData.append('description', description);
-        formData.append('brand', brand);
-        formData.append('category', category);
+        formData.append("title", title);
+        formData.append("price", price);
+        formData.append("description", description);
+        formData.append("brand", brand);
+        formData.append("category", category);
         for (const key in image) {
           if (image[key]) {
-            const file = await fetch(image[key]).then(res => res.blob());
-            formData.append('images', file, `image-${key}.jpg`);
+            const file = await fetch(image[key]).then((res) => res.blob());
+            formData.append("images", file, `image-${key}.jpg`);
           }
         }
         const response = await apiCreateProduct(token, formData);
@@ -164,8 +175,13 @@ export default function Product() {
                 Thêm mới sản phẩm
               </h4>
               <div className="flex items-center pt-8">
-                <h4 className="font-sans text-base w-6/12 ml-4">
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Tên sản phẩm
+                  {error ? (
+                    <h5 className="ml-1 text-red-500">{error.title}</h5>
+                  ) : (
+                    <h5 className="ml-1 text-red-600">(*)</h5>
+                  )}
                 </h4>
                 <h4 className="font-sans text-base w-5/12 ml-4">Mã sản phẩm</h4>
               </div>
@@ -179,7 +195,6 @@ export default function Product() {
                   onBlur={handleBlur}
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
-                {error && <div className="text-red-500">{error.title}</div>}
                 <input
                   type="text"
                   placeholder="Mã sản phẩm"
@@ -187,8 +202,15 @@ export default function Product() {
                   disabled
                 />
               </div>
-              <div className="flex items-center pt-8">
-                <h4 className="font-sans text-base w-6/12 ml-4">Đơn giá</h4>
+              <div className="flex items-center pt-3">
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
+                  Đơn giá
+                  {error ? (
+                    <h5 className="ml-1 text-red-500">{error.price}</h5>
+                  ) : (
+                    <h5 className="ml-1 text-red-600">(*)</h5>
+                  )}
+                </h4>
               </div>
               <div className="flex items-center pt-2">
                 <input
@@ -200,9 +222,15 @@ export default function Product() {
                   placeholder="Đơn giá"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
-                {error && <div className="text-red-500">{error.price}</div>}
               </div>
-              <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>
+              <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
+                Mô tả
+                {error ? (
+                  <h5 className="ml-1 text-red-500">{error.description}</h5>
+                ) : (
+                  <h5 className="ml-1 text-red-600">(*)</h5>
+                )}
+              </h4>
               <textarea
                 name="description"
                 value={payload.description}
@@ -211,13 +239,15 @@ export default function Product() {
                 onBlur={handleBlur}
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
               />
-              {error && <div className="text-red-500">{error.description}</div>}
             </div>
           </div>
           {/* Hình ảnh sản phẩm */}
           <div className="w-full h-auto mr-4 rounded-sm pt-4 pb-8">
             <div className="card bg-white rounded-sm top-7 grid pt-6 ">
-              <h4 className="font-bold text-xl w-full ml-4">Hình ảnh</h4>
+              <h4 className="flex font-bold text-xl w-full ml-4">
+                Hình ảnh
+                <h5 className="ml-1 text-red-600">(*)</h5>
+              </h4>
               <div className="flex pt-8 w-full pb-8">
                 {/* Ảnh SP đại diện */}
                 {/* Hình 1 */}
@@ -352,7 +382,6 @@ export default function Product() {
                     onChange={(e) => handleChange(e, "input2")}
                     className="hidden"
                     id="ImgDetail2"
-                    
                   />
 
                   {image && image["input2"] ? (
@@ -771,7 +800,8 @@ export default function Product() {
 
               {/* Button Thêm và Hủy */}
               <div className="flex w-full h-28 mt-2 mb-5 ml-4">
-                <button onClick={handleSubmit}
+                <button
+                  onClick={handleSubmit}
                   class="btn w-28 text-white"
                   style={{ backgroundColor: "#f13612" }}
                 >
@@ -792,32 +822,62 @@ export default function Product() {
             <h4 className="font-bold text-xl w-full ml-4 mt-2">
               Thông tin đính kèm
             </h4>
-            <h4 className="font-sans text-base w-6/12 h-10 ml-4 pt-2">
-              Thương hiệu
+            <h4 className="flex font-sans text-base w-full h-10 ml-4 pt-2">
+              Nhà cung cấp
+              {error ? (
+                <h5 className="ml-1 text-red-500">{error.brand}</h5>
+              ) : (
+                <h5 className="ml-1 text-red-600">(*)</h5>
+              )}
             </h4>
             {/* Select type  */}
-            <select name="brand" onChange={handleChangeInput} onBlur={handleBlur} value={payload.brand || ""}  className="select select-bordered w-11/12 ml-4 pt-2 mb-5">
-            <option value="" disabled selected>
-                Chọn thương hiệu
+            <select
+              name="brand"
+              onChange={handleChangeInput}
+              onBlur={handleBlur}
+              value={payload.brand || ""}
+              className="select select-bordered w-11/12 ml-4 pt-2 mb-5"
+            >
+              <option value="" disabled selected>
+                Chọn nhà cung cấp
               </option>
-            {brands.map((product) => (
-              <option key={product._id} value={product._id}>{product.name}</option>
-            ))}
+              {brands.map((product) => (
+                <option key={product._id} value={product._id}>
+                  {product.name}
+                </option>
+              ))}
             </select>
-            {error && <div className="text-red-500">{error.brand}</div>} 
-            <h4 className="font-sans text-base w-6/12 h-10 ml-4 pt-2">
+            <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
               Loại sản phẩm
+              {error ? (
+                <h5 className="ml-1 text-red-500">{error.categories}</h5>
+              ) : (
+                <h5 className="ml-1 text-red-600">(*)</h5>
+              )}
             </h4>
             {/* Select type  */}
-            <select name="category" onBlur={handleBlur} onChange={handleChangeInput} value={payload.category || ""} className="select select-bordered w-11/12 h-11 ml-4 mb-8">
+            {/* <select
+              name="category"
+              onBlur={handleBlur}
+              onChange={handleChangeInput}
+              value={payload.category || ""}
+              className="select select-bordered w-11/12 h-11 ml-4 mb-8"
+            >
               <option value="" disabled selected>
                 Loại sản phẩm
               </option>
               {categories.map((category) => (
-                <option key={category._id} value={category._id}>{category.name}</option>
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
               ))}
-            </select>
-            {error && <div className="text-red-500">{error.category}</div>} 
+            </select> */}
+            <div className="w-11/12 h-11 ml-4 mb-8 ">
+              <Autocomplete
+                suggestions={suggestions}
+                placeholder="Loại sản phẩm"
+              />
+            </div>
           </div>
         </div>
       </div>
