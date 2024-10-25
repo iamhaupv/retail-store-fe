@@ -9,6 +9,7 @@ export default function ListProduct() {
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
+  
   return (
     <>
       <div
@@ -37,8 +38,7 @@ export default function ListProduct() {
                 <div role="tabpanel" className="tab-content p-10" style={{
                   borderTop: "2px solid #ededed",
                 }}>
-                  {" "}
-                  <ListProductTable />{" "}
+                  <ListProductTable />
                 </div>
 
                 <input

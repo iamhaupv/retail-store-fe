@@ -32,7 +32,7 @@ export default function Inventory() {
                 <div className="flex w-12/12">
                   <div className="avatar">
                     <div className="size-28 rounded-full  mt-4 mb-4 ml-4 mr-4">
-                      <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                      <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="ảnh đại diện" />
                     </div>
                   </div>
                   <div className="w-9/12">
@@ -133,8 +133,8 @@ export default function Inventory() {
                 <div role="tabpanel" className="tab-content mb-20 p-10 " style={{
                   borderTop: "2px solid #ededed",
                 }}>
-                  {" "}
-                  <StockIn />{" "}
+                 
+                  <StockIn />
                 </div>
 
                 <input
@@ -149,8 +149,8 @@ export default function Inventory() {
                 <div role="tabpanel" className="tab-content mb-20 p-10" style={{
                   borderTop: "2px solid #ededed",
                 }}>
-                  {" "}
-                  <InventoryProduct />{" "}
+                  
+                  {/* <InventoryProduct /> */}
                 </div>
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function Inventory() {
               <p className="py-4 w-20">Avatar</p>
               <div className="avatar">
                 <div className="size-24 rounded-full">
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="ảnh đại diện chỉnh sửa" />
                 </div>
               </div>
             </div>

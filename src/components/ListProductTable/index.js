@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import TableProductDetail from '../TableProductDetail'
 import apiGetListProduct from '../../apis/apiGetListProduct';
+
+import apiGetListBrand from '../../apis/apiGetListBrand';
+
 import Autocomplete from '../AutoComplete';
 
 export default function ListProductTable() {
   const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([])
   const fetch = async () => {
     const response = await apiGetListProduct();
     setProducts(response.products);
   };
+  const fetchBrans = async () => {
+    try {
+      const response = await apiGetListBrand();
+      setBrands(response.brands)
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
   useEffect(() => {
+    fetchBrans()
     fetch();
   }, []);
   // const {inputRef} = useBarcode({
@@ -37,9 +50,20 @@ export default function ListProductTable() {
                 <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm"/>
             </div>
           {/* Brand Option */}
+
+          {/* <select className="select select-bordered select-sm w-52  mr-5">
+            <option disabled selected>
+              Thương hiệu
+            </option>
+            {brands.map((brand) => (
+              <option key={brand._id}>{brand.name}</option>
+            ))}
+          </select> */}
+
            <div className="ml-4 mt-2 w-52 h-11">
                 <Autocomplete suggestions={suggestions} placeholder="Nhà cung cấp"/>
             </div>
+
 
           {/* status Option */}
           <select className="select select-bordered h-4 w-52 ml-4">
@@ -83,22 +107,6 @@ export default function ListProductTable() {
       </tr>
     </thead>
     <tbody>
-
-      {/* row 1 */}
-      <TableProductDetail/>
-      {/* row 2 */}
-      <TableProductDetail/>
-      {/* row 3 */}
-      <TableProductDetail/>
-      {/* row 4 */}
-      <TableProductDetail/>
-      {/* row 1 */}
-      <TableProductDetail/>
-      {/* row 2 */}
-      <TableProductDetail/>
-      {/* row 3 */}
-      <TableProductDetail/>
-      {/* row 4 */}
       <TableProductDetail/>
     </tbody>
     <tfoot>

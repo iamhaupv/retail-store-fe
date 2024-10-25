@@ -5,15 +5,83 @@ export default function Employee() {
   const [image, setImage] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
   const [payload, setPayload] = useState({});
+  const [error, setError] = useState({});
+  const handleBlur = async (e) => {
+    const { name } = e.target;
+    if (!payload[name]) {
+      setError((prev) => ({ ...prev, [name]: `Không được để trống!` }));
+    }
+  };
   const handleClose = () => {
     setIsVisible(false);
     setImage(null);
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
+    const nameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex =
+      /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
+    const addressRegex = /^\d+\s[A-Za-zÀ-ỹ0-9\s.,'-]+$/;
+    // const birthday =
+    let errorMessage;
+    // name
+    if (name === "name") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!nameRegex.test(value)) {
+        errorMessage = "Tên không hợp lệ. Vui lòng nhập tên hợp lệ!";
+      }
+    }
+    // email
+    if (name === "email") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!emailRegex.test(value)) {
+        errorMessage = "Email không hợp lệ. Vui lòng nhập email hợp lệ!";
+      }
+    }
+    // phone
+    if (name === "phone") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!phoneRegex.test(value)) {
+        errorMessage = "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại hợp lệ!";
+      }
+    }
+    // address
+    if (name === "address") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!addressRegex.test(value)) {
+        errorMessage = "Địa không hợp lệ. Vui lòng nhập địa chỉ hợp lệ!";
+      }
+    }
+    // birthday
+    if (name === "birthday") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else {
+        const today = new Date();
+        const birthDate = new Date(value);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+
+        const isUnderage = age < 18 || 
+          (age === 18 && (
+            monthDifference < 0 || 
+            (monthDifference === 0 && today.getDate() < birthDate.getDate())
+          ));
+
+        if (isUnderage) {
+          errorMessage = "Bạn phải ít nhất 18 tuổi.";
+        }
+      }
+    }    
+    setError((prev) => ({ ...prev, [name]: errorMessage }));
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
-  const handleChange = (event, id) => {  
+  const handleChange = (event, id) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -29,7 +97,15 @@ export default function Employee() {
   const handleSubmit = async () => {
     try {
       const { name, email, phone, address, gender, birthday } = payload;
-      if (!name || !email || !phone || !address || !gender || !birthday || !image) {
+      if (
+        !name ||
+        !email ||
+        !phone ||
+        !address ||
+        !gender ||
+        !birthday ||
+        !image
+      ) {
         Swal.fire(
           "Thiếu thông tin!",
           "Vui lòng điền đầy đủ thông tin!",
@@ -79,7 +155,7 @@ export default function Employee() {
   };
   return (
     <>
-<div
+      <div
         className="w-11/12 h-screen justify-center flex"
         style={{ backgroundColor: "#F5F5F5" }}
       >
@@ -101,16 +177,18 @@ export default function Employee() {
               </div>
               <div className="flex items-center pt-2">
                 <input
-                name="name"
-                onChange={handleChangeInput}
-                value={payload.name}
+                  name="name"
+                  onChange={handleChangeInput}
+                  value={payload.name}
+                  onBlur={handleBlur}
                   type="text"
                   placeholder="Tên nhân viên"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
+                {error && <div className="text-red-500">{error.name}</div>}
                 <input
                   type="text"
-                  placeholder=""
+                  placeholder="Max nhan vien"
                   className="input input-bordered w-5/12 h-10 ml-4"
                   disabled
                 />
@@ -123,21 +201,25 @@ export default function Employee() {
               </div>
               <div className="flex items-center pt-2">
                 <input
-                name="email"
-                onChange={handleChangeInput}
-                value={payload.email}
+                  name="email"
+                  onChange={handleChangeInput}
+                  value={payload.email}
                   type="text"
                   placeholder="Email"
                   className="input input-bordered w-6/12 h-10 ml-4"
+                  onBlur={handleBlur}
                 />
+                {error && <div className="text-red-500">{error.email}</div>}
                 <input
-                name="phone"
-                onChange={handleChangeInput}
-                value={payload.phone}
+                  name="phone"
+                  onChange={handleChangeInput}
+                  value={payload.phone}
                   type="text"
                   placeholder="Số điện thoại"
+                  onBlur={handleBlur}
                   className="input input-bordered w-5/12 h-10 ml-4"
                 />
+                {error && <div className="text-red-500">{error.phone}</div>}
               </div>
               <div className="flex items-center pt-2">
                 <h4 className="font-sans text-base w-6/12 ml-4 mb-2">
@@ -147,33 +229,44 @@ export default function Employee() {
               </div>
               <div className="flex items-center pt-2">
                 <input
-                name="address"
-                value={payload.address}
-                onChange={handleChangeInput}
+                  name="address"
+                  value={payload.address}
+                  onChange={handleChangeInput}
                   type="text"
                   placeholder="Địa chỉ"
                   className="input input-bordered w-6/12 h-10 ml-4"
+                  onBlur={handleBlur}
                 />
+                {error && <div className="text-red-500">{error.address}</div>}
                 <input
                   name="birthday"
                   value={payload.birthday}
                   onChange={handleChangeInput}
                   type="date"
                   placeholder="Ngày sinh"
+                  onBlur={handleBlur}
                   className="input input-bordered w-5/12 h-10 ml-4"
                 />
+                {error && <div className="text-red-500">{error.birthday}</div>}
               </div>
 
               <h4 className="font-sans text-base w-6/12 ml-4 mb-2 mt-2">
                 Giới tính
               </h4>
-              <select value={payload.gender} name="gender" onChange={handleChangeInput} className="select select-bordered w-full max-w-xs ml-4 mb-2">
-                <option disabled selected>
+              <select
+                value={payload.gender}
+                name="gender"
+                onChange={handleChangeInput}
+                onBlur={handleBlur}
+                className="select select-bordered w-full max-w-xs ml-4 mb-2"
+              >
+                <option value=" " disabled selected>
                   Giới tính
                 </option>
                 <option value={"Nam"}>Nam</option>
                 <option value={"Nữ"}>Nữ</option>
               </select>
+              {error && <div className="text-red-500">{error.gender}</div>}
             </div>
 
             {/* Button Thêm và Hủy */}
@@ -265,7 +358,7 @@ export default function Employee() {
             )}
           </div>
         </div>
-      </div>      
+      </div>
     </>
   );
 }

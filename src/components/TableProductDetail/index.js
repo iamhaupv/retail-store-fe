@@ -2,10 +2,12 @@ import { useBarcode } from "@createnextapp/react-barcode";
 import { CarouselProduct } from "../CarouselProduct";
 import React, { useEffect, useState } from "react";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
-import apiGetListProduct from "../../apis/apiGetListProduct";
+import apiIsDisplay from "../../apis/apiIsDisplay";
 
 export default function TableProductDetail() {
   const [products, setProducts] = useState([]);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   // const { inputRef } = useBarcode({
   //   value: "ASM001",
   //   options: {
@@ -17,7 +19,9 @@ export default function TableProductDetail() {
   // });
   const fetchPrducts = async () => {
     try {
-      const response = await apiGetAllProduct();
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetAllProduct(token);
       setProducts(response.products);
     } catch (error) {
       throw new Error(error);
@@ -26,6 +30,20 @@ export default function TableProductDetail() {
   useEffect(() => {
     fetchPrducts();
   }, []);
+  const handleChangeIsDisplay = async (pid, isDisplay) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      await apiIsDisplay(token, pid, { isDisplay });
+      fetchPrducts();
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+    document.getElementById("modal_Quick_View").showModal();
+  };
   return (
     <>
       {products.map((product) => (
@@ -40,16 +58,13 @@ export default function TableProductDetail() {
             <div className="flex items-center gap-3">
               <div className="avatar">
                 <div className="mask rounded h-12 w-12">
-                  <img
-                    src={product.images[0]}
-                    alt={`${product.name}`}
-                  />
+                  <img src={product.images[0]} alt={`${product.name}`} />
                 </div>
               </div>
               <div>
                 <div className="font-bold">{product.title}</div>
                 {/* Rating */}
-                <div className="rating rating-sm">
+                <div className="rating rating-sm" s>
                   <input
                     type="radio"
                     name="rating-4"
@@ -85,9 +100,9 @@ export default function TableProductDetail() {
             <br />
             <span className="badge badge-ghost badge-sm">Nước giải khát</span>
           </td>
-          <td>Đang bán</td>
+          <td>{product.status === "in_stock" ? "Đang bán" : "Hết hàng"}</td>
           <td>
-            <button className="btn btn-ghost btn-xs">900</button>
+            <button className="btn btn-ghost btn-xs">{product.sold}</button>
           </td>
 
           <td>
@@ -95,9 +110,7 @@ export default function TableProductDetail() {
               <button
                 className=" w-6 h-6 rounded-lg mr-2"
                 style={{ backgroundColor: "#e2f2ea", outline: "" }}
-                onClick={() =>
-                  document.getElementById("modal_Quick_View").showModal()
-                }
+                onClick={() => handleOpenModal(product)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -142,10 +155,10 @@ export default function TableProductDetail() {
               </button>
 
               <button
+                onClick={() => handleChangeIsDisplay(product._id, false)}
                 id="btn__delete"
                 className="w-6 h-6 rounded-lg "
                 style={{ backgroundColor: "#feebe8", outline: "" }}
-                onClick={() => document.getElementById("Delete").showModal()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -165,11 +178,47 @@ export default function TableProductDetail() {
               </button>
             </div>
             {/* Alert Delete */}
+            <dialog id="Delete" className="modal" open={isDeleteModalOpen}>
+              <div className="modal-box w-3/12 ">
+                <h3 className="font-bold text-lg">
+                  Bạn muốn xóa sản phẩm này khỏi danh sách bán?
+                </h3>
+                <div className="flex items-center ">
+                  <label className="mr-2">
+                    <input type="checkbox" className="checkbox" />
+                  </label>
+                  <p className="py-4">Hàng chưa về</p>
+                </div>
+                <div className="flex items-center ">
+                  <label className="mr-2">
+                    <input type="checkbox" className="checkbox" />
+                  </label>
+                  <p className="py-4">Không còn kinh doanh</p>
+                </div>
+                {/* Text Area */}
+                <textarea
+                  placeholder="Bio"
+                  className="textarea textarea-bordered textarea-lg w-full max-w-xs"
+                ></textarea>
+
+                <div className="flex modal-action justify-between ">
+                  <button className="btn w-20 bg-orange-500"> Đồng ý</button>
+                  <form method="dialog ">
+                    <button
+                      onClick={() => setDeleteModalOpen(false)}
+                      className="btn w-20"
+                    >
+                      Hủy
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
           </td>
         </tr>
       ))}
 
-      <dialog id="Delete" className="modal">
+      <dialog id="Delete" className="modal" open={isDeleteModalOpen}>
         <div className="modal-box w-3/12 ">
           <h3 className="font-bold text-lg">
             Bạn muốn xóa sản phẩm này khỏi danh sách bán?
@@ -195,8 +244,12 @@ export default function TableProductDetail() {
           <div className="flex modal-action justify-between ">
             <button className="btn w-20 bg-orange-500"> Đồng ý</button>
             <form method="dialog ">
-              {/* if there is a button, it will close the modal */}
-              <button className="btn w-20">Hủy</button>
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                className="btn w-20"
+              >
+                Hủy
+              </button>
             </form>
           </div>
         </div>
@@ -204,49 +257,53 @@ export default function TableProductDetail() {
 
       {/* Product Detail */}
       <dialog id="modal_Quick_View" className="modal">
-        <div className="modal-box w-10/12 max-w-4xl h-auto">
-          <div className="card lg:card-side bg-base-100 ">
-            {/* Card */}
-            <figure>
-              <CarouselProduct />
-            </figure>
+      <div className="modal-box w-10/12 max-w-4xl h-auto">
+        <div className="card lg:card-side bg-base-100 ">
+          {/* Card */}
+          {/* <figure> */}
+            {selectedProduct && <div><CarouselProduct product={selectedProduct} />
+            
+            </div> }
+          {/* </figure> */}
+          
             <div className="card-body">
-              <h1 className="card-title text-3xl font-medium">
-                Ibanez RG470DX-SFM Electric Guitar,Sea Foam Green Matte
-              </h1>
-              <h1>
-                Body Body Type: Solidbody Body Material: Meranti Body Shape: RG
-                Color:Sea Foam Green Matte NECK...{" "}
-              </h1>
-              <h1 className="text-xl font-medium">14.600.000đ</h1>
-              <u href="" className="">
-                View details
-              </u>
+            <h1 className="card-title text-3xl font-medium">
+              Ibanez RG470DX-SFM Electric Guitar,Sea Foam Green Matte
+            </h1>
+            <h1>
+              Body Body Type: Solidbody Body Material: Meranti Body Shape: RG
+              Color:Sea Foam Green Matte NECK...{" "}
+            </h1>
+            <h1 className="text-xl font-medium">14.600.000đ</h1>
+            <u href="" className="">
+              View details
+            </u>
 
-              <div className="card-actions justify-start">
-                <div>
-                  {/* <h3 className="font-medium">Quantity</h3> */}
-                  <div className="flex justify-center">
-                    <div className="join mr-6" >
-                      <button className="join-item btn">+</button>
-                      <button className="join-item btn">1</button>
-                      <button className="join-item btn">-</button>
-                    </div>
-                    <button className="btn btn-neutral btn-wide" hidden>
-                      Add to cart
-                    </button>
+            <div className="card-actions justify-start">
+              <div>
+                {/* <h3 className="font-medium">Quantity</h3> */}
+                <div className="flex justify-center">
+                  <div className="join mr-6">
+                    <button className="join-item btn">+</button>
+                    <button className="join-item btn">1</button>
+                    <button className="join-item btn">-</button>
                   </div>
+                  <button className="btn btn-neutral btn-wide" hidden>
+                    Add to cart
+                  </button>
                 </div>
               </div>
             </div>
           </div>
+          ))}
         </div>
-        <form method="dialog" className="modal-backdrop">
-          <button>close</button>
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 ">
-            ✕
-          </button>
-        </form>
+      </div>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 ">
+          ✕
+        </button>
+      </form>
       </dialog>
     </>
   );

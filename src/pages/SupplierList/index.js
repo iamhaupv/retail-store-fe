@@ -62,21 +62,6 @@ export default function SupplierList() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* row 1 */}
-                  <SupplyTableDetail />
-                  {/* row 2 */}
-                  <SupplyTableDetail />
-                  {/* row 3 */}
-                  <SupplyTableDetail />
-                  {/* row 4 */}
-                  <SupplyTableDetail />
-                  {/* row 1 */}
-                  <SupplyTableDetail />
-                  {/* row 2 */}
-                  <SupplyTableDetail />
-                  {/* row 3 */}
-                  <SupplyTableDetail />
-                  {/* row 4 */}
                   <SupplyTableDetail />
                 </tbody>
                 <tfoot>

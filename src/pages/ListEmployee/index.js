@@ -64,18 +64,7 @@ export default function ListEmployee() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* row 1 */}
-                  <EmployeeTableDetail/>
-                  {/* row 2 */}
-                  <EmployeeTableDetail/>
-                  {/* row 3 */}
-                  <EmployeeTableDetail/>
-                  <EmployeeTableDetail/>
-                  <EmployeeTableDetail/>
-                  <EmployeeTableDetail/>
-                  <EmployeeTableDetail/>
-                  {/* row 4 */}
-                  
+                  <EmployeeTableDetail/>      
                 </tbody>
                 <tfoot>
                   <tr></tr>

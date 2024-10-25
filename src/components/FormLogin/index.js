@@ -26,6 +26,7 @@ export default function FormLogin() {
       const username = rs.userData.username;
       localStorage.setItem("username", username)
       localStorage.setItem("refreshToken", rs.userData.refreshToken)
+      localStorage.setItem("email", rs.userData.email)
     } else {
       Swal.fire("Oops!", rs.mes, "error");
     }
