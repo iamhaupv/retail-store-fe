@@ -17,11 +17,14 @@ export default function TableDetailWarehouse() {
   }, []);
   //datePicker
   const [startDate, setStartDate] = useState(new Date());
-  const suggestions = [
-    "Thùng 24 ",
-    "Thùng 30",
-    "Lốc",
-    "Chai",
+  const suggestion = [
+    { id: 1, name: "Tom Cook" },
+    { id: 2, name: "Wade Cooper" },
+    { id: 3, name: "Tanya Fox" },
+    { id: 4, name: "Arlene Mccoy" },
+    { id: 5, name: "Devon Webb" },
+    { id: 6, name: "Nguyễn Thanh Khoa" },
+    { id: 7, name: "Nguyễn Đức Long" },
   ];
   return (
     <>
@@ -60,7 +63,7 @@ export default function TableDetailWarehouse() {
           </td>
           <td>
           <div className="w-52  mr-3">
-              <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm" />
+              <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" />
             </div>
           </td>
           <td>

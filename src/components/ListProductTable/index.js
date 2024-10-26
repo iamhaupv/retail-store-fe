@@ -35,15 +35,23 @@ export default function ListProductTable() {
   //       height: 25,
   //   }
   //  })
-  const suggestions = ["Thùng 24 ", "Thùng 30", "Lốc", "Chai"];
-  return (
+  const suggestion = [
+    { id: 1, name: "Tom Cook" },
+    { id: 2, name: "Wade Cooper" },
+    { id: 3, name: "Tanya Fox" },
+    { id: 4, name: "Arlene Mccoy" },
+    { id: 5, name: "Devon Webb" },
+    { id: 6, name: "Nguyễn Thanh Khoa" },
+    { id: 7, name: "Nguyễn Đức Long" },
+  ];
+ return (
     <>
       <div className="">
         {/* filter */}
         <div className="flex ">
           {/* search Input */}
           <div className="ml-3 mt-2 w-52 h-3 ">
-            <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm" />
+            <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" />
           </div>
           {/* Brand Option */}
 
@@ -58,7 +66,7 @@ export default function ListProductTable() {
 
           <div className="ml-4 mt-2 w-52 h-11">
             <Autocomplete
-              suggestions={suggestions}
+              suggestion={suggestion}
               placeholder="Nhà cung cấp"
             />
           </div>
@@ -113,6 +121,7 @@ export default function ListProductTable() {
                 <th>Nhà cung cấp</th>
                 <th>Tình trạng</th>
                 <th>Số lượng</th>
+                <th>Giá bán</th>
                 <th>Thao tác</th>
               </tr>
             </thead>

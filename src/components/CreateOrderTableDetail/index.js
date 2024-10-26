@@ -2,17 +2,24 @@ import React from "react";
 import Autocomplete from "../AutoComplete";
 
 export default function CreateOrderTableDetail() {
-  const suggestions = [
-    "Nước ngọt pepsi dung tích 120ml",
-    "Snack Khoai tây lays",
-    "Nước khoáng aquafina",
+  const suggestion = [
+    { id: 1, name: "Nước ngọt pepsi dung tích 120ml" },
+    { id: 2, name: "Snack Khoai tây lays" },
+    { id: 3, name: "Tanya Fox" },
+    { id: 4, name: "Arlene Mccoy" },
+    { id: 5, name: "Devon Webb" },
+    { id: 6, name: "Nguyễn Thanh Khoa" },
+    { id: 7, name: "Nguyễn Đức Long" },
   ];
   
   const DonViTinh = [
-    "Thùng 30",
-    "Thùng 24",
-    "Lóc",
-    "Chai"
+    { id: 1, name: "Thung24" },
+    { id: 2, name: "Thung30" },
+    { id: 3, name: "Thung20" },
+    { id: 4, name: "Arlene Mccoy" },
+    { id: 5, name: "Devon Webb" },
+    { id: 6, name: "Nguyễn Thanh Khoa" },
+    { id: 7, name: "Nguyễn Đức Long" },
   ];
   return (
     <>
@@ -20,7 +27,7 @@ export default function CreateOrderTableDetail() {
         <td>SP034213</td>
         <td>
             <div className="w-56">
-                <Autocomplete suggestions={suggestions} placeholder=""/>
+                <Autocomplete suggestion={suggestion} placeholder=""/>
             </div>
         </td>
         <td>
@@ -28,7 +35,7 @@ export default function CreateOrderTableDetail() {
         </td>
         <td>
         <div className="w-56">
-                <Autocomplete suggestions={DonViTinh} placeholder=""/>
+                <Autocomplete suggestion={DonViTinh} placeholder=""/>
             </div>
         </td>
         <td>10.000</td>

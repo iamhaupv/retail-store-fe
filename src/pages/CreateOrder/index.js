@@ -21,6 +21,7 @@ export default function CreateOrder() {
             role="tab"
             className="tab"
             aria-label="Đơn hàng 1"
+            defaultChecked
           />
           <div
             role="tabpanel"
@@ -35,7 +36,6 @@ export default function CreateOrder() {
             role="tab"
             className="tab"
             aria-label="Đơn hàng 2"
-            defaultChecked
           />
           <div
             role="tabpanel"

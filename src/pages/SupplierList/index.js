@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import Autocomplete from "../../components/AutoComplete";
 
 export default function SupplierList() {
-  const suggestions = [
-    "Thùng 24 ",
-    "Thùng 30",
-    "Lốc",
-    "Chai",
+  const suggestion = [
+    { id: 1, name: "Thùng 24 " },
+    { id: 2, name: "Thùng 30" },
+    { id: 3, name: "Lốc" },
+    { id: 4, name: "Chai" },
+    { id: 5, name: "Devon Webb" },
+    { id: 6, name: "Nguyễn Thanh Khoa" },
+    { id: 7, name: "Nguyễn Đức Long" },
   ];
   return (
     <>
@@ -20,7 +23,7 @@ export default function SupplierList() {
           <div className="card bg-white rounded-none top-7 grid  ">
             {/* search Input */}
             <div className="ml-4 mt-4 w-4/12">
-                <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm"/>
+                <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm"/>
             </div>
             {/* Nofication and Button Add */}
 

@@ -25,7 +25,7 @@ export default function Inventory() {
               <h4 className="font-bold text-xl w-32 ml-4 mt-4 h-fit">
                 Thông tin kho
               </h4>
-              <div
+               <div
                 className="card rounded-lg ml-8 mr-8 mb-24 mt-3 w-12/12  grid "
                 style={{ backgroundColor: "#F5F5F5" }}
               >

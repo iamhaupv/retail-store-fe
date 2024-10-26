@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import ListProductInventory from "../../components/ListProductInventory";
 import ListProductWareHouse from "../../components/ListProductWareHouse";
 import TableDetailWarehouse from "../../components/TableDetailWarehouse";
 import Autocomplete from "../../components/AutoComplete";
+import apiGetAllProduct from "../../apis/apiGetAllProducts";
 
 export default function WarehouseReceipt() {
   // const [image, setImage] = useState({});
@@ -21,18 +22,33 @@ export default function WarehouseReceipt() {
   //   }
   // };
 
-  const [isClicked, setIsClicked] = useState(false);
- const placeHolderBrand='Nhà cung cấp..'
- const placeHolderCategory='loại sản phẩm..'
+  const [products, setProducts] = useState([])
+  const fetchPrducts = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid")
+      const response = await apiGetAllProduct(token);
+      setProducts(response.products);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  useEffect(() => {
+    fetchPrducts();
+  }, []);
 
-  const suggestions = [
-    "Nước ngọt ",
-    "Nước ép trái cây",
-    "Nước tăng lực",
-    "Nước trà",
-    "Cà phê hòa tan",
-    "Cà phê pha phin",
-    "Cà phê lon",
+  const [isClicked, setIsClicked] = useState(false);
+  const placeHolderBrand = "Nhà cung cấp..";
+  const placeHolderCategory = "loại sản phẩm..";
+
+  const suggestion = [
+    { id: 1, name: "Nước ngọt " },
+    { id: 2, name: "Nước ép trái cây" },
+    { id: 3, name: "Nước tăng lực" },
+    { id: 4, name: "Nước trà" },
+    { id: 5, name: "Cà phê hòa tan" },
+    { id: 6, name: "Cà phê pha phin" },
+    { id: 7, name: "Cà phê lon" },
   ];
 
   return (
@@ -179,21 +195,27 @@ export default function WarehouseReceipt() {
           </div>
         </div> */}
       </div>
-      <dialog id="AddWarehouseReceipt" className="modal ">
-        <div className="modal-box w-full max-w-4xl h-full overflow-y-hidden  ">
+      <dialog id="AddWarehouseReceipt" className="modal  ">
+        <div className="modal-box w-full  max-w-4xl h-full overflow-y-hidden ">
           <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
           <div className="flex items-center mb-4">
             {/* Brand */}
             <div className="w-52">
-              <Autocomplete suggestions={suggestions} placeholder="Nhà cung cấp.." />
+              <Autocomplete
+                suggestion={suggestion}
+                placeholder="Nhà cung cấp.."
+              />
             </div>
             {/* Product */}
             <div className="w-52 ml-3 mr-3">
-              <Autocomplete suggestions={suggestions} placeholder="Loại sản phẩm.." />
+              <Autocomplete
+                suggestion={suggestion}
+                placeholder="Loại sản phẩm.."
+              />
             </div>
             {/* Search Input  */}
             <div className="w-52  mr-3">
-              <Autocomplete suggestions={suggestions} placeholder="Tìm kiếm" />
+              <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" />
             </div>
           </div>
           {/* table product  */}
@@ -210,7 +232,46 @@ export default function WarehouseReceipt() {
                 </tr>
               </thead>
               <tbody>
-                <ListProductWareHouse />
+                {/* ListProductWareHouse detail */}
+                {/* <ListProductWareHouse /> */}
+                {products.map((product) => (
+                  <tr className="hover:bg-slate-100">
+                    <th key={product._id}>
+                      <label>
+                        <input type="checkbox" class="checkbox" />
+                      </label>
+                    </th>
+                    <td>
+                      <div>
+                        <div className="font-bold">ASM001</div>
+                        {/* <svg ref={inputRef} /> */}
+                      </div>
+                    </td>
+                    <td>
+                      <div class="flex items-center gap-3">
+                        <div class="avatar">
+                          <div class="mask mask-squircle h-12 w-12">
+                            <img
+                              src={product.images[0]}
+                              alt="Avatar Tailwind CSS Component"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div class="font-bold">{product.title}</div>
+                          <div class="text-sm opacity-50">{product.title}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      {product.brand.name}
+                      <br />
+                      <span class="badge badge-ghost badge-sm">
+                        {product.title}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
               <tfoot></tfoot>
             </table>

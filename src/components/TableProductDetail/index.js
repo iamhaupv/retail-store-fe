@@ -63,7 +63,9 @@ export default function TableProductDetail() {
               </div>
               <div>
                 <div className="font-bold">{product.title}</div>
-                <span className="badge badge-ghost badge-sm">Nước giải khát</span>
+                <span className="badge badge-ghost badge-sm">
+                  Nước giải khát
+                </span>
               </div>
             </div>
           </td>
@@ -75,7 +77,9 @@ export default function TableProductDetail() {
           <td>
             <h1 className="">{product.quantity}</h1>
           </td>
-
+          <td>
+            <h1 className="">{product.price.toLocaleString()} đ</h1>
+          </td>
           <td>
             <div className="flex w-fit">
               <button
@@ -257,7 +261,9 @@ export default function TableProductDetail() {
                         </a>
                         <a
                           href={`#slideProduct${
-                            index + 2 > selectedProduct.images.length ? 1 : index + 2
+                            index + 2 > selectedProduct.images.length
+                              ? 1
+                              : index + 2
                           }`}
                           className="btn btn-circle"
                         >
