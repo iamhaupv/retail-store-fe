@@ -6,21 +6,15 @@ import Autocomplete from "../../components/AutoComplete";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
 
 export default function WarehouseReceipt() {
-  // const [image, setImage] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // const handleChange = (event, id) => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setImage((prevImages) => ({
-  //         ...prevImages,
-  //         [id]: reader.result,
-  //       }));
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const [products, setProducts] = useState([])
   const fetchPrducts = async () => {
@@ -92,7 +86,7 @@ export default function WarehouseReceipt() {
           <div className="w-full h-fit mr-4 rounded-sm pt-4 pb-8">
             <div className="card bg-white h-fit rounded-sm top-7 grid pt-6 ">
               <h4 className="font-bold text-xl w-full ml-4">
-                Danh sách mặt hàng PepsiCo
+                Danh sách mặt hàng 
               </h4>
               <div className="flex pt-8 h-fit w-full  pb-2">
                 {/* Ảnh SP đại diện */}
@@ -100,9 +94,7 @@ export default function WarehouseReceipt() {
                 {/* <div className='w-4/12'> */}
                 <button
                   className="hidden"
-                  onClick={() =>
-                    document.getElementById("AddWarehouseReceipt").showModal()
-                  }
+                  onClick={openModal}
                   id="FileMain"
                 />
 
@@ -195,12 +187,13 @@ export default function WarehouseReceipt() {
           </div>
         </div> */}
       </div>
-      <dialog id="AddWarehouseReceipt" className="modal  ">
-        <div className="modal-box w-full  max-w-4xl h-full overflow-y-hidden ">
+      {isModalOpen && (
+       <div className="fixed w-screen  inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="modal-box w-full  max-w-6xl h-full overflow-y-hidden ">
           <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
           <div className="flex items-center mb-4">
             {/* Brand */}
-            <div className="w-52">
+            <div className="w-52 ">
               <Autocomplete
                 suggestion={suggestion}
                 placeholder="Nhà cung cấp.."
@@ -220,20 +213,15 @@ export default function WarehouseReceipt() {
           </div>
           {/* table product  */}
           <div className=" overflow-y-scroll h-4/6">
-            <table className="table table-pin-rows">
-              {/* head */}
+            <table className="table table-pin-rows">              
               <thead>
                 <tr>
-                  {/* <div className='w-7'> */}
                   <th></th>
-                  {/* </div> */}
                   <th>Mã sản phẩm</th>
                   <th>Sản phẩm</th>
                 </tr>
               </thead>
               <tbody>
-                {/* ListProductWareHouse detail */}
-                {/* <ListProductWareHouse /> */}
                 {products.map((product) => (
                   <tr className="hover:bg-slate-100">
                     <th key={product._id}>
@@ -244,7 +232,6 @@ export default function WarehouseReceipt() {
                     <td>
                       <div>
                         <div className="font-bold">ASM001</div>
-                        {/* <svg ref={inputRef} /> */}
                       </div>
                     </td>
                     <td>
@@ -262,13 +249,6 @@ export default function WarehouseReceipt() {
                           <div class="text-sm opacity-50">{product.title}</div>
                         </div>
                       </div>
-                    </td>
-                    <td>
-                      {product.brand.name}
-                      <br />
-                      <span class="badge badge-ghost badge-sm">
-                        {product.title}
-                      </span>
                     </td>
                   </tr>
                 ))}
@@ -291,6 +271,7 @@ export default function WarehouseReceipt() {
                 <button
                   class="btn w-28 ml-4"
                   style={{ backgroundColor: "#e0e0e0" }}
+                  onClick={closeModal}
                 >
                   Hủy
                 </button>
@@ -298,7 +279,8 @@ export default function WarehouseReceipt() {
             </div>
           </div>
         </div>
-      </dialog>
+        </div>
+      )}
     </>
   );
 }

@@ -27,6 +27,11 @@ export default function ListProductInventory() {
           </div>
         </td>
         <td>
+          <div>
+            <div className="font-bold">PO9212</div>
+          </div>
+        </td>
+        <td>
           <div class="flex items-center gap-3">
             <div class="avatar">
               <div class="mask mask-squircle h-12 w-12">

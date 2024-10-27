@@ -150,7 +150,7 @@ export default function Inventory() {
                   borderTop: "2px solid #ededed",
                 }}>
                   
-                  {/* <InventoryProduct /> */}
+                  <InventoryProduct />
                 </div>
               </div>
             </div>
