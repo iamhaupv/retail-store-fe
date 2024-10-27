@@ -154,8 +154,12 @@ export default function Supply() {
               </h4>
               <div className="flex items-center pt-8">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
-                  Tên nhà cung cấp
-                  <h5 className="ml-1 text-red-600">(*)</h5>
+                  Tên nhà cung cấp {error ? (
+                    <h5 className="ml-1 text-red-500">{error.name}</h5>
+                  ) : (
+                    <h5 className="ml-1 text-red-600">(*)</h5>
+                  )}
+                 
                 </h4>
                 <h4 className="font-sans text-base w-5/12 ml-4">
                   Mã nhà cung cấp
@@ -171,7 +175,6 @@ export default function Supply() {
                   placeholder="Tên nhà cung cấp"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
-                {error && <div className="text-red-500">{error.name}</div>}
                 <input
                   type="text"
                   placeholder="Mã thương hiệu"
@@ -181,11 +184,18 @@ export default function Supply() {
               </div>
               <div className="flex items-center pt-2">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
-                  Tên người cung cấp
-                  <h5 className="ml-1 text-red-600">(*)</h5>
+                  Tên người cung cấp {error ? (
+                    <h5 className="ml-1 text-red-500">{error.supplyName}</h5>
+                  ) : (
+                    <h5 className="ml-1 text-red-600">(*)</h5>
+                  )}
                 </h4>
                 <h4 className="flex font-sans text-base w-5/12 ml-4">
-                  Số điện thoại
+                  Số điện thoại {error ? (
+                    <h5 className="ml-1 text-red-500">{error.phone}</h5>
+                  ) : (
+                    <h5 className="ml-1 text-red-600">(*)</h5>
+                  )}
                   <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
               </div>
@@ -198,8 +208,7 @@ export default function Supply() {
                   onBlur={handleBlur}
                   placeholder="Tên người cung cấp"
                   className="input input-bordered w-6/12 h-10 ml-4"
-                />
-                {error && <div className="text-red-500" >{error.supplyName}</div>} 
+                /> 
                 <input
                   name="phone"
                   value={payload.phone}
@@ -209,12 +218,14 @@ export default function Supply() {
                   placeholder="Số điện thoại"
                   className="input input-bordered w-5/12 h-10 ml-4"
                 />
-                {error && <div className="text-red-500" >{error.phone}</div>}
               </div>
               <div className="flex items-center pt-2">
                 <h4 className="flex font-sans text-base w-6/12 ml-4 ">
-                  Địa chỉ
-                  <h5 className="ml-1 text-red-600">(*)</h5>
+                  Địa chỉ {error ? (
+                    <h5 className="ml-1 text-red-500">{error.address}</h5>
+                  ) : (
+                    <h5 className="ml-1 text-red-600">(*)</h5>
+                  )}
                 </h4>
               </div>
               <div className="flex items-center pt-2">
@@ -227,10 +238,14 @@ export default function Supply() {
                   className="input input-bordered w-6/12 h-10 ml-4"
                   onBlur={handleBlur}
                 />
-                {error && <div className="text-red-500" >{error.address}</div>}
               </div>
 
               <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>
+              {error ? (
+                    <h5 className="ml-1 text-red-500">{error.description}</h5>
+                  ) : (
+                    <h5 className="ml-1 text-red-600">(*)</h5>
+                  )}
               <textarea
                 name="description"
                 value={payload.description}
@@ -239,7 +254,6 @@ export default function Supply() {
                 onBlur={handleBlur}
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
               />
-              {error && <div className="text-red-500" >{error.description}</div>}
             </div>
 
             {/* Button Thêm và Hủy */}

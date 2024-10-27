@@ -1,9 +1,7 @@
-import { useBarcode } from "@createnextapp/react-barcode";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
-import { useState } from "react";
 
-export default function ListProductWareHouse() {
+export default function ListProductWareHouse({onSelectProduct}) {
   // const { inputRef } = useBarcode({
   //   value: "ASM001",
   //   options: {
@@ -13,34 +11,52 @@ export default function ListProductWareHouse() {
   //     height: 25,
   //   },
   // });
-  const [products, setProducts] = useState([])
-  const fetchPrducts = async () => {
+  const [products, setProducts] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState({});
+  const fetchProducts = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      if(!token) throw new Error("Token is invalid")
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
       const response = await apiGetAllProduct(token);
       setProducts(response.products);
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
+
   useEffect(() => {
-    fetchPrducts();
+    fetchProducts();
   }, []);
-  
+
+  const handleCheckboxChange = (productId) => {
+    setSelectedProducts((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
+
+  const handleAddSelectedProducts = () => {
+    const selected = products.filter((product) => selectedProducts[product._id]);
+    onSelectProduct(selected);
+    setSelectedProducts({}); // Reset selected products
+  };
+
+
   return (
     <>
       {products.map((product)=> (<tr className="hover:bg-slate-100"> 
         <th key={product._id}>
 
           <label>
-            <input type="checkbox" class="checkbox" />
+            <input type="checkbox"
+                className="checkbox"
+                checked={!!selectedProducts[product._id]}
+                onChange={() => handleCheckboxChange(product._id)} />
           </label>
         </th>
         <td>
           <div>
             <div className="font-bold">ASM001</div>
-            {/* <svg ref={inputRef} /> */}
           </div>
         </td>
         <td>
@@ -65,7 +81,6 @@ export default function ListProductWareHouse() {
           <span class="badge badge-ghost badge-sm">{product.title}</span>
         </td>
       </tr>))}
-
     </>
   );
 }

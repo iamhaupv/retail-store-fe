@@ -1,11 +1,11 @@
-import React from "react";
 
-export default function CategoryTableDetail() {
+export default function CategoryTableDetail({units}) {
+  
   return (
     <>
-      <tr className="hover:bg-slate-100">
-        <td>Thung24</td>
-        <td>24</td>
+      {units.map((unit)=> (<tr className="hover:bg-slate-100">
+        <td key={unit._id}>{unit.name}</td>
+        <td>{unit.convertQuantity}</td>
         <td>
           <button
             className=" w-6 h-6 rounded-lg mr-2"
@@ -53,7 +53,7 @@ export default function CategoryTableDetail() {
             </svg>
           </button>
         </td>
-      </tr>
+      </tr>))}
 
       <dialog id="DeleteSupplyDetail" className="modal">
         <div className="modal-box w-3/12 ">
@@ -63,7 +63,6 @@ export default function CategoryTableDetail() {
           <div className="flex modal-action justify-between ">
             <button className="btn w-20 bg-orange-500"> Đồng ý</button>
             <form method="dialog ">
-              {/* if there is a button, it will close the modal */}
               <button className="btn w-20">Hủy</button>
             </form>
           </div>

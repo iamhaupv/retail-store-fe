@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import ListProductInventory from "../../components/ListProductInventory";
 import ListProductWareHouse from "../../components/ListProductWareHouse";
 import TableDetailWarehouse from "../../components/TableDetailWarehouse";
 import Autocomplete from "../../components/AutoComplete";
+import apiGetAllProduct from "../../apis/apiGetAllProducts";
 
 export default function WarehouseReceipt() {
   // const [image, setImage] = useState({});
@@ -20,10 +21,10 @@ export default function WarehouseReceipt() {
   //     reader.readAsDataURL(file);
   //   }
   // };
-
   const [isClicked, setIsClicked] = useState(false);
  const placeHolderBrand='Nhà cung cấp..'
  const placeHolderCategory='loại sản phẩm..'
+ const [selectedProducts, setSelectedProducts] = useState([]);
 
   const suggestions = [
     "Nước ngọt ",
@@ -34,6 +35,12 @@ export default function WarehouseReceipt() {
     "Cà phê pha phin",
     "Cà phê lon",
   ];
+  // WarehouseReceipt.js
+
+const handleAddProduct = (products) => {
+  setSelectedProducts((prev) => [...prev, ...products]);
+  console.log("Sản phẩm đã chọn:", products);
+};
 
   return (
     <>
@@ -107,20 +114,7 @@ export default function WarehouseReceipt() {
                         </tr>
                       </thead>
                       <tbody>
-                        <TableDetailWarehouse />
-                        {/* row 2 */}
-                        <TableDetailWarehouse />
-                        {/* row 3 */}
-                        <TableDetailWarehouse />
-                        {/* row 4 */}
-                        <TableDetailWarehouse />
-                        <TableDetailWarehouse />
-                        {/* row 2 */}
-                        <TableDetailWarehouse />
-                        {/* row 3 */}
-                        <TableDetailWarehouse />
-                        {/* row 4 */}
-                        <TableDetailWarehouse />
+                      <TableDetailWarehouse selectedProducts={selectedProducts} />
                       </tbody>
                       {/* foot */}
                       <tfoot>
@@ -210,7 +204,7 @@ export default function WarehouseReceipt() {
                 </tr>
               </thead>
               <tbody>
-                <ListProductWareHouse />
+              <ListProductWareHouse onSelectProduct={handleAddProduct} />
               </tbody>
               <tfoot></tfoot>
             </table>
@@ -219,13 +213,9 @@ export default function WarehouseReceipt() {
           <div className="modal-action ">
             <div className="flex w-full">
               <form method="dialog">
-                <button
-                  class="btn w-28 text-white"
-                  style={{ backgroundColor: "#f13612" }}
-                  onClick={() => setIsClicked(true)}
-                >
-                  Thêm
-                </button>
+              <button className="btn w-28 text-white" style={{ backgroundColor: "#f13612" }} onClick={() => setIsClicked(true)}>
+              Thêm
+            </button>
                 {/* if there is a button in form, it will close the modal */}
                 <button
                   class="btn w-28 ml-4"

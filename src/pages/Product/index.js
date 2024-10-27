@@ -25,7 +25,7 @@ export default function Product() {
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const titleRegex = /^[a-zA-Z\s]+$/;
+    const titleRegex = /^[a-zA-Z\s\dÀ-ỹ]+$/;
     const priceRegex = /^\d+(\.\d{1,2})?$/; // cho nhập số nguyên và số thập phân
     const descriptionRegex = /^.{10,}$/; // min 10 character
 
@@ -856,7 +856,7 @@ export default function Product() {
               )}
             </h4>
             {/* Select type  */}
-            {/* <select
+            <select
               name="category"
               onBlur={handleBlur}
               onChange={handleChangeInput}
@@ -871,13 +871,13 @@ export default function Product() {
                   {category.name}
                 </option>
               ))}
-            </select> */}
-            <div className="w-11/12 h-11 ml-4 mb-8 ">
+            </select>
+            {/* <div className="w-11/12 h-11 ml-4 mb-8 ">
               <Autocomplete
                 suggestions={suggestions}
                 placeholder="Loại sản phẩm"
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
