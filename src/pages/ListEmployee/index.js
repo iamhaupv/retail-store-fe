@@ -4,11 +4,14 @@ import EmployeeTableDetail from "../../components/EmployeeTableDetail";
 import Autocomplete from "../../components/AutoComplete";
 
 export default function ListEmployee() {
-  const suggestions = [
-    "Nguyễn Thanh Khoa",
-    "Phạm Văn Hậu",
-    "Nguyễn Đức Long",
-    "Lê Trọng Nghĩa",
+  const suggestion = [
+    { id: 1, name: "Nguyễn Thanh Khoa" },
+    { id: 2, name: "Phạm Văn Hậu" },
+    { id: 3, name: "Nguyễn Đức Long" },
+    { id: 4, name: "Lê Trọng Nghĩa" },
+    { id: 5, name: "Devon Webb" },
+    { id: 6, name: "Nguyễn Thanh Khoa" },
+    { id: 7, name: "Nguyễn Đức Long" },
   ];
   return (
     <>
@@ -20,7 +23,7 @@ export default function ListEmployee() {
           <div className="card bg-white rounded-none top-7 grid  ">
             {/* search Input */}
             <div className="ml-4 mt-4 w-4/12">
-                <Autocomplete suggestions={suggestions} placeholder="Tên nhân viên.."/>
+                <Autocomplete suggestion={suggestion} placeholder="Tên nhân viên.."/>
             </div>
             {/* Nofication and Button Add */}
 

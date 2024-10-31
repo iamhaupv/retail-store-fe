@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 export default function Supply() {
   const [image, setImage] = useState({});
   const [isVisible, setIsVisible] = useState(true);
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
   const handleClose = () => {
     setIsVisible(false);
     setImage(null); // Reset image to null to show the label again
@@ -20,56 +20,57 @@ export default function Supply() {
   const handleBlur = (e) => {
     const { name } = e.target;
     if (!payload[name]) {
-      setError((prev) => ({ ...prev, [name]: `Không được để trống!` })); 
+      setError((prev) => ({ ...prev, [name]: `Không được để trống!` }));
     }
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const nameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/; 
-    const supplyNameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/; 
-    const descriptionRegex = /^.{10,}$/  // min 10 character
+    const nameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/;
+    const supplyNameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/;
+    const descriptionRegex = /^.{10,}$/; // min 10 character
     const phoneRegex =
       /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
     const addressRegex = /^\d+\s[A-Za-zÀ-ỹ0-9\s.,'-]+$/;
     let errorMessage;
     // title
-    if(name === 'name') {
-      if(!value){
-        errorMessage = 'Không được để trống!'
-      }else if(!nameRegex.test(value)){
-        errorMessage = 'Tên không hợp lệ. Vui lòng nhập tên hợp lệ!'
+    if (name === "name") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!nameRegex.test(value)) {
+        errorMessage = "Tên phải có chữ hoa đầu";
       }
     }
     // price
-    if(name === 'supplyName') {
-      if(!value){
-        errorMessage = 'Không được để trống!'
-      }else if(!supplyNameRegex.test(value)){
-        errorMessage = 'Giá không hợp lệ. Vui lòng nhập số hợp lệ!'
+    if (name === "supplyName") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!supplyNameRegex.test(value)) {
+        errorMessage = "Giá phải là số";
       }
     }
     // description
-    if(name === 'description') {
-      if(!value){
-        errorMessage = 'Không được để trống!'
-      }else if(!descriptionRegex.test(value)){
-        errorMessage = 'Mô tả phải nhập ít nhất 10 kí tự!'
+    if (name === "description") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!descriptionRegex.test(value)) {
+        errorMessage = "Mô tả phải nhập ít nhất 10 kí tự!";
       }
     }
-    // 
-    if(name === 'phone') {
-      if(!value){
-        errorMessage = 'Không được để trống!'
-      }else if(!phoneRegex.test(value)){
-        errorMessage = 'Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại hợp lệ!'
+    //
+    if (name === "phone") {
+      if (!value) {
+        errorMessage = "Không được để trống!";
+      } else if (!phoneRegex.test(value)) {
+        errorMessage =
+          "Số điện thoại phải là số và 11 số";
       }
     }
-    // 
+    //
     if (name === "address") {
       if (!value) {
         errorMessage = "Không được để trống!";
       } else if (!addressRegex.test(value)) {
-        errorMessage = "Địa không hợp lệ. Vui lòng nhập địa chỉ hợp lệ!";
+        errorMessage = "Địa không hợp lệ";
       }
     }
     setError((prev) => ({ ...prev, [name]: errorMessage }));
@@ -136,7 +137,7 @@ export default function Supply() {
     }
   };
   console.log(payload.name);
-  
+
   return (
     <>
       {/* <Content component={Receipt}/> */}
@@ -154,18 +155,17 @@ export default function Supply() {
               </h4>
               <div className="flex items-center pt-8">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
-                  Tên nhà cung cấp {error ? (
-                    <h5 className="ml-1 text-red-500">{error.name}</h5>
-                  ) : (
-                    <h5 className="ml-1 text-red-600">(*)</h5>
-                  )}
-                 
+                  Tên nhà cung cấp
+                  <h5 className="ml-1 text-red-600 ml-1">(*)</h5>
                 </h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">
+                <h4 className="flex font-sans text-base w-5/12 ml-4">
                   Mã nhà cung cấp
+                  <h5 className="ml-1 text-red-600 ml-1">(*)</h5>
+
                 </h4>
               </div>
-              <div className="flex items-center pt-2">
+              <div className="flex pt-2">
+                <div className="w-6/12">
                 <input
                   name="name"
                   value={payload.name}
@@ -173,8 +173,12 @@ export default function Supply() {
                   onChange={handleChangeInput}
                   type="text"
                   placeholder="Tên nhà cung cấp"
-                  className="input input-bordered w-6/12 h-10 ml-4"
+                  className="input input-bordered w-full h-10 ml-4"
                 />
+                {error && (
+                    <h5 className="ml-1 text-red-500">{error.name}</h5>
+                  )}
+                  </div>
                 <input
                   type="text"
                   placeholder="Mã thương hiệu"
@@ -184,19 +188,19 @@ export default function Supply() {
               </div>
               <div className="flex items-center pt-2">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
-                  Tên người cung cấp {error ? (
+                  Tên người cung cấp
+                  <h5 className="ml-1 text-red-600 ml-1">(*)</h5>
+
+                  {error && (
                     <h5 className="ml-1 text-red-500">{error.supplyName}</h5>
-                  ) : (
-                    <h5 className="ml-1 text-red-600">(*)</h5>
                   )}
                 </h4>
                 <h4 className="flex font-sans text-base w-5/12 ml-4">
-                  Số điện thoại {error ? (
-                    <h5 className="ml-1 text-red-500">{error.phone}</h5>
-                  ) : (
-                    <h5 className="ml-1 text-red-600">(*)</h5>
-                  )}
+                  Số điện thoại
                   <h5 className="ml-1 text-red-600">(*)</h5>
+                  {error && (
+                    <h5 className="ml-1 text-red-500">{error.phone}</h5>
+                  )}
                 </h4>
               </div>
               <div className="flex items-center pt-2">
@@ -208,7 +212,7 @@ export default function Supply() {
                   onBlur={handleBlur}
                   placeholder="Tên người cung cấp"
                   className="input input-bordered w-6/12 h-10 ml-4"
-                /> 
+                />
                 <input
                   name="phone"
                   value={payload.phone}
@@ -221,11 +225,12 @@ export default function Supply() {
               </div>
               <div className="flex items-center pt-2">
                 <h4 className="flex font-sans text-base w-6/12 ml-4 ">
-                  Địa chỉ {error ? (
+                  Địa chỉ
+                  {error ? (
                     <h5 className="ml-1 text-red-500">{error.address}</h5>
                   ) : (
                     <h5 className="ml-1 text-red-600">(*)</h5>
-                  )}
+                  )}{" "}
                 </h4>
               </div>
               <div className="flex items-center pt-2">
@@ -240,12 +245,14 @@ export default function Supply() {
                 />
               </div>
 
-              <h4 className="font-sans text-base w-6/12 ml-4 mb-2">Mô tả</h4>
-              {error ? (
-                    <h5 className="ml-1 text-red-500">{error.description}</h5>
-                  ) : (
-                    <h5 className="ml-1 text-red-600">(*)</h5>
-                  )}
+              <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
+                Mô tả
+                {error ? (
+                  <h5 className="ml-1 text-red-500">{error.description}</h5>
+                ) : (
+                  <h5 className="ml-1 text-red-600">(*)</h5>
+                )}
+              </h4>
               <textarea
                 name="description"
                 value={payload.description}

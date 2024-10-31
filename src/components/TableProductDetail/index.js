@@ -44,7 +44,6 @@ export default function TableProductDetail() {
     setSelectedProduct(product);
     document.getElementById("modal_Quick_View").showModal();
   };
-  
   return (
     <>
       {products.map((product) => (
@@ -64,7 +63,9 @@ export default function TableProductDetail() {
               </div>
               <div>
                 <div className="font-bold">{product.title}</div>
-                <span className="badge badge-ghost badge-sm">{product.category.name}</span>
+                <span className="badge badge-ghost badge-sm">
+                  Nước giải khát
+                </span>
               </div>
             </div>
           </td>
@@ -76,7 +77,9 @@ export default function TableProductDetail() {
           <td>
             <h1 className="">{product.quantity}</h1>
           </td>
-
+          <td>
+            <h1 className="">{product.price.toLocaleString()} đ</h1>
+          </td>
           <td>
             <div className="flex w-fit">
               <button
@@ -258,7 +261,9 @@ export default function TableProductDetail() {
                         </a>
                         <a
                           href={`#slideProduct${
-                            index + 2 > selectedProduct.images.length ? 1 : index + 2
+                            index + 2 > selectedProduct.images.length
+                              ? 1
+                              : index + 2
                           }`}
                           className="btn btn-circle"
                         >
@@ -270,15 +275,31 @@ export default function TableProductDetail() {
                 </div>
               </div>
             )}
+            {/* </figure> */}
+
             <div className="card-body w-3/6 h-full">
               <h1 className="card-title text-3xl font-medium">
-                {selectedProduct ? selectedProduct.title : ""}
+                Ibanez RG470DX-SFM Electric Guitar,Sea Foam Green Matte
               </h1>
               <h1>
-                {selectedProduct ? selectedProduct.description : ""}
+                Body Body Type: Solidbody Body Material: Meranti Body Shape: RG
+                Color:Sea Foam Green Matte NECK...{" "}
               </h1>
-              <h1 className="text-xl font-medium">{selectedProduct ? selectedProduct.price : ""}đ </h1>
+              <h1 className="text-xl font-medium">14.600.000đ</h1>
+
               <div className="card-actions justify-start">
+                {/* <div>
+                <div className="flex justify-center">
+                  <div className="join mr-6">
+                    <button className="join-item btn">+</button>
+                    <button className="join-item btn">1</button>
+                    <button className="join-item btn">-</button>
+                  </div>
+                  <button className="btn btn-neutral btn-wide" hidden>
+                    Add to cart
+                  </button>
+                </div>
+              </div> */}
               </div>
             </div>
           </div>

@@ -22,10 +22,10 @@ export default function StockInDetail() {
     <>
       {receipts.map((receipt) => (
         <tr key={receipt._id} className="hover:bg-slate-100">
-          <th>KNK0314322021-001</th>
+          <td>KNK0314322021-001</td>
           <td>{receipt.user}</td>
           <td>{receipt.user}</td>
-          <td>
+          {/* <td>
             <div
               className="badge  gap-2"
               style={{ backgroundColor: "#f2f1fa", color: "#bfb8c6" }}
@@ -46,8 +46,7 @@ export default function StockInDetail() {
               </svg>
               Đang vận chuyển
             </div>
-            {/* Nếu đã giao thì xài tag này */}
-            {/* <div className="badge  gap-2" style={{backgroundColor:"#c8f7f5", color:"#46d7d0"}}>
+            <div className="badge  gap-2" style={{backgroundColor:"#c8f7f5", color:"#46d7d0"}}>
              <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 fill="none" 
@@ -59,12 +58,12 @@ export default function StockInDetail() {
                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
              </svg>
                 Đã giao
-              </div> */}
-          </td>
+              </div>
+          </td> */}
           <td>{receipt.products.length}</td>
           <td>{receipt.products.reduce((total, product) => {
-                  return total + product.quantity * product.priceImport;
-                }, 0)}</td>
+                  return (total + product.quantity * product.priceImport);
+                }, 0).toLocaleString()}</td>
 
           <th>
             <button
@@ -93,26 +92,7 @@ export default function StockInDetail() {
               </svg>
             </button>
 
-            <button
-              className=" w-6 h-6 rounded-sm mr-2"
-              style={{ backgroundColor: "#ebf3fe", outline: "" }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-                style={{ color: "#2f80ed" }}
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                />
-              </svg>
-            </button>
+            
 
             <button
               id="btn__delete"

@@ -46,7 +46,8 @@ export default function Employee() {
       if (!value) {
         errorMessage = "Không được để trống!";
       } else if (!phoneRegex.test(value)) {
-        errorMessage = "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại hợp lệ!";
+        errorMessage =
+          "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại hợp lệ!";
       }
     }
     // address
@@ -67,17 +68,18 @@ export default function Employee() {
         const age = today.getFullYear() - birthDate.getFullYear();
         const monthDifference = today.getMonth() - birthDate.getMonth();
 
-        const isUnderage = age < 18 || 
-          (age === 18 && (
-            monthDifference < 0 || 
-            (monthDifference === 0 && today.getDate() < birthDate.getDate())
-          ));
+        const isUnderage =
+          age < 18 ||
+          (age === 18 &&
+            (monthDifference < 0 ||
+              (monthDifference === 0 &&
+                today.getDate() < birthDate.getDate())));
 
         if (isUnderage) {
           errorMessage = "Bạn phải ít nhất 18 tuổi.";
         }
       }
-    }    
+    }
     setError((prev) => ({ ...prev, [name]: errorMessage }));
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
@@ -168,8 +170,9 @@ export default function Employee() {
                 Thêm nhân viên
               </h4>
               <div className="flex items-center pt-8">
-                <h4 className="font-sans text-base w-6/12 ml-4">
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Tên nhân viên
+                  <div className="text-red-500 ml-1">(*)</div>
                 </h4>
                 <h4 className="font-sans text-base w-5/12 ml-4">
                   Mã nhân viên
@@ -185,7 +188,7 @@ export default function Employee() {
                   placeholder="Tên nhân viên"
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
-                {error && <div className="text-red-500">{error.name}</div>}
+
                 <input
                   type="text"
                   placeholder="Max nhan vien"
@@ -193,10 +196,15 @@ export default function Employee() {
                   disabled
                 />
               </div>
+              {error && <div className="text-red-500 ml-4">{error.name}</div>}
               <div className="flex items-center pt-2">
-                <h4 className="font-sans text-base w-6/12 ml-4">Email</h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
+                  Email
+                  <div className="text-red-500 ml-1">(*)</div>
+                </h4>
+                <h4 className="flex font-sans text-base w-5/12 ml-4">
                   Số điện thoại
+                  <div className="text-red-500 ml-1">(*)</div>
                 </h4>
               </div>
               <div className="flex items-center pt-2">
@@ -209,7 +217,6 @@ export default function Employee() {
                   className="input input-bordered w-6/12 h-10 ml-4"
                   onBlur={handleBlur}
                 />
-                {error && <div className="text-red-500">{error.email}</div>}
                 <input
                   name="phone"
                   onChange={handleChangeInput}
@@ -219,13 +226,20 @@ export default function Employee() {
                   onBlur={handleBlur}
                   className="input input-bordered w-5/12 h-10 ml-4"
                 />
-                {error && <div className="text-red-500">{error.phone}</div>}
               </div>
               <div className="flex items-center pt-2">
-                <h4 className="font-sans text-base w-6/12 ml-4 mb-2">
+                {error && <div className="text-red-500 ">{error.email}</div>}
+                {error && <div className="text-red-500 ">{error.phone}</div>}
+              </div>
+              <div className="flex items-center pt-2">
+                <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
                   Địa chỉ
+                  <div className="text-red-500 ml-1">(*)</div>
                 </h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">Ngày sinh</h4>
+                <h4 className="flex font-sans text-base w-5/12 ml-4">
+                  Ngày sinh
+                  <div className="text-red-500 ml-1">(*)</div>
+                </h4>
               </div>
               <div className="flex items-center pt-2">
                 <input
@@ -250,8 +264,9 @@ export default function Employee() {
                 {error && <div className="text-red-500">{error.birthday}</div>}
               </div>
 
-              <h4 className="font-sans text-base w-6/12 ml-4 mb-2 mt-2">
+              <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2 mt-2">
                 Giới tính
+                <div className="text-red-500 ml-1">(*)</div>
               </h4>
               <select
                 value={payload.gender}
@@ -293,8 +308,9 @@ export default function Employee() {
             <h4 className="font-bold text-xl w-full ml-4 mt-2">
               Thông tin đính kèm
             </h4>
-            <h4 className="font-sans text-base w-6/12 h-10 ml-4 pt-2">
-              Logo Thương hiệu
+            <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
+              Ảnh đại diện
+              <div className="text-red-500 ml-1">(*)</div>
             </h4>
             {/* Logo img  */}
             <input
