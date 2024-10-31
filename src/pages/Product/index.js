@@ -4,7 +4,9 @@ import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
 import Autocomplete from "../../components/AutoComplete";
+import { useNavigate } from "react-router-dom";
 export default function Product() {
+  const navigate = useNavigate()
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState([]);
@@ -28,7 +30,7 @@ export default function Product() {
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const titleRegex = /^[a-zA-Z\s]+$/;
+    const titleRegex = /^[A-Za-zÀ-ỹ\s'-.\d]{2,}$/;
     const priceRegex = /^\d+(\.\d{1,2})?$/; // cho nhập số nguyên và số thập phân
     const descriptionRegex = /^.{10,}$/; // min 10 character
 
@@ -157,6 +159,7 @@ export default function Product() {
         const response = await apiCreateProduct(token, formData);
         if (response.success) {
           Swal.fire("Success", "Thêm thành công!", "success");
+          navigate("/product-list")
         } else {
           Swal.fire("Error", "Thêm không thành công!", "error");
         }
@@ -856,7 +859,7 @@ export default function Product() {
               <h5 className="ml-1 text-red-600">(*)</h5>
             </h4>
             {/* Select type  */}
-            {/* <select
+            <select
               name="category"
               onBlur={handleBlur}
               onChange={handleChangeInput}
@@ -871,7 +874,7 @@ export default function Product() {
                   {category.name}
                 </option>
               ))}
-            </select> */}
+            </select>
             <div className="w-11/12 h-11 ml-4 mb-8 ">
               <Autocomplete suggestion={suggestion}/>
             </div>

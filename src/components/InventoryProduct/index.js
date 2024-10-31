@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import ProductInventory from "../ProductInventory";
 import ListProductInventory from "../ListProductInventory";
 
 export default function InventoryProduct() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="w-auto">
       <select className="select-sm select-bordered w-32">
@@ -19,9 +29,7 @@ export default function InventoryProduct() {
         <h4 className="font-bold text-xl w-32 ml-4">Hàng tồn kho</h4>
         <button
           className="btn btn-success text-white w-48"
-          onClick={() =>
-            document.getElementById("AddInventoryProduct").showModal()
-          }
+          onClick={openModal}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +51,6 @@ export default function InventoryProduct() {
       {/* TableInventory */}
       <div className="overflow-y-auto h-80 mt-7">
         <table className="table table-pin-rows">
-          {/* head */}
           <thead>
             <tr>
               <th>Mã sản phẩm</th>
@@ -57,21 +64,13 @@ export default function InventoryProduct() {
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
             <ProductInventory />
-            {/* row 2 */}
             <ProductInventory />
-            {/* row 3 */}
             <ProductInventory />
-            {/* row 4 */}
             <ProductInventory />
-            {/* row 1 */}
             <ProductInventory />
-            {/* row 2 */}
             <ProductInventory />
-            {/* row 3 */}
             <ProductInventory />
-            {/* row 4 */}
             <ProductInventory />
           </tbody>
           <tfoot>
@@ -81,8 +80,9 @@ export default function InventoryProduct() {
       </div>
 
       {/* Thêm Hàng vào kệ */}
-      <dialog id="AddInventoryProduct" className="modal ">
-        <div className="modal-box w-full max-w-4xl h-full overflow-y-hidden  ">
+      {isModalOpen && (
+       <div className="fixed w-screen z-40 top-0  inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="modal-box w-full max-w-6xl h-full overflow-y-hidden  ">
           <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
           <div className="flex items-center mb-4 w-full">
             {/* Search Input  */}
@@ -127,9 +127,10 @@ export default function InventoryProduct() {
                   {/* <div className='w-7'> */}
                   <th></th>
                   {/* </div> */}
-                  <th>Modal</th>
+                  <th>Mã sản phẩm</th>
+                  <th>Mã phiếu</th>
                   <th>Sản phẩm</th>
-                  <th>Thương hiệu</th>
+                  <th>Nhà cung cấp</th>
                   <th>Số lượng</th>
                 </tr>
               </thead>
@@ -164,6 +165,7 @@ export default function InventoryProduct() {
                 <button
                   class="btn w-28 ml-4"
                   style={{ backgroundColor: "#e0e0e0" }}
+                  onClick={closeModal}
                 >
                   Hủy
                 </button>
@@ -171,7 +173,8 @@ export default function InventoryProduct() {
             </div>
           </div>
         </div>
-      </dialog>
+      </div>
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import apiLastIdWarehouseReceipt from "../../apis/apiLastIdWarehouseReceipt";
 import { useNavigate } from "react-router-dom";
 
 export default function WarehouseReceipt() {
-  const navigate = useNavigate()
+  const navigate = useNavigate;
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);
@@ -16,6 +16,15 @@ export default function WarehouseReceipt() {
   const [units, setUnits] = useState([]);
   const [user, setUser] = useState("");
   const [code, setCode] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   const fetchUnits = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -82,9 +91,10 @@ export default function WarehouseReceipt() {
     }));
 
     setAddedProducts((prev) => [...prev, ...newAddedProducts]);
-    document.getElementById("AddWarehouseReceipt").close();
+    // document.getElementById("AddWarehouseReceipt").close();
     setSelectedProducts([]);
     setIsClicked(true);
+    setIsModalOpen(false)
   };
 
   const handleChangeInput = (index, name, value) => {
@@ -136,7 +146,7 @@ export default function WarehouseReceipt() {
       const response = await apiCreateWarehouseReceipt(token, payload);
       console.log("Receipt created successfully:", response);
       document.getElementById("AddWarehouseReceipt").close();
-      navigate("/inventory")
+      navigate("/inventory");
     } catch (error) {
       throw new Error("handle submit is error " + error);
     }
@@ -225,13 +235,7 @@ export default function WarehouseReceipt() {
                 Danh sách mặt hàng PepsiCo
               </h4>
               <div className="flex pt-8 h-fit w-full pb-2">
-                <button
-                  className="hidden"
-                  onClick={() =>
-                    document.getElementById("AddWarehouseReceipt").showModal()
-                  }
-                  id="FileMain"
-                />
+              <button className="hidden" onClick={openModal} id="FileMain" />
                 {isClicked ? (
                   <div className="overflow-y-auto w-full h-96">
                     <table className="table table-pin-rows">
@@ -405,7 +409,7 @@ export default function WarehouseReceipt() {
         </div>
       </div>
 
-      <dialog id="AddWarehouseReceipt" className="modal">
+      {/* <dialog id="AddWarehouseReceipt" className="modal">
         <div className="modal-box w-full max-w-4xl h-full overflow-y-hidden">
           <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
           <div className="flex items-center mb-4">
@@ -498,7 +502,113 @@ export default function WarehouseReceipt() {
             </div>
           </div>
         </div>
-      </dialog>
+      </dialog> */}
+      {isModalOpen && (
+        <div id="AddWarehouseReceipt" className="fixed w-screen  inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="modal-box w-full  max-w-6xl h-full overflow-y-hidden ">
+            <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
+            <div className="flex items-center mb-4">
+              {/* Brand */}
+              <div className="w-52 ">
+                <Autocomplete
+                  suggestion={suggestion}
+                  placeholder="Nhà cung cấp.."
+                />
+              </div>
+              {/* Product */}
+              <div className="w-52 ml-3 mr-3">
+                <Autocomplete
+                  suggestion={suggestion}
+                  placeholder="Loại sản phẩm.."
+                />
+              </div>
+              {/* Search Input  */}
+              <div className="w-52  mr-3">
+                <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" />
+              </div>
+            </div>
+            {/* table product  */}
+            <div className=" overflow-y-scroll h-4/6">
+              <table className="table table-pin-rows">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Mã sản phẩm</th>
+                    <th>Sản phẩm</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr className="hover:bg-slate-100">
+                      <th key={product._id}>
+                        <label>
+                          <input type="checkbox"
+                          className="checkbox"
+                          checked={
+                            selectedProducts.includes(product._id) ||
+                            addedProducts.includes(product)
+                          }
+                          onChange={() => handleCheckboxChange(product._id)}
+                          disabled={addedProducts.some(
+                            (addedProduct) => addedProduct._id === product._id
+                          )} />
+                        </label>
+                      </th>
+                      <td>
+                        <div>
+                          <div className="font-bold">ASM001</div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-3">
+                          <div class="avatar">
+                            <div class="mask mask-squircle h-12 w-12">
+                              <img
+                                src={product.images[0]}
+                                alt="Avatar Tailwind CSS Component"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <div class="font-bold">{product.title}</div>
+                            <div class="text-sm opacity-50">
+                              {product.title}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot></tfoot>
+              </table>
+            </div>
+
+            <div className="modal-action ">
+              <div className="flex w-full">
+                <form method="dialog">
+                  <button
+                    class="btn w-28 text-white"
+                    style={{ backgroundColor: "#f13612" }}
+                    // onClick={() => setIsClicked(true)}
+                    onClick={handleAdd}
+                  >
+                    Thêm
+                  </button>
+                  {/* if there is a button in form, it will close the modal */}
+                  <button
+                    class="btn w-28 ml-4"
+                    style={{ backgroundColor: "#e0e0e0" }}
+                    onClick={closeModal}
+                  >
+                    Hủy
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

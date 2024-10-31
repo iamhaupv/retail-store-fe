@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import apiCreateBrand from "../../apis/apiCreateBrand";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 export default function Supply() {
+  const navigate = useNavigate()
   const [image, setImage] = useState({});
   const [isVisible, setIsVisible] = useState(true);
   const [error, setError] = useState(false);
@@ -25,12 +27,12 @@ export default function Supply() {
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const nameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/;
+    const nameRegex = /^[\w\d.A-Za-zÀ-ỹ\s()'-]{2,}$/;
     const supplyNameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/;
     const descriptionRegex = /^.{10,}$/; // min 10 character
     const phoneRegex =
       /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
-    const addressRegex = /^\d+\s[A-Za-zÀ-ỹ0-9\s.,'-]+$/;
+    const addressRegex = /^\w+|\d+\s[A-Za-zÀ-ỹ0-9\s./,'-]+$/;
     let errorMessage;
     // title
     if (name === "name") {
@@ -127,6 +129,7 @@ export default function Supply() {
         const response = await apiCreateBrand(token, formData);
         if (response.success) {
           Swal.fire("Success", "Thêm thành công!", "success");
+          navigate("/supply-list")
         } else {
           Swal.fire("Error", "Thêm không thành công!", "error");
         }
@@ -136,7 +139,6 @@ export default function Supply() {
       }
     }
   };
-  console.log(payload.name);
 
   return (
     <>
