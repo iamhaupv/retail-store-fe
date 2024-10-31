@@ -21,7 +21,7 @@ export default function FormLogin() {
     const rs = await LoginApi(email, password);
     if (rs.success) {
       setPayload({ email: "", password: "" });
-      navigate("/dashboard");
+      navigate("/");
       localStorage.setItem("accessToken", rs.accessToken)
       const username = rs.userData.username;
       localStorage.setItem("username", username)
