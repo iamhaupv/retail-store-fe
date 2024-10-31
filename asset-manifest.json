@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/retail-store-fe/static/css/main.99d05d03.css",
+    "main.js": "/retail-store-fe/static/js/main.3e01c98a.js",
+    "static/js/453.a43e6e49.chunk.js": "/retail-store-fe/static/js/453.a43e6e49.chunk.js",
+    "static/media/pngegg.png": "/retail-store-fe/static/media/pngegg.0dcf4fd373e0823f5e58.png",
+    "static/media/luck.png": "/retail-store-fe/static/media/luck.2ab64e3fc60d83fcae94.png",
+    "static/media/Logo-removebg-preview.png": "/retail-store-fe/static/media/Logo-removebg-preview.e4b3e24b26831a6c2817.png",
+    "index.html": "/retail-store-fe/index.html",
+    "main.99d05d03.css.map": "/retail-store-fe/static/css/main.99d05d03.css.map",
+    "main.3e01c98a.js.map": "/retail-store-fe/static/js/main.3e01c98a.js.map",
+    "453.a43e6e49.chunk.js.map": "/retail-store-fe/static/js/453.a43e6e49.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.99d05d03.css",
+    "static/js/main.3e01c98a.js"
+  ]
+}
