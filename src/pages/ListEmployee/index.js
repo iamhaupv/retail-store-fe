@@ -4,6 +4,7 @@ import EmployeeTableDetail from "../../components/EmployeeTableDetail";
 import Autocomplete from "../../components/AutoComplete";
 
 export default function ListEmployee() {
+  
   const suggestion = [
     { id: 1, name: "Nguyễn Thanh Khoa" },
     { id: 2, name: "Phạm Văn Hậu" },

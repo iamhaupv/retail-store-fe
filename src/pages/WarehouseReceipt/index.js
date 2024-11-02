@@ -5,7 +5,7 @@ import apiGetAllUnit from "../../apis/apiGetAllUnit";
 import apiCreateWarehouseReceipt from "../../apis/apiCreateWarehouseReceipt";
 import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
 import apiLastIdWarehouseReceipt from "../../apis/apiLastIdWarehouseReceipt";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function WarehouseReceipt() {
   const navigate = useNavigate;
@@ -17,7 +17,41 @@ export default function WarehouseReceipt() {
   const [user, setUser] = useState("");
   const [code, setCode] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [brands, setBrands] = useState([])
+  const [productFilter, setProductFilter] = useState([])
+  const [isBrand, setIsBrand] = useState('Hảo Hảo')
+  const fetchProductFilter = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("Token is invalid!");
+    try {
+      const response = await apiGetProductsByFilter(token, { name: isBrand });
+      // Kiểm tra xem sản phẩm có phải là mảng không
+      if (Array.isArray(response.products)) {
+        setProductFilter(response.products);
+      } else {
+        // Nếu không, đặt thành mảng rỗng
+        setProductFilter([]);
+        console.warn(response.products); // Ghi lại thông báo "No products found!" nếu cần
+      }
+    } catch (error) {
+      setProductFilter([]); // Đặt lại thành mảng rỗng nếu có lỗi
+    }
+  };
+  
+  
+  useEffect(() => {
+    fetchProductFilter();
+}, [isBrand]);
+  const fetchBrands = async() => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid!")
+      const response = await apiGetListBrands()
+      setBrands(response.brands)
+    } catch (error) {
+      throw new Error("fetch brand is error " + error)
+    }
+  }
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -44,6 +78,7 @@ export default function WarehouseReceipt() {
   useEffect(() => {
     fetchUnits();
     fetchUser();
+    fetchBrands()
   }, []);
 
   const fetchProducts = async () => {
@@ -410,101 +445,6 @@ export default function WarehouseReceipt() {
           </div>
         </div>
       </div>
-
-      {/* <dialog id="AddWarehouseReceipt" className="modal">
-        <div className="modal-box w-full max-w-4xl h-full overflow-y-hidden">
-          <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
-          <div className="flex items-center mb-4">
-            <div className="w-52">
-              <Autocomplete
-                suggestion={suggestion}
-                placeholder="Nhà cung cấp.."
-              />
-            </div>
-            <div className="w-52 ml-3 mr-3">
-              <Autocomplete
-                suggestion={suggestion}
-                placeholder="Loại sản phẩm.."
-              />
-            </div>
-            <div className="w-52 mr-3">
-              <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" />
-            </div>
-          </div>
-          <div className="overflow-y-scroll h-4/6">
-            <table className="table table-pin-rows">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Mã sản phẩm</th>
-                  <th>Sản phẩm</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr key={product._id} className="hover:bg-slate-100">
-                    <th>
-                      <label>
-                        <input
-                          type="checkbox"
-                          className="checkbox"
-                          checked={
-                            selectedProducts.includes(product._id) ||
-                            addedProducts.includes(product)
-                          }
-                          onChange={() => handleCheckboxChange(product._id)}
-                          disabled={addedProducts.some(
-                            (addedProduct) => addedProduct._id === product._id
-                          )}
-                        />
-                      </label>
-                    </th>
-                    <td>
-                      <div>
-                        <div className="font-bold">{product.code}</div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex items-center gap-3">
-                        <div className="avatar">
-                          <div className="mask mask-squircle h-12 w-12">
-                            <img src={product.images[0]} alt={product.title} />
-                          </div>
-                        </div>
-                        <div>
-                          <div className="font-bold">{product.title}</div>
-                          <div className="text-sm opacity-50">
-                            {product.brand.name}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="modal-action">
-            <div className="flex w-full">
-              <button
-                className="btn w-28 text-white"
-                style={{ backgroundColor: "#f13612" }}
-                onClick={handleAdd}
-              >
-                Thêm
-              </button>
-              <button
-                className="btn w-28 ml-4"
-                style={{ backgroundColor: "#e0e0e0" }}
-                onClick={handleSubmit}
-              >
-                Hủy
-              </button>
-            </div>
-          </div>
-        </div>
-      </dialog> */}
       {isModalOpen && (
         <div id="AddWarehouseReceipt" className="fixed w-screen  inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="modal-box w-full  max-w-6xl h-full overflow-y-hidden ">
@@ -512,6 +452,20 @@ export default function WarehouseReceipt() {
             <div className="flex items-center mb-4">
               {/* Brand */}
               <div className="w-52 ">
+              <select
+              onChange={(e) => setIsBrand(e.target.value)} 
+              name="category"
+              className="select select-bordered w-11/12 h-11 ml-4 mb-8"
+            >
+              <option value="" disabled selected>
+                Loại sản phẩm
+              </option>
+              {brands.map((brand) => (
+                <option key={brand._id} value={brand.name}>
+                  {brand.name}
+                </option>
+              ))}
+            </select>
                 <Autocomplete
                   suggestion={suggestion}
                   placeholder="Nhà cung cấp.."
@@ -540,7 +494,7 @@ export default function WarehouseReceipt() {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
+                  {productFilter.length > 0  ? productFilter.map((product) => (
                     <tr className="hover:bg-slate-100">
                       <th key={product._id}>
                         <label>
@@ -580,7 +534,7 @@ export default function WarehouseReceipt() {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  )) : <div>Chưa có sản phẩm</div>}
                 </tbody>
                 <tfoot></tfoot>
               </table>

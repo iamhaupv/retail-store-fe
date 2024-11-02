@@ -44,6 +44,8 @@ export default function TableProductDetail() {
     setSelectedProduct(product);
     document.getElementById("modal_Quick_View").showModal();
   };
+  console.log(products);
+  
   return (
     <>
       {products.map((product) => (
@@ -64,7 +66,7 @@ export default function TableProductDetail() {
               <div>
                 <div className="font-bold">{product.title}</div>
                 <span className="badge badge-ghost badge-sm">
-                  Nước giải khát
+                  {product.category.name}
                 </span>
               </div>
             </div>
@@ -279,13 +281,12 @@ export default function TableProductDetail() {
 
             <div className="card-body w-3/6 h-full">
               <h1 className="card-title text-3xl font-medium">
-                Ibanez RG470DX-SFM Electric Guitar,Sea Foam Green Matte
+                {selectedProduct ? selectedProduct.title : ""}
               </h1>
               <h1>
-                Body Body Type: Solidbody Body Material: Meranti Body Shape: RG
-                Color:Sea Foam Green Matte NECK...{" "}
+                {selectedProduct ? selectedProduct.description : ""}
               </h1>
-              <h1 className="text-xl font-medium">14.600.000đ</h1>
+              <h1 className="text-xl font-medium">{selectedProduct ? selectedProduct.price : ""} đ</h1>
 
               <div className="card-actions justify-start">
                 {/* <div>
