@@ -7,7 +7,7 @@ const apiChangePassword = async(token, payload) => {
         }})
         return response.data
     } catch (error) {
-        throw new Error(error)
+        console.log("api change password is error " + error);
     }
 }
 

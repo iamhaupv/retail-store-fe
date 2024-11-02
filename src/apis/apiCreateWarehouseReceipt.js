@@ -8,7 +8,7 @@ const apiCreateWarehouseReceipt = async (token, payload) => {
         }})
         return response.data
     } catch (error) {
-        throw new Error("api craete warehouse receipt is error!")
+        console.log("api create warehouse receipt is error" + error);
     }
 }
 

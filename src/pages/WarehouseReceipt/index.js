@@ -21,7 +21,7 @@ export default function WarehouseReceipt() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [brands, setBrands] = useState([])
   const [productFilter, setProductFilter] = useState([])
-  const [isBrand, setIsBrand] = useState('Hảo Hảo')
+  const [isBrand, setIsBrand] = useState('')
   const fetchProductFilter = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("Token is invalid!");
@@ -56,8 +56,11 @@ export default function WarehouseReceipt() {
   }
   const openModal = () => {
     setIsModalOpen(true);
+    setIsBrand(""); // Reset brand filter on close
+    setProductFilter([]); 
   };
-
+  console.log(brands);
+  
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -226,7 +229,9 @@ export default function WarehouseReceipt() {
 
     return code; // Trả về mã đã tạo
   };
-
+  const handleBrand = async (e) => {
+    setBrands(e.target)
+  }
   useEffect(() => {
     fetchProducts();
     generateWarehouseReceiptCode();
@@ -269,7 +274,7 @@ export default function WarehouseReceipt() {
           <div className="w-full h-fit mr-4 rounded-sm pt-4 pb-8">
             <div className="card bg-white h-fit rounded-sm top-7 grid pt-6">
               <h4 className="font-bold text-xl w-full ml-4">
-                Danh sách mặt hàng PepsiCo
+                Danh sách mặt hàng {isBrand}
               </h4>
               <div className="flex pt-8 h-fit w-full pb-2">
               <button className="hidden" onClick={openModal} id="FileMain" />
@@ -452,7 +457,7 @@ export default function WarehouseReceipt() {
             <div className="flex items-center mb-4">
               {/* Brand */}
               <div className="w-52 ">
-              <select
+              {/* <select
               onChange={(e) => setIsBrand(e.target.value)} 
               name="category"
               className="select select-bordered w-11/12 h-11 ml-4 mb-8"
@@ -465,7 +470,8 @@ export default function WarehouseReceipt() {
                   {brand.name}
                 </option>
               ))}
-            </select>
+            </select> */}
+            <input className="border" name="category" onChange={(e) => setIsBrand(e.target.value)} />
                 <Autocomplete
                   suggestion={suggestion}
                   placeholder="Nhà cung cấp.."

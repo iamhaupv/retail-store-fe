@@ -10,9 +10,9 @@ const apiGetAllProduct = async (token) => {
         },
       }
     );
-    return response.data;
+    return response.data || [];
   } catch (error) {
-    throw new Error(error);
+    console.log("api get all product is error " + error);
   }
 };
 export default apiGetAllProduct;

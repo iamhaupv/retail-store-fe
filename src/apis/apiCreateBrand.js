@@ -14,7 +14,8 @@ const apiCreateBrand = async (token, payload) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error("Time out");
+    console.log("api create brand is error " + error);
+    
   }
 };
 export default apiCreateBrand;

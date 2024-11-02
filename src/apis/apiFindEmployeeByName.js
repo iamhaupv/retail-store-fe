@@ -10,7 +10,7 @@ const apiFindEmployeeByName = async (token, payload) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error("api find employee by name" + error);
+    console.log("api find employee by name is error " + error);
   }
 };
 

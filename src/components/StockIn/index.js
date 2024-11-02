@@ -77,17 +77,6 @@ export default function StockIn() {
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
-            <StockInDetail />
-            {/* row 2 */}
-            <StockInDetail />
-            {/* row 3 */}
-            <StockInDetail />
-            {/* row 1 */}
-            <StockInDetail />
-            {/* row 2 */}
-            <StockInDetail />
-            {/* row 3 */}
             <StockInDetail />
           </tbody>
         </table>

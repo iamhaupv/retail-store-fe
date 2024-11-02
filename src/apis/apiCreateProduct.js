@@ -10,7 +10,7 @@ const apiCreateProduct = async (token, payload) => {
         });
         return response.data;
     } catch (error) {
-        throw new Error(error.response ? error.response.data : error.message);
+        console.log("api create product is error " + error);
     }
 };
 

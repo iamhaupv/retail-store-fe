@@ -12,7 +12,7 @@ const apiGetAllReceipt = async (token) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(error);
+    console.log("api get all receipt is error " + error); 
   }
 };
 export default apiGetAllReceipt;
