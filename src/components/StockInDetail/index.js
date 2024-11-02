@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiGetAllReceipt from "../../apis/apiGetAllReceipt";
+import { Link } from "react-router-dom";
 
 export default function StockInDetail() {
   const [receipts, setReceipts] = useState([]);
@@ -65,7 +66,8 @@ export default function StockInDetail() {
                   return (total + product.quantity * product.priceImport);
                 }, 0).toLocaleString()}</td>
 
-          <th>
+          <td>
+            <Link to='/EntryForm'>
             <button
               className=" w-6 h-6 rounded-sm mr-2"
               style={{ backgroundColor: "#e2f2ea", outline: "" }}
@@ -91,7 +93,7 @@ export default function StockInDetail() {
                 />
               </svg>
             </button>
-
+            </Link>
             
 
             <button
@@ -120,7 +122,7 @@ export default function StockInDetail() {
             </button>
 
             {/* Alert Delete */}
-          </th>
+          </td>
         </tr>
       ))}
 

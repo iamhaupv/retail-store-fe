@@ -5,7 +5,9 @@ import apiGetAllUnit from "../../apis/apiGetAllUnit";
 import apiCreateWarehouseReceipt from "../../apis/apiCreateWarehouseReceipt";
 import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
 import apiLastIdWarehouseReceipt from "../../apis/apiLastIdWarehouseReceipt";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import apiGetProductsByFilter from "../../apis/apiGetProductsByFilter";
+import apiGetListBrands from "../../apis/apiGetListBrand";
 
 export default function WarehouseReceipt() {
   const navigate = useNavigate;
@@ -17,9 +19,9 @@ export default function WarehouseReceipt() {
   const [user, setUser] = useState("");
   const [code, setCode] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [brands, setBrands] = useState([])
-  const [productFilter, setProductFilter] = useState([])
-  const [isBrand, setIsBrand] = useState('Hảo Hảo')
+  const [brands, setBrands] = useState([]);
+  const [productFilter, setProductFilter] = useState([]);
+  const [isBrand, setIsBrand] = useState("Hảo Hảo");
   const fetchProductFilter = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("Token is invalid!");
@@ -37,21 +39,20 @@ export default function WarehouseReceipt() {
       setProductFilter([]); // Đặt lại thành mảng rỗng nếu có lỗi
     }
   };
-  
-  
+
   useEffect(() => {
     fetchProductFilter();
-}, [isBrand]);
-  const fetchBrands = async() => {
+  }, [isBrand]);
+  const fetchBrands = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      if(!token) throw new Error("Token is invalid!")
-      const response = await apiGetListBrands()
-      setBrands(response.brands)
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListBrands();
+      setBrands(response.brands);
     } catch (error) {
-      throw new Error("fetch brand is error " + error)
+      throw new Error("fetch brand is error " + error);
     }
-  }
+  };
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -78,7 +79,7 @@ export default function WarehouseReceipt() {
   useEffect(() => {
     fetchUnits();
     fetchUser();
-    fetchBrands()
+    fetchBrands();
   }, []);
 
   const fetchProducts = async () => {
@@ -129,7 +130,7 @@ export default function WarehouseReceipt() {
     // document.getElementById("AddWarehouseReceipt").close();
     setSelectedProducts([]);
     setIsClicked(true);
-    setIsModalOpen(false)
+    setIsModalOpen(false);
   };
 
   const handleChangeInput = (index, name, value) => {
@@ -270,7 +271,7 @@ export default function WarehouseReceipt() {
                 Danh sách mặt hàng
               </h4>
               <div className="flex pt-8 h-fit w-full pb-2">
-              <button className="hidden" onClick={openModal} id="FileMain" />
+                <button className="hidden" onClick={openModal} id="FileMain" />
                 {isClicked ? (
                   <div className="overflow-y-auto w-full h-96">
                     <table className="table table-pin-rows">
@@ -435,37 +436,40 @@ export default function WarehouseReceipt() {
               Thêm
             </button>
             <Link to="/inventory">
-            <button
-              className="btn w-28 ml-4"
-              style={{ backgroundColor: "#e0e0e0" }}
-            >
-              Hủy
-            </button>
+              <button
+                className="btn w-28 ml-4"
+                style={{ backgroundColor: "#e0e0e0" }}
+              >
+                Hủy
+              </button>
             </Link>
           </div>
         </div>
       </div>
       {isModalOpen && (
-        <div id="AddWarehouseReceipt" className="fixed w-screen  inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+          id="AddWarehouseReceipt"
+          className="fixed w-screen  inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        >
           <div className="modal-box w-full  max-w-6xl h-full overflow-y-hidden ">
             <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
             <div className="flex items-center mb-4">
               {/* Brand */}
               <div className="w-52 ">
-              <select
-              onChange={(e) => setIsBrand(e.target.value)} 
-              name="category"
-              className="select select-bordered w-11/12 h-11 ml-4 mb-8"
-            >
-              <option value="" disabled selected>
-                Loại sản phẩm
-              </option>
-              {brands.map((brand) => (
-                <option key={brand._id} value={brand.name}>
-                  {brand.name}
-                </option>
-              ))}
-            </select>
+                <select
+                  onChange={(e) => setIsBrand(e.target.value)}
+                  name="category"
+                  className="select select-bordered w-11/12 h-11 ml-4 mb-8"
+                >
+                  <option value="" disabled selected>
+                    Loại sản phẩm
+                  </option>
+                  {brands.map((brand) => (
+                    <option key={brand._id} value={brand.name}>
+                      {brand.name}
+                    </option>
+                  ))}
+                </select>
                 <Autocomplete
                   suggestion={suggestion}
                   placeholder="Nhà cung cấp.."
@@ -494,47 +498,54 @@ export default function WarehouseReceipt() {
                   </tr>
                 </thead>
                 <tbody>
-                  {productFilter.length > 0  ? productFilter.map((product) => (
-                    <tr className="hover:bg-slate-100">
-                      <th key={product._id}>
-                        <label>
-                          <input type="checkbox"
-                          className="checkbox"
-                          checked={
-                            selectedProducts.includes(product._id) ||
-                            addedProducts.includes(product)
-                          }
-                          onChange={() => handleCheckboxChange(product._id)}
-                          disabled={addedProducts.some(
-                            (addedProduct) => addedProduct._id === product._id
-                          )} />
-                        </label>
-                      </th>
-                      <td>
-                        <div>
-                          <div className="font-bold">ASM001</div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="flex items-center gap-3">
-                          <div class="avatar">
-                            <div class="mask mask-squircle h-12 w-12">
-                              <img
-                                src={product.images[0]}
-                                alt="Avatar Tailwind CSS Component"
-                              />
-                            </div>
-                          </div>
+                  {productFilter.length > 0 ? (
+                    productFilter.map((product) => (
+                      <tr className="hover:bg-slate-100">
+                        <th key={product._id}>
+                          <label>
+                            <input
+                              type="checkbox"
+                              className="checkbox"
+                              checked={
+                                selectedProducts.includes(product._id) ||
+                                addedProducts.includes(product)
+                              }
+                              onChange={() => handleCheckboxChange(product._id)}
+                              disabled={addedProducts.some(
+                                (addedProduct) =>
+                                  addedProduct._id === product._id
+                              )}
+                            />
+                          </label>
+                        </th>
+                        <td>
                           <div>
-                            <div class="font-bold">{product.title}</div>
-                            <div class="text-sm opacity-50">
-                              {product.title}
+                            <div className="font-bold">ASM001</div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="flex items-center gap-3">
+                            <div class="avatar">
+                              <div class="mask mask-squircle h-12 w-12">
+                                <img
+                                  src={product.images[0]}
+                                  alt="Avatar Tailwind CSS Component"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <div class="font-bold">{product.title}</div>
+                              <div class="text-sm opacity-50">
+                                {product.title}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  )) : <div>Chưa có sản phẩm</div>}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <div>Chưa có sản phẩm</div>
+                  )}
                 </tbody>
                 <tfoot></tfoot>
               </table>

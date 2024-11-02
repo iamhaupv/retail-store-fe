@@ -1,3 +1,4 @@
+import { elements } from "chart.js";
 import LayoutDefault from "../layout/LayoutDefault";
 import Category from "../pages/Category";
 import ChangePassWord from "../pages/ChangePassWord";
@@ -17,8 +18,10 @@ import SignUp from "../pages/SignUp";
 import SupplierList from "../pages/SupplierList";
 import Supply from "../pages/Supply";
 import WarehouseReceipt from "../pages/WarehouseReceipt";
+import EntryForm from "../pages/EntryForm";
 
 export const routes = [
+  { path: "/entryForm", element: <EntryForm/>},
   { path: "/signin", element: <SignIn /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
   {
