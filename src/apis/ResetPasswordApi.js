@@ -1,9 +1,12 @@
-import axios from "../configs/axios";
-const ResetPasswordApi = (payload) =>
-  axios({
-    url: "/user/resetpassword",
-    method: "put",
-    data: payload,
-  });
+import axios from "axios";
+const ResetPasswordApi = async(payload) => {
+  try {
+    const url = process.env.REACT_APP_API_URL
+    const response = axios.put(`${url}user/resetpassword`, payload)
+    return (await response).data
+  } catch (error) {
+    throw new Error("api reset password is error " + error)
+  }
+}
 
-export default ResetPasswordApi;
+export default ResetPasswordApi

@@ -17,8 +17,7 @@ export default function FormLogin() {
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
   const handleLogin = async () => {
-    const { email, password } = payload;
-    const rs = await LoginApi(email, password);
+    const rs = await LoginApi(payload);
     if (rs.success) {
       setPayload({ email: "", password: "" });
       navigate("/");
@@ -34,7 +33,7 @@ export default function FormLogin() {
   const handleForgotPassword = async() => {
     try {
       const {email} = payload
-      const rs = await ForgotPasswordApi(email)
+      const rs = await ForgotPasswordApi({email})
       if(rs.success){
         Swal.fire("Bạn vui lòng check email", rs.mes, "success")
       }else{
