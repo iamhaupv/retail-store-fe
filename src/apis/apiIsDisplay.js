@@ -9,7 +9,8 @@ const apiIsDisplay = async(token, pid, data) => {
           );
           return response.data;
     } catch (error) {
-        throw new Error(error)
+        console.log("api IsDisplay is error " + error);
+        
     }
 }
 

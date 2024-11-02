@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import apiGetAllReceipt from "../../apis/apiGetAllReceipt";
 import { Link } from "react-router-dom";
-
+import apiIsDisplayWarehouseReceipt from "../../apis/apiIsDisplayWarehouseReceipt";
 export default function StockInDetail() {
+
   const [receipts, setReceipts] = useState([]);
   const fetchReceipts = async () => {
     try {
@@ -19,52 +20,45 @@ export default function StockInDetail() {
   useEffect(() => {
     fetchReceipts();
   }, []);
+  
+  function formatDate(date) {
+    if (!(date instanceof Date)) {
+      date = new Date(date); // Chuyển đổi chuỗi thành đối tượng Date
+    }
+  
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+  
+    return `${day}/${month}/${year}`;
+  }
+  const handleChangeIsDisplay = async (pid, isDisplay) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      await apiIsDisplayWarehouseReceipt(token, pid, { isDisplay });
+      fetchReceipts();
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
   return (
     <>
       {receipts.map((receipt) => (
         <tr key={receipt._id} className="hover:bg-slate-100">
-          <td>KNK0314322021-001</td>
-          <td>{receipt.user}</td>
-          <td>{receipt.user}</td>
-          {/* <td>
-            <div
-              className="badge  gap-2"
-              style={{ backgroundColor: "#f2f1fa", color: "#bfb8c6" }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="inline-block h-4 w-4 stroke-current"
-                style={{ color: "#bfb8c6" }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-              Đang vận chuyển
-            </div>
-            <div className="badge  gap-2" style={{backgroundColor:"#c8f7f5", color:"#46d7d0"}}>
-             <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="currentColor" 
-                class="size-6"
-                className="inline-block h-4 w-4 stroke-current" style={{color:"#46d7d0"}}>
-               <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-             </svg>
-                Đã giao
-              </div>
-          </td> */}
+          <td>{receipt.idPNK}</td>
+          <td>{formatDate(receipt.createdAt)}</td>
+          <td>
+            {receipt.user.lastname} {receipt.user.firstname}
+          </td>
           <td>{receipt.products.length}</td>
-          <td>{receipt.products.reduce((total, product) => {
-                  return (total + product.quantity * product.priceImport);
-                }, 0).toLocaleString()}</td>
+          <td>
+            {receipt.products
+              .reduce((total, product) => {
+                return total + product.quantity * product.importPrice;
+              }, 0)
+              .toLocaleString()}
+          </td>
 
           <td>
             <Link to='/EntryForm'>
@@ -94,15 +88,14 @@ export default function StockInDetail() {
               </svg>
             </button>
             </Link>
-            
-
             <button
               id="btn__delete"
               className="w-6 h-6 rounded-sm "
               style={{ backgroundColor: "#feebe8", outline: "" }}
-              onClick={() =>
-                document.getElementById("Delete_StockIn").showModal()
-              }
+              // onClick={() =>
+              //   document.getElementById("Delete_StockIn").showModal()
+              // }
+              onClick={() => handleChangeIsDisplay(receipt._id, false)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

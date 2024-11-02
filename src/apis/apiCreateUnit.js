@@ -7,7 +7,7 @@ const apiCreateUnit = async(token, payload) => {
         }})
         return response.data
     } catch (error) {
-        throw new Error("api create unit is error" + error)
+        console.log("api create unit is error " + error);
     }
 }
 export default apiCreateUnit

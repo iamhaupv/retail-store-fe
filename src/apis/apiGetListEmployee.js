@@ -12,7 +12,7 @@ const apiGetListEmployee = async (token) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(error);
+   console.log("api get list employees is error " + error);
   }
 };
 export default apiGetListEmployee;

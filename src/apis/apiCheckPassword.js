@@ -10,7 +10,8 @@ const apiCheckPassword = async (token, payload) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error("api check password is error!");
+    console.log("api check password is error " + error);
+    
   }
 };
 

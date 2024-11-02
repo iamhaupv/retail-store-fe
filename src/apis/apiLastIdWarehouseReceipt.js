@@ -7,7 +7,7 @@ const apiLastIdWarehouseReceipt = async (token) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error("api last id warehouse receipt is error" + error);
+    console.log("api last id warehouse receipt is error" + error);
   }
 };
 

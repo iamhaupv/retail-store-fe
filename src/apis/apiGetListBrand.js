@@ -5,7 +5,7 @@ const apiGetListBrands = async() => {
         const response = await axios.get(`${url}brand`)
         return response.data
     } catch (error) {
-        throw new Error(error)
+        console.log("api get list brand is error " + error);
     }
 }
 

@@ -7,7 +7,7 @@ const apiForgotPassword = async(token, payload) => {
         }}) 
         return response.data
     } catch (error) {
-        throw new Error("Error api forgot password!")
+        console.log("api forgot password is error " + error);
     }
 }
 export default apiForgotPassword

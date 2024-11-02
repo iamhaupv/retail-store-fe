@@ -14,7 +14,8 @@ const apiCreateEmployee = async (token, payload) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(error);
+    console.log("api create employee is error " + error);
+    
   }
 };
 export default apiCreateEmployee;

@@ -12,7 +12,7 @@ const apiGetAllProduct_OUT_OF_STOCK = async (token) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(error);
+    console.log("api get all product out of stock is error " + error);
   }
 };
 export default apiGetAllProduct_OUT_OF_STOCK;

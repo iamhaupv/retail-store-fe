@@ -5,7 +5,7 @@ const apiGetListProduct = async() =>{
         const response = await axios.get(`${url}product`)
         return response.data
     } catch (error) {
-        throw new Error(error)
+        console.log("api get list product is error " + error);
     }
 }
 

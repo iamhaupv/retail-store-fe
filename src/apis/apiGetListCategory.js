@@ -9,7 +9,7 @@ const apiGetListCategory = async() => {
         
         return response.data
     } catch (error) {
-        throw new Error(error)
+        console.log("api get list category is error " + error);
     }
 }
 

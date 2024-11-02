@@ -7,7 +7,7 @@ const apiGetAllUnit = async (token) => {
         }})
         return response.data
     } catch (error) {
-        throw new Error("api get all unit is error" + error)
+        console.log("api get all unit is error " + error)
     }
 }
 

@@ -12,7 +12,7 @@ const apiDeleteProduct = async (token, productId) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(error);
+    console.log("api delete product is error " +  error);
   }
 };
 export default apiDeleteProduct;
