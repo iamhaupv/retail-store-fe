@@ -4,13 +4,22 @@ import React, { useState } from "react";
 import "./Inventory.css";
 import StockIn from "../../components/StockIn";
 import InventoryProduct from "../../components/InventoryProduct";
+import ListProductInventory from "../../components/ListProductInventory";
 
 export default function Inventory() {
   const [activeTab, setActiveTab] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
+
+  const toggleModal = () => {
+    console.log("Toggle modal");
+
+    setIsModalOpen(!isModalOpen)
+  }
+
   return (
     <>
 
@@ -118,8 +127,7 @@ export default function Inventory() {
             <div className="card bg-white rounded-lg top-7  grid   ">
               <div role="tablist" className="tabs tabs-bordered order-b border-gray-200" style={{
                 
-              }}>
-                
+              }}>            
                 <input
                   type="radio"
                   name="my_tabs_1"
@@ -127,7 +135,7 @@ export default function Inventory() {
                   className="tab whitespace-nowrap"
                   aria-label="Nhập kho"
                   defaultChecked
-                  style={activeTab === 0 ? { borderColor: "#f89a88"  } : {}}
+                  style={activeTab === 0 ? { borderColor: "#f89a88" } : {}}
                   onClick={() => handleTabClick(0)}
                 />
                 <div role="tabpanel" className="tab-content mb-20 p-10 " style={{
@@ -148,9 +156,8 @@ export default function Inventory() {
                 />
                 <div role="tabpanel" className="tab-content mb-20 p-10" style={{
                   borderTop: "2px solid #ededed",
-                }}>
-                  
-                  <InventoryProduct />
+                }}>  
+                  <InventoryProduct onChangeModal={toggleModal} />
                 </div>
               </div>
             </div>
@@ -225,6 +232,104 @@ export default function Inventory() {
           <button>close</button>
         </form>
       </dialog>
+      
+      {isModalOpen && (
+       <div 
+        className="fixed w-screen z-40 inset-0 flex items-center justify-center bg-black bg-opacity-50"  
+      >
+        <div className="modal-box w-full max-w-6xl h-full overflow-y-hidden  ">
+          <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
+          <div className="flex items-center mb-4 w-full">
+            {/* Search Input  */}
+            <label className="input input-bordered w-52 h-12 flex  items-center gap-2">
+              <input type="text" className="grow" placeholder="Tên sản phẩm" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </label>
+            {/* Product */}
+            <select className="select select-bordered w-52 ml-3 mr-3">
+              <option disabled selected>
+                Loại sản phẩm
+              </option>
+              <option>Đồ ăn</option>
+              <option>Thức uống</option>
+            </select>
+            {/* Brand */}
+            <select className="select select-bordered h-12 w-52 ">
+              <option disabled selected>
+                Thương hiệu
+              </option>
+              <option>KFC</option>
+              <option>Pepsi</option>
+            </select>
+          </div>
+          {/* table product  */}
+          <div className=" overflow-y-scroll h-4/6">
+            <table className="table">
+              {/* head */}
+              <thead>
+                <tr>
+                  {/* <div className='w-7'> */}
+                  <th></th>
+                  {/* </div> */}
+                  <th>Mã sản phẩm</th>
+                  <th>Mã phiếu</th>
+                  <th>Sản phẩm</th>
+                  <th>Nhà cung cấp</th>
+                  <th>Số lượng</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* row 1 */}
+                <ListProductInventory />
+                {/* row 2 */}
+                <ListProductInventory />
+                {/* row 3 */}
+                <ListProductInventory />
+                {/* row 4 */}
+                <ListProductInventory />
+                {/* row 5 */}
+                <ListProductInventory />
+              </tbody>
+              {/* foot */}
+              <tfoot></tfoot>
+            </table>
+          </div>
+
+          <div className="modal-action ">
+            <div className="flex w-full">
+              <button
+                class="btn w-28 text-white"
+                style={{ backgroundColor: "#f13612" }}
+              >
+                Thêm
+              </button>
+              <form method="dialog">
+                {/* if there is a button in form, it will close the modal */}
+
+                <button
+                  class="btn w-28 ml-4"
+                  style={{ backgroundColor: "#e0e0e0" }}
+                  onClick={toggleModal}
+                >
+                  Hủy
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      )}
     </>
   );
 }

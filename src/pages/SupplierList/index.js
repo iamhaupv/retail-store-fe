@@ -56,11 +56,11 @@ export default function SupplierList() {
                 {/* head */}
                 <thead>
                   <tr>
-                    <th>Modal</th>
-                    <th>Thương hiệu</th>
+                    <th>Mã</th>
+                    <th>Nhà cung cấp</th>
                     <th>Địa chỉ</th>
                     <th>Số điện thoại</th>
-                    <th>Tên nhà cung cấp</th>
+                    <th>Tên người cung cấp</th>
                     <th>Thao tác</th>
                   </tr>
                 </thead>

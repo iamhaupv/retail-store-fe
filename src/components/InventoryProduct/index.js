@@ -2,16 +2,8 @@ import React, { useState } from "react";
 import ProductInventory from "../ProductInventory";
 import ListProductInventory from "../ListProductInventory";
 
-export default function InventoryProduct() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+export default function InventoryProduct({onChangeModal}) {
+  
 
   return (
     <div className="w-auto">
@@ -29,7 +21,8 @@ export default function InventoryProduct() {
         <h4 className="font-bold text-xl w-32 ml-4">Hàng tồn kho</h4>
         <button
           className="btn btn-success text-white w-48"
-          onClick={openModal}
+          // onClick={openModal}
+          onClick={onChangeModal}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -79,13 +72,11 @@ export default function InventoryProduct() {
         </table>
       </div>
 
-      {/* Thêm Hàng vào kệ */}
-      {isModalOpen && (
-       <div className="fixed w-screen z-40 top-0  inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      {/* {isModalOpen && (
+       <div className="fixed w-screen z-40 inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div className="modal-box w-full max-w-6xl h-full overflow-y-hidden  ">
           <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
           <div className="flex items-center mb-4 w-full">
-            {/* Search Input  */}
             <label className="input input-bordered w-52 h-12 flex  items-center gap-2">
               <input type="text" className="grow" placeholder="Tên sản phẩm" />
               <svg
@@ -101,7 +92,6 @@ export default function InventoryProduct() {
                 />
               </svg>
             </label>
-            {/* Product */}
             <select className="select select-bordered w-52 ml-3 mr-3">
               <option disabled selected>
                 Loại sản phẩm
@@ -109,7 +99,6 @@ export default function InventoryProduct() {
               <option>Đồ ăn</option>
               <option>Thức uống</option>
             </select>
-            {/* Brand */}
             <select className="select select-bordered h-12 w-52 ">
               <option disabled selected>
                 Thương hiệu
@@ -118,15 +107,11 @@ export default function InventoryProduct() {
               <option>Pepsi</option>
             </select>
           </div>
-          {/* table product  */}
           <div className=" overflow-y-scroll h-4/6">
             <table className="table">
-              {/* head */}
               <thead>
                 <tr>
-                  {/* <div className='w-7'> */}
                   <th></th>
-                  {/* </div> */}
                   <th>Mã sản phẩm</th>
                   <th>Mã phiếu</th>
                   <th>Sản phẩm</th>
@@ -135,18 +120,12 @@ export default function InventoryProduct() {
                 </tr>
               </thead>
               <tbody>
-                {/* row 1 */}
                 <ListProductInventory />
-                {/* row 2 */}
                 <ListProductInventory />
-                {/* row 3 */}
                 <ListProductInventory />
-                {/* row 4 */}
                 <ListProductInventory />
-                {/* row 5 */}
                 <ListProductInventory />
               </tbody>
-              {/* foot */}
               <tfoot></tfoot>
             </table>
           </div>
@@ -160,7 +139,6 @@ export default function InventoryProduct() {
                 Thêm
               </button>
               <form method="dialog">
-                {/* if there is a button in form, it will close the modal */}
 
                 <button
                   class="btn w-28 ml-4"
@@ -174,7 +152,7 @@ export default function InventoryProduct() {
           </div>
         </div>
       </div>
-      )}
+      )} */}
     </div>
   );
 }

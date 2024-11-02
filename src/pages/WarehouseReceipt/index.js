@@ -5,7 +5,7 @@ import apiGetAllUnit from "../../apis/apiGetAllUnit";
 import apiCreateWarehouseReceipt from "../../apis/apiCreateWarehouseReceipt";
 import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
 import apiLastIdWarehouseReceipt from "../../apis/apiLastIdWarehouseReceipt";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function WarehouseReceipt() {
   const navigate = useNavigate;
@@ -232,7 +232,7 @@ export default function WarehouseReceipt() {
           <div className="w-full h-fit mr-4 rounded-sm pt-4 pb-8">
             <div className="card bg-white h-fit rounded-sm top-7 grid pt-6">
               <h4 className="font-bold text-xl w-full ml-4">
-                Danh sách mặt hàng PepsiCo
+                Danh sách mặt hàng
               </h4>
               <div className="flex pt-8 h-fit w-full pb-2">
               <button className="hidden" onClick={openModal} id="FileMain" />
@@ -263,7 +263,7 @@ export default function WarehouseReceipt() {
                                   </div>
                                 </div>
                                 <div>
-                                  <div className="font-bold">
+                                  <div className="font-bold text-ellipsis">
                                     {product.title}
                                   </div>
                                 </div>
@@ -292,10 +292,10 @@ export default function WarehouseReceipt() {
                                   handleUnitChange(index, e.target.value)
                                 } // Handle unit change
                                 value={product.unit || ""} // Bind to unit value
-                                className="select select-bordered w-11/12 h-11 ml-4 mb-8"
+                                className="select select-bordered w-32 h-8 "
                               >
                                 <option value="" disabled>
-                                  Loại sản phẩm
+                                  Đơn vị tính
                                 </option>
                                 {units.map((unit) => (
                                   <option key={unit._id} value={unit._id}>
@@ -399,12 +399,14 @@ export default function WarehouseReceipt() {
             >
               Thêm
             </button>
+            <Link to="/inventory">
             <button
               className="btn w-28 ml-4"
               style={{ backgroundColor: "#e0e0e0" }}
             >
               Hủy
             </button>
+            </Link>
           </div>
         </div>
       </div>
