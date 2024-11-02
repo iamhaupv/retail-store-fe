@@ -1,10 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import EmployeeTableDetail from "../../components/EmployeeTableDetail";
 import Autocomplete from "../../components/AutoComplete";
+import apiFindEmployeeByName from "../../apis/apiFindEmployeeByName";
 
 export default function ListEmployee() {
-  
+  const [employees, setEmployees] = useState([]);
+  const [employeeName, setEmployeeName] = useState("");
+  const fetchFindEmployeeByName = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiFindEmployeeByName(token, {
+        name: employeeName,
+      });
+      setEmployees(response.employees || []);
+    } catch (error) {
+      console.error("Failed to fetch employees:", error);
+      // Optionally set an error state here
+    }
+  };
+
+  useEffect(() => {
+    if (employeeName) {
+      fetchFindEmployeeByName();
+    }
+  }, [employeeName]);
+  const handleChangeInput = (e) => {
+    const { value } = e.target;
+    setEmployeeName(value);
+  };
+
+  console.log(employees);
+
   const suggestion = [
     { id: 1, name: "Nguyễn Thanh Khoa" },
     { id: 2, name: "Phạm Văn Hậu" },
@@ -24,7 +52,19 @@ export default function ListEmployee() {
           <div className="card bg-white rounded-none top-7 grid  ">
             {/* search Input */}
             <div className="ml-4 mt-4 w-4/12">
-                <Autocomplete suggestion={suggestion} placeholder="Tên nhân viên.."/>
+              <input
+                id="employeeName"
+                type="text"
+                name="employeeName"
+                value={employeeName}
+                onChange={handleChangeInput}
+                className="border rounded p-2 w-full"
+                placeholder="Nhập tên nhân viên..."
+              />
+              <Autocomplete
+                suggestion={suggestion}
+                placeholder="Tên nhân viên.."
+              />
             </div>
             {/* Nofication and Button Add */}
 
@@ -68,7 +108,18 @@ export default function ListEmployee() {
                   </tr>
                 </thead>
                 <tbody>
-                  <EmployeeTableDetail/>      
+                  {/* <EmployeeTableDetail /> */}
+
+                  {employees.length > 0 ? (
+                    employees.map((employee) => (
+                      <EmployeeTableDetail
+                        key={employee.id}
+                        employee={employee}
+                      />
+                    ))
+                  ) : (
+                    <div>Không có nhân viên nào</div>
+                  )}
                 </tbody>
                 <tfoot>
                   <tr></tr>
