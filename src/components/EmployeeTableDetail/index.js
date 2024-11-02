@@ -2,26 +2,26 @@ import React, { useState } from "react";
 import apiGetListEmployee from "../../apis/apiGetListEmployee";
 import { useEffect } from "react";
 
-export default function EmployeeTableDetail() {
-  const [employees, setEmployees] = useState([])
-  const fetchEmployees = async() => {
-    try {
-      const token = localStorage.getItem("accessToken")
-      if(!token){
-        throw new Error("Token is invalid!")
-      }
-      const response = await apiGetListEmployee(token)
-      setEmployees(response.data)
-    } catch (error) {
-      throw new Error(error)
-    }
-  }
-  useEffect(() => {
-    fetchEmployees()
-  }, [])
+export default function EmployeeTableDetail({employee}) {
+  // const [employees, setEmployees] = useState([])
+  // const fetchEmployees = async() => {
+  //   try {
+  //     const token = localStorage.getItem("accessToken")
+  //     if(!token){
+  //       throw new Error("Token is invalid!")
+  //     }
+  //     const response = await apiGetListEmployee(token)
+  //     setEmployees(response.data)
+  //   } catch (error) {
+  //     throw new Error(error)
+  //   }
+  // }
+  // useEffect(() => {
+  //   fetchEmployees()
+  // }, [])
   return (
     <>
-      {employees.map((employee) => (
+      {/* {employees.map((employee) => ( */}
         <tr key={employee._id} className="hover:bg-slate-100">
         <td>
           <div>
@@ -104,7 +104,7 @@ export default function EmployeeTableDetail() {
           {/* Alert Delete */}
         </td>
       </tr>
-      ))}
+      {/* ))} */}
     </>
   );
 }
