@@ -61,7 +61,7 @@ export default function StockInDetail() {
           </td>
 
           <td>
-            <Link to='/EntryForm'>
+            <Link to='/entryForm'>
             <button
               className=" w-6 h-6 rounded-sm mr-2"
               style={{ backgroundColor: "#e2f2ea", outline: "" }}

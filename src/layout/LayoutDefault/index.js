@@ -18,8 +18,29 @@ const LayoutDefault = () => {
     case "/employee":
       headerContent = <Header title={"Thêm nhân viên"} />;
       break;
+    case "/employeelist":
+      headerContent = <Header title={"Danh sách nhân viên"} />;
+      break;
+      case "/inventory":
+      headerContent = <Header title={"Thông tin kho"} />;
+      break;
+      case "/WarehouseReceipt":
+      headerContent = <Header title={"Phiếu nhập kho"} />;
+      break;
+      case "/createOrder":
+      headerContent = <Header title={"Tạo đơn hàng"} />;
+      break;
+      case "/information":
+      headerContent = <Header title={"Thông tin cá nhân"} />;
+      break;
+      case "/changePassWord":
+      headerContent = <Header title={"Đổi mật khẩu"} />;
+      break;
     case "/product-list":
       headerContent = <Header title={"Danh sách sản phẩm"} />;
+      break;
+    case "/category":
+      headerContent = <Header title={"Đơn vị tính"} />;
       break;
     case "/product":
       headerContent = <Header title={"Thêm sản phẩm"} />;
@@ -33,9 +54,9 @@ const LayoutDefault = () => {
     case "/supply-list":
       headerContent = <Header title={"Danh sách nhà cung cấp"} />;
       break;
-      case "/order":
-        headerContent = <Header title={"Danh sách đơn hàng"} />;
-        break;
+    case "/order":
+      headerContent = <Header title={"Danh sách đơn hàng"} />;
+      break;
     default:
       headerContent = <Header title={"Home"} />;
   }
