@@ -1,4 +1,3 @@
-import { elements } from "chart.js";
 import LayoutDefault from "../layout/LayoutDefault";
 import Category from "../pages/Category";
 import ChangePassWord from "../pages/ChangePassWord";
@@ -18,10 +17,10 @@ import SignUp from "../pages/SignUp";
 import SupplierList from "../pages/SupplierList";
 import Supply from "../pages/Supply";
 import WarehouseReceipt from "../pages/WarehouseReceipt";
+import UpdateProduct from "../pages/UpdateProduct";
 import EntryForm from "../pages/EntryForm";
 
 export const routes = [
-  // { path: "/entryForm", element: <EntryForm /> },
   { path: "/signin", element: <SignIn /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
   {
@@ -45,10 +44,14 @@ export const routes = [
         element: <Product />,
       },
       {
+        path: "update-product",
+        element: <UpdateProduct />,
+      },
+      {
         path: "/category",
         element: <Category />,
       },
-      { path: "/entryForm", 
+      { path: "/entry-form", 
         element: <EntryForm /> 
       },
       {

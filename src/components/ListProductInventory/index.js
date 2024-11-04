@@ -15,23 +15,23 @@ export default function ListProductInventory() {
   return (
     <>
       <tr>
-        <th>
+        <td>
           <label>
             <input type="checkbox" class="checkbox" />
           </label>
-        </th>
-        <td>
+        </td>
+        <td className="w-32">
           <div>
             <div className="font-bold">ASM001</div>
             <svg ref={inputRef} />
           </div>
         </td>
-        <td>
+        <td className="w-32">
           <div>
             <div className="font-bold">PO9212</div>
           </div>
         </td>
-        <td>
+        <td className="w-60">
           <div class="flex items-center gap-3">
             <div class="avatar">
               <div class="mask mask-squircle h-12 w-12">
@@ -43,14 +43,12 @@ export default function ListProductInventory() {
             </div>
             <div>
               <div class="font-bold">Hart Hagerty</div>
-              <div class="text-sm opacity-50">United States</div>
-            </div>
+              <span class="badge badge-ghost badge-sm">Nước giải khát</span>
+              </div>
           </div>
         </td>
         <td>
           PepsiCo
-          <br />
-          <span class="badge badge-ghost badge-sm">Nước giải khát</span>
         </td>
         <td>
           <h3 class="">30</h3>

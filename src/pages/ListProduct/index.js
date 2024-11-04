@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import { NavLink } from "react-router-dom";
 import ListProductTable from "../../components/ListProductTable";
+import ListProductSale from "../ListProductSale";
+import ListProductOutStock from "../ListProductOutStock";
 
 export default function ListProduct() {
   const [activeTab, setActiveTab] = useState(0);
@@ -53,7 +55,7 @@ export default function ListProduct() {
                 <div role="tabpanel" className="tab-content p-10" style={{
                   borderTop: "2px solid #ededed",
                 }}>
-                  {" "}
+                  <ListProductSale/>
                 </div>
 
                 <input
@@ -68,7 +70,7 @@ export default function ListProduct() {
                 <div role="tabpanel" className="tab-content p-10"style={{
                   borderTop: "2px solid #ededed",
                 }}>
-                  {" "}
+                  <ListProductOutStock/>
                 </div>
               </div>
             </div>

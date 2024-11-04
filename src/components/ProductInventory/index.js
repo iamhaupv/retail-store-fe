@@ -45,9 +45,8 @@ export default function ProductInventory() {
          <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
        </td> */}
         <td>
-          <select class="">
-            <option>
-              <div className="badge badge-success gap-2">
+          
+              <div className="badge badge-success gap-2 whitespace-nowrap">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -63,9 +62,8 @@ export default function ProductInventory() {
                 </svg>
                 Còn hạn
               </div>
-            </option>
-            <option>
-              <div className="badge badge-warning gap-2">
+            
+              {/* <div className="badge badge-warning gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -81,8 +79,7 @@ export default function ProductInventory() {
                 </svg>
                 Cận hạn
               </div>
-            </option>
-            <option>
+            
               <div className="badge badge-error gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -98,16 +95,15 @@ export default function ProductInventory() {
                   ></path>
                 </svg>
                 Hết hạn
-              </div>
-            </option>
-          </select>
+              </div> */}
+            
         </td>
         <td>8/12/2024</td>
         <td>9/12/2024</td>
-        <th>
+        <td>
           <button className="btn btn-ghost btn-xs">900</button>
-        </th>
-        <th>
+        </td>
+        <td className="whitespace-nowrap">
           <button
             className=" w-6 h-6 rounded-lg mr-2"
             style={{ backgroundColor: "#e2f2ea", outline: "" }}
@@ -182,7 +178,7 @@ export default function ProductInventory() {
           </button>
 
           {/* Alert Delete */}
-        </th>
+        </td>
       </tr>
 
       <dialog id="Delete" className="modal">

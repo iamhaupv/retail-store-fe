@@ -60,7 +60,7 @@ export default function StockInDetail() {
               .toLocaleString()}
           </td>
           <td>
-            <Link to="/entryForm" state={{ receipt: receipt }}>
+            <Link to="/entry-form" state={{ receipt: receipt }}>
               <button
                 className=" w-6 h-6 rounded-sm mr-2"
                 style={{ backgroundColor: "#e2f2ea", outline: "" }}

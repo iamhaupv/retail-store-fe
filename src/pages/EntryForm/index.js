@@ -121,7 +121,7 @@ export default function EntryForm() {
                   alt="logo Store 24 Hour"
                 />
                 <div className=" ml-3">
-                  <h1 className="font-bold">Công ty TNHH 24 Hour</h1>
+                  <h1 className="font-bold">Công ty TNHH 24 HOUR</h1>
                   <h1>294/23/513 Phạm Văn Đồng Q.Bình Thạnh Tp.HCM</h1>
                   <h1 className="flex">
                     Hotline:<h1 className="font-bold ml-1">0374892431</h1>{" "}
@@ -138,6 +138,10 @@ export default function EntryForm() {
             </h2>
             <div className="flex justify-between">
               <div className=" justify-items-start">
+              <h1 className="flex">
+                  Nhà cung cấp:
+                  <h1 className="font-bold ml-1">Pepsico</h1>{" "}
+                </h1>
                 <h1 className="flex">
                   Người gửi:
                   <h1 className="font-bold ml-1">Nguyễn Thanh Khoa</h1>{" "}
@@ -150,6 +154,7 @@ export default function EntryForm() {
                 </h1>
               </div>
               <div className=" justify-items-end">
+                
                 <h1 className="flex">
                   Điện thoại:<h1 className="font-bold ml-1">0374892431</h1>{" "}
                 </h1>
