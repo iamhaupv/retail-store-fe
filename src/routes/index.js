@@ -1,3 +1,4 @@
+import { elements } from "chart.js";
 import LayoutDefault from "../layout/LayoutDefault";
 import Category from "../pages/Category";
 import ChangePassWord from "../pages/ChangePassWord";
@@ -17,8 +18,10 @@ import SignUp from "../pages/SignUp";
 import SupplierList from "../pages/SupplierList";
 import Supply from "../pages/Supply";
 import WarehouseReceipt from "../pages/WarehouseReceipt";
+import EntryForm from "../pages/EntryForm";
 
 export const routes = [
+  // { path: "/entryForm", element: <EntryForm /> },
   { path: "/signin", element: <SignIn /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
   {
@@ -31,7 +34,7 @@ export const routes = [
       },
       {
         path: "/supply-list",
-        element: <SupplierList/>,
+        element: <SupplierList />,
       },
       {
         path: "product-list",
@@ -44,6 +47,9 @@ export const routes = [
       {
         path: "/category",
         element: <Category />,
+      },
+      { path: "/entryForm", 
+        element: <EntryForm /> 
       },
       {
         path: "/employee",
@@ -65,14 +71,14 @@ export const routes = [
         path: "/order",
         element: <Order />,
       },
-      
+
       {
         path: "/createOrder",
         element: <CreateOrder />,
       },
       {
         path: "/WarehouseReceipt",
-        element: <WarehouseReceipt/>,
+        element: <WarehouseReceipt />,
       },
       {
         path: "/changePassWord",
@@ -85,8 +91,7 @@ export const routes = [
       {
         path: "signup",
         element: <SignUp />,
-        children: [
-        ],
+        children: [],
       },
       { path: "*", element: <Error404 /> },
     ],

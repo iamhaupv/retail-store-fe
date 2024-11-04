@@ -68,10 +68,10 @@ export default function EmployeeTableDetail({employee}) {
           </div>
         </td>
         <td>
-          <div className="font-bold">{employee.address}</div>
+          <div className="font-bold text-ellipsis">{employee.address}</div>
         </td>
         <td>
-          <div className="font-bold">{employee.birthday}</div>
+          <div className="font-bold whitespace-nowrap">{employee.birthday}</div>
         </td>
         <td>
           <div className="font-bold">{employee.gender}</div>

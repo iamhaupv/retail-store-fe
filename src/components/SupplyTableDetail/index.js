@@ -35,16 +35,16 @@ export default function SupplyTableDetail() {
                 alt={`Logo brand ${brand.name}`} />
             </div>
           </div>
-          <td className='font-bold'>
+          <h1 className='font-bold'>
             {brand.name}
-          </td>
+          </h1>
         </div>
       </td>
       <td>{brand.address}</td>
-      <th>{brand.phone}</th>
-      <th>{brand.supplyName}</th>
+      <td>{brand.phone}</td>
+      <td className='whitespace-nowrap'>{brand.supplyName}</td>
 
-      <th>
+      <td className='whitespace-nowrap'>
         
       {/* <button className=" w-6 h-6 rounded-sm mr-2" style={{backgroundColor: "#e2f2ea", outline:''}}
       onClick={()=>document.getElementById('Modal_ProductDetail').showModal()}>
@@ -100,7 +100,7 @@ export default function SupplyTableDetail() {
            
            {/* Alert Delete */}
            
-      </th>
+      </td>
     </tr>
     ))}  
              {/* Delete Modal */}

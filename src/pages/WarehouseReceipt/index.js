@@ -5,10 +5,10 @@ import apiGetAllUnit from "../../apis/apiGetAllUnit";
 import apiCreateWarehouseReceipt from "../../apis/apiCreateWarehouseReceipt";
 import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
 import apiLastIdWarehouseReceipt from "../../apis/apiLastIdWarehouseReceipt";
-import { useNavigate } from "react-router-dom";
-import apiGetListBrands from "../../apis/apiGetListBrand";
+import { Link, useNavigate } from "react-router-dom";
 import apiGetProductsByFilter from "../../apis/apiGetProductsByFilter";
 import Swal from "sweetalert2";
+import apiGetListBrands from "../../apis/apiGetListBrand";
 
 export default function WarehouseReceipt() {
   const navigate = useNavigate();
@@ -20,9 +20,9 @@ export default function WarehouseReceipt() {
   const [user, setUser] = useState("");
   const [code, setCode] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [brands, setBrands] = useState([]);
-  const [productFilter, setProductFilter] = useState([]);
-  const [isBrand, setIsBrand] = useState("");
+  const [brands, setBrands] = useState([])
+  const [productFilter, setProductFilter] = useState([])
+  const [isBrand, setIsBrand] = useState('')
   const fetchProductFilter = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("Token is invalid!");
@@ -326,7 +326,7 @@ export default function WarehouseReceipt() {
                                   </div>
                                 </div>
                                 <div>
-                                  <div className="font-bold">
+                                  <div className="font-bold text-ellipsis">
                                     {product.title}
                                   </div>
                                 </div>
@@ -355,7 +355,7 @@ export default function WarehouseReceipt() {
                                   handleUnitChange(index, e.target.value)
                                 } // Handle unit change
                                 value={product.unit || ""} // Bind to unit value
-                                className="select select-bordered w-11/12 h-11 ml-4 mb-8"
+                                className="select select-bordered w-32 h-8 "
                               >
                                 <option value="" disabled>
                                   Đơn vị tính
@@ -462,12 +462,14 @@ export default function WarehouseReceipt() {
             >
               Thêm
             </button>
-            <button
-              className="btn w-28 ml-4"
-              style={{ backgroundColor: "#e0e0e0" }}
-            >
-              Hủy
-            </button>
+            <Link to="/inventory">
+              <button
+                className="btn w-28 ml-4"
+                style={{ backgroundColor: "#e0e0e0" }}
+              >
+                Hủy
+              </button>
+            </Link>
           </div>
         </div>
       </div>
