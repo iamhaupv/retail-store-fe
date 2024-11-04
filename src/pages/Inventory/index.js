@@ -287,6 +287,7 @@ export default function Inventory() {
                   <th>Sản phẩm</th>
                   <th>Nhà cung cấp</th>
                   <th>Số lượng</th>
+                  <th>Số lượng trưng bày</th>
                 </tr>
               </thead>
               <tbody>

@@ -52,9 +52,16 @@ export default function ListProductInventory() {
           <br />
           <span class="badge badge-ghost badge-sm">Nước giải khát</span>
         </td>
-        <th>
+        <td>
           <h3 class="">30</h3>
-        </th>
+        </td>
+        <td>
+          <input
+            type="number"
+            placeholder=""
+            className="input input-bordered w-32"
+          />
+        </td>
       </tr>
     </>
   );
