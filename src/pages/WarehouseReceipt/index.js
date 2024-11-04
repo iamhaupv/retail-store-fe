@@ -8,9 +8,10 @@ import apiLastIdWarehouseReceipt from "../../apis/apiLastIdWarehouseReceipt";
 import { useNavigate } from "react-router-dom";
 import apiGetListBrands from "../../apis/apiGetListBrand";
 import apiGetProductsByFilter from "../../apis/apiGetProductsByFilter";
+import Swal from "sweetalert2";
 
 export default function WarehouseReceipt() {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);
@@ -19,9 +20,9 @@ export default function WarehouseReceipt() {
   const [user, setUser] = useState("");
   const [code, setCode] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [brands, setBrands] = useState([])
-  const [productFilter, setProductFilter] = useState([])
-  const [isBrand, setIsBrand] = useState('')
+  const [brands, setBrands] = useState([]);
+  const [productFilter, setProductFilter] = useState([]);
+  const [isBrand, setIsBrand] = useState("");
   const fetchProductFilter = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("Token is invalid!");
@@ -39,28 +40,27 @@ export default function WarehouseReceipt() {
       setProductFilter([]); // Đặt lại thành mảng rỗng nếu có lỗi
     }
   };
-  
-  
+
   useEffect(() => {
     fetchProductFilter();
-}, [isBrand]);
-  const fetchBrands = async() => {
+  }, [isBrand]);
+  const fetchBrands = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      if(!token) throw new Error("Token is invalid!")
-      const response = await apiGetListBrands()
-      setBrands(response.brands)
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListBrands();
+      setBrands(response.brands);
     } catch (error) {
-      throw new Error("fetch brand is error " + error)
+      throw new Error("fetch brand is error " + error);
     }
-  }
+  };
   const openModal = () => {
     setIsModalOpen(true);
     setIsBrand(""); // Reset brand filter on close
-    setProductFilter([]); 
+    setProductFilter([]);
   };
   console.log(brands);
-  
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -83,7 +83,7 @@ export default function WarehouseReceipt() {
   useEffect(() => {
     fetchUnits();
     fetchUser();
-    fetchBrands()
+    fetchBrands();
   }, []);
 
   const fetchProducts = async () => {
@@ -134,7 +134,7 @@ export default function WarehouseReceipt() {
     // document.getElementById("AddWarehouseReceipt").close();
     setSelectedProducts([]);
     setIsClicked(true);
-    setIsModalOpen(false)
+    setIsModalOpen(false);
   };
 
   const handleChangeInput = (index, name, value) => {
@@ -167,26 +167,47 @@ export default function WarehouseReceipt() {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
-
+      if (!code || addedProducts.length === 0) {
+        Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
+        return;
+      }
+      for (const product of addedProducts) {
+        if (!product.quantity || !product.importPrice || !product.expires || !product.unit) {
+          Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin cho tất cả sản phẩm!", "error");
+          return;
+        }
+      }
       const user = await apiGetCurrentUser(token);
-      const userId = user.rs._id; // Assuming this is the user ID
-
-      const payload = {
-        user: userId,
-        idPNK: await generateWarehouseReceiptCode(),
-        description: "Warehouse receipt description", // You can replace this with a state variable if needed
-        products: addedProducts.map((product) => ({
-          product: product._id,
-          quantity: product.quantity,
-          importPrice: product.importPrice,
-          expires: product.expires,
-        })),
-      };
-
-      const response = await apiCreateWarehouseReceipt(token, payload);
-      console.log("Receipt created successfully:", response);
-      document.getElementById("AddWarehouseReceipt").close();
-      navigate("/inventory");
+      const userId = user.rs._id;
+      const result = await Swal.fire({
+        title: "Xác nhận",
+        text: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Có",
+        cancelButtonText: "Không",
+      });
+      if (result.isConfirmed) {
+        const payload = {
+          user: userId,
+          idPNK: await generateWarehouseReceiptCode(),
+          description: "Warehouse receipt description",
+          products: addedProducts.map((product) => ({
+            product: product._id,
+            quantity: product.quantity,
+            importPrice: product.importPrice,
+            expires: product.expires,
+            unit: product.unit
+          })),
+        };
+        const response = await apiCreateWarehouseReceipt(token, payload);
+        if (response.success) {
+          Swal.fire("Success", "Thêm thành công!", "success");
+          navigate("/inventory");
+        } else {
+          Swal.fire("Error", "Thêm không thành công!", "error");
+        }
+      }
     } catch (error) {
       throw new Error("handle submit is error " + error);
     }
@@ -230,8 +251,8 @@ export default function WarehouseReceipt() {
     return code; // Trả về mã đã tạo
   };
   const handleBrand = async (e) => {
-    setBrands(e.target)
-  }
+    setBrands(e.target);
+  };
   useEffect(() => {
     fetchProducts();
     generateWarehouseReceiptCode();
@@ -277,7 +298,7 @@ export default function WarehouseReceipt() {
                 Danh sách mặt hàng {isBrand}
               </h4>
               <div className="flex pt-8 h-fit w-full pb-2">
-              <button className="hidden" onClick={openModal} id="FileMain" />
+                <button className="hidden" onClick={openModal} id="FileMain" />
                 {isClicked ? (
                   <div className="overflow-y-auto w-full h-96">
                     <table className="table table-pin-rows">
@@ -337,7 +358,7 @@ export default function WarehouseReceipt() {
                                 className="select select-bordered w-11/12 h-11 ml-4 mb-8"
                               >
                                 <option value="" disabled>
-                                  Loại sản phẩm
+                                  Đơn vị tính
                                 </option>
                                 {units.map((unit) => (
                                   <option key={unit._id} value={unit._id}>
@@ -451,13 +472,16 @@ export default function WarehouseReceipt() {
         </div>
       </div>
       {isModalOpen && (
-        <div id="AddWarehouseReceipt" className="fixed w-screen  inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+          id="AddWarehouseReceipt"
+          className="fixed w-screen  inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        >
           <div className="modal-box w-full  max-w-6xl h-full overflow-y-hidden ">
             <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
             <div className="flex items-center mb-4">
               {/* Brand */}
               <div className="w-52 ">
-              {/* <select
+                {/* <select
               onChange={(e) => setIsBrand(e.target.value)} 
               name="category"
               className="select select-bordered w-11/12 h-11 ml-4 mb-8"
@@ -471,7 +495,11 @@ export default function WarehouseReceipt() {
                 </option>
               ))}
             </select> */}
-            <input className="border" name="category" onChange={(e) => setIsBrand(e.target.value)} />
+                <input
+                  className="border"
+                  name="category"
+                  onChange={(e) => setIsBrand(e.target.value)}
+                />
                 <Autocomplete
                   suggestion={suggestion}
                   placeholder="Nhà cung cấp.."
@@ -500,47 +528,54 @@ export default function WarehouseReceipt() {
                   </tr>
                 </thead>
                 <tbody>
-                  {productFilter.length > 0  ? productFilter.map((product) => (
-                    <tr className="hover:bg-slate-100">
-                      <th key={product._id}>
-                        <label>
-                          <input type="checkbox"
-                          className="checkbox"
-                          checked={
-                            selectedProducts.includes(product._id) ||
-                            addedProducts.includes(product)
-                          }
-                          onChange={() => handleCheckboxChange(product._id)}
-                          disabled={addedProducts.some(
-                            (addedProduct) => addedProduct._id === product._id
-                          )} />
-                        </label>
-                      </th>
-                      <td>
-                        <div>
-                          <div className="font-bold">ASM001</div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="flex items-center gap-3">
-                          <div class="avatar">
-                            <div class="mask mask-squircle h-12 w-12">
-                              <img
-                                src={product.images[0]}
-                                alt="Avatar Tailwind CSS Component"
-                              />
-                            </div>
-                          </div>
+                  {productFilter.length > 0 ? (
+                    productFilter.map((product) => (
+                      <tr className="hover:bg-slate-100">
+                        <th key={product._id}>
+                          <label>
+                            <input
+                              type="checkbox"
+                              className="checkbox"
+                              checked={
+                                selectedProducts.includes(product._id) ||
+                                addedProducts.includes(product)
+                              }
+                              onChange={() => handleCheckboxChange(product._id)}
+                              disabled={addedProducts.some(
+                                (addedProduct) =>
+                                  addedProduct._id === product._id
+                              )}
+                            />
+                          </label>
+                        </th>
+                        <td>
                           <div>
-                            <div class="font-bold">{product.title}</div>
-                            <div class="text-sm opacity-50">
-                              {product.title}
+                            <div className="font-bold">ASM001</div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="flex items-center gap-3">
+                            <div class="avatar">
+                              <div class="mask mask-squircle h-12 w-12">
+                                <img
+                                  src={product.images[0]}
+                                  alt="Avatar Tailwind CSS Component"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <div class="font-bold">{product.title}</div>
+                              <div class="text-sm opacity-50">
+                                {product.title}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  )) : <div>Chưa có sản phẩm</div>}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <div>Chưa có sản phẩm</div>
+                  )}
                 </tbody>
                 <tfoot></tfoot>
               </table>
