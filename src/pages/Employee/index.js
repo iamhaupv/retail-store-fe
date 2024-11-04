@@ -18,11 +18,11 @@ export default function Employee() {
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const nameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/;
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const nameRegex = /^[A-ZÀ-Ý][a-zà-ỹ]*(\s[A-ZÀ-Ý][a-zà-ỹ]*)*$/
+    const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9.]{6,30}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     const phoneRegex =
       /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
-    const addressRegex = /^\d+\s[A-Za-zÀ-ỹ0-9\s.,'-]+$/;
+    const addressRegex = /^.{1,100}$/
     // const birthday =
     let errorMessage;
     // name
@@ -118,7 +118,7 @@ export default function Employee() {
 
       const result = await Swal.fire({
         title: "Xác nhận",
-        text: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
+        text: "Bạn có chắc chắn muốn thêm nhân viên này không?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Có",

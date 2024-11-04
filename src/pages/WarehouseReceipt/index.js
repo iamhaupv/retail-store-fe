@@ -7,10 +7,11 @@ import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
 import apiLastIdWarehouseReceipt from "../../apis/apiLastIdWarehouseReceipt";
 import { Link, useNavigate } from "react-router-dom";
 import apiGetProductsByFilter from "../../apis/apiGetProductsByFilter";
+import Swal from "sweetalert2";
 import apiGetListBrands from "../../apis/apiGetListBrand";
 
 export default function WarehouseReceipt() {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);
@@ -19,7 +20,6 @@ export default function WarehouseReceipt() {
   const [user, setUser] = useState("");
   const [code, setCode] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [brands, setBrands] = useState([])
   const [productFilter, setProductFilter] = useState([])
   const [isBrand, setIsBrand] = useState('')
@@ -57,10 +57,10 @@ export default function WarehouseReceipt() {
   const openModal = () => {
     setIsModalOpen(true);
     setIsBrand(""); // Reset brand filter on close
-    setProductFilter([]); 
+    setProductFilter([]);
   };
   console.log(brands);
-  
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -167,26 +167,47 @@ export default function WarehouseReceipt() {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
-
+      if (!code || addedProducts.length === 0) {
+        Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
+        return;
+      }
+      for (const product of addedProducts) {
+        if (!product.quantity || !product.importPrice || !product.expires || !product.unit) {
+          Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin cho tất cả sản phẩm!", "error");
+          return;
+        }
+      }
       const user = await apiGetCurrentUser(token);
-      const userId = user.rs._id; // Assuming this is the user ID
-
-      const payload = {
-        user: userId,
-        idPNK: await generateWarehouseReceiptCode(),
-        description: "Warehouse receipt description", // You can replace this with a state variable if needed
-        products: addedProducts.map((product) => ({
-          product: product._id,
-          quantity: product.quantity,
-          importPrice: product.importPrice,
-          expires: product.expires,
-        })),
-      };
-
-      const response = await apiCreateWarehouseReceipt(token, payload);
-      console.log("Receipt created successfully:", response);
-      document.getElementById("AddWarehouseReceipt").close();
-      navigate("/inventory");
+      const userId = user.rs._id;
+      const result = await Swal.fire({
+        title: "Xác nhận",
+        text: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Có",
+        cancelButtonText: "Không",
+      });
+      if (result.isConfirmed) {
+        const payload = {
+          user: userId,
+          idPNK: await generateWarehouseReceiptCode(),
+          description: "Warehouse receipt description",
+          products: addedProducts.map((product) => ({
+            product: product._id,
+            quantity: product.quantity,
+            importPrice: product.importPrice,
+            expires: product.expires,
+            unit: product.unit
+          })),
+        };
+        const response = await apiCreateWarehouseReceipt(token, payload);
+        if (response.success) {
+          Swal.fire("Success", "Thêm thành công!", "success");
+          navigate("/inventory");
+        } else {
+          Swal.fire("Error", "Thêm không thành công!", "error");
+        }
+      }
     } catch (error) {
       throw new Error("handle submit is error " + error);
     }
@@ -230,8 +251,8 @@ export default function WarehouseReceipt() {
     return code; // Trả về mã đã tạo
   };
   const handleBrand = async (e) => {
-    setBrands(e.target)
-  }
+    setBrands(e.target);
+  };
   useEffect(() => {
     fetchProducts();
     generateWarehouseReceiptCode();
@@ -462,7 +483,7 @@ export default function WarehouseReceipt() {
             <div className="flex items-center mb-4">
               {/* Brand */}
               <div className="w-52 ">
-              {/* <select
+                {/* <select
               onChange={(e) => setIsBrand(e.target.value)} 
               name="category"
               className="select select-bordered w-11/12 h-11 ml-4 mb-8"
@@ -476,7 +497,11 @@ export default function WarehouseReceipt() {
                 </option>
               ))}
             </select> */}
-            <input className="border" name="category" onChange={(e) => setIsBrand(e.target.value)} />
+                <input
+                  className="border"
+                  name="category"
+                  onChange={(e) => setIsBrand(e.target.value)}
+                />
                 <Autocomplete
                   suggestion={suggestion}
                   placeholder="Nhà cung cấp.."

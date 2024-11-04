@@ -31,9 +31,8 @@ export default function Product() {
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
     const titleRegex = /^[A-Za-zÀ-ỹ\s'-.\d]{2,}$/;
-    const priceRegex = /^\d+(\.\d{1,2})?$/; // cho nhập số nguyên và số thập phân
-    const descriptionRegex = /^.{10,}$/; // min 10 character
-
+    const priceRegex = /^\d+(\.\d{1,2})?$/;
+    const descriptionRegex = /^([\s\S]{10,1000})$/
     let errorMessage;
     // title
     if (name === "title") {

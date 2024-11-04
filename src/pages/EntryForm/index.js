@@ -1,37 +1,57 @@
 import React, { useRef } from "react";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas-pro';
-import { Link } from "react-router-dom";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas-pro";
+import { Link, useLocation } from "react-router-dom";
 import logo_form from "../../Image/LogoForm.png";
 
 export default function EntryForm() {
-  const contentRef = useRef();
+  const location = useLocation();
+  const { receipt } = location.state || {};
+  const totalQuantity = receipt.products.reduce(
+    (sum, product) => sum + product.quantity,
+    0
+  );
+  const totalPrice = receipt.products.reduce(
+    (sum, product) => sum + product.quantity * product.importPrice,
+    0
+  );
 
+  const contentRef = useRef();
   const handleDownloadPdf = () => {
     const element = contentRef.current;
     html2canvas(element).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
       const imgWidth = 210; // A4 width in mm
       const pageHeight = 297; // A4 height in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       let heightLeft = imgHeight;
       let position = 0;
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
       while (heightLeft >= 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
 
-      pdf.save('document.pdf');
+      pdf.save("document.pdf");
     });
   };
+  function formatDate(date) {
+    if (!(date instanceof Date)) {
+      date = new Date(date); // Chuyển đổi chuỗi thành đối tượng Date
+    }
 
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
   return (
     <>
       <div className="w-full h-full min-h-screen justify-center flex bg-base-200  rounded-none overflow-y-auto">
@@ -69,7 +89,10 @@ export default function EntryForm() {
             />
           </svg>
         </button> */}
-        <button className="fixed btn btn-circle bg-gray-200 right-4 top-20" onClick={handleDownloadPdf}>
+        <button
+          className="fixed btn btn-circle bg-gray-200 right-4 top-20"
+          onClick={handleDownloadPdf}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -85,7 +108,10 @@ export default function EntryForm() {
             />
           </svg>
         </button>
-        <div className="card bg-base-100 w-8/12 h-fit rounded-lg mt-6 mb-10  " ref={contentRef}>
+        <div
+          className="card bg-base-100 w-8/12 h-fit rounded-lg mt-6 mb-10  "
+          ref={contentRef}
+        >
           <div className="card-body">
             <div className="flex justify-between">
               <div className="flex items-center">
@@ -133,96 +159,158 @@ export default function EntryForm() {
               <table className="table table-xs">
                 <thead>
                   <tr>
-                    <th className="border-2 w-10 justify-items-center text-black" style={{backgroundColor:'#f2f2f2',borderColor:'#cecece'}}>STT</th>
-                    <th className="border-2 w-80 justify-items-center text-black" style={{backgroundColor:'#f2f2f2',borderColor:'#cecece'}}>Tên sản phẩm</th>
-                    <th className="border-2 w-24 justify-items-center text-black" style={{backgroundColor:'#f2f2f2',borderColor:'#cecece'}}>Đơn vị tính</th>
-                    <th className="border-2 w-36 justify-items-center text-black" style={{backgroundColor:'#f2f2f2',borderColor:'#cecece'}}>Ngày hết hạn</th>
-                    <th className="border-2 w-28 justify-items-center text-black" style={{backgroundColor:'#f2f2f2',borderColor:'#cecece'}}>Giá </th>
-                    <th className="border-2 w-28 justify-items-center text-black" style={{backgroundColor:'#f2f2f2',borderColor:'#cecece'}}>Số lượng</th>
-                    <th className="border-2 w-32 justify-items-center text-black" style={{backgroundColor:'#f2f2f2',borderColor:'#cecece'}}>Tổng tiền</th>
+                    <th
+                      className="border-2 w-10 justify-items-center text-black"
+                      style={{
+                        backgroundColor: "#f2f2f2",
+                        borderColor: "#cecece",
+                      }}
+                    >
+                      STT
+                    </th>
+                    <th
+                      className="border-2 w-80 justify-items-center text-black"
+                      style={{
+                        backgroundColor: "#f2f2f2",
+                        borderColor: "#cecece",
+                      }}
+                    >
+                      Tên sản phẩm
+                    </th>
+                    <th
+                      className="border-2 w-24 justify-items-center text-black"
+                      style={{
+                        backgroundColor: "#f2f2f2",
+                        borderColor: "#cecece",
+                      }}
+                    >
+                      Đơn vị tính
+                    </th>
+                    <th
+                      className="border-2 w-36 justify-items-center text-black"
+                      style={{
+                        backgroundColor: "#f2f2f2",
+                        borderColor: "#cecece",
+                      }}
+                    >
+                      Ngày hết hạn
+                    </th>
+                    <th
+                      className="border-2 w-28 justify-items-center text-black"
+                      style={{
+                        backgroundColor: "#f2f2f2",
+                        borderColor: "#cecece",
+                      }}
+                    >
+                      Giá{" "}
+                    </th>
+                    <th
+                      className="border-2 w-28 justify-items-center text-black"
+                      style={{
+                        backgroundColor: "#f2f2f2",
+                        borderColor: "#cecece",
+                      }}
+                    >
+                      Số lượng
+                    </th>
+                    <th
+                      className="border-2 w-32 justify-items-center text-black"
+                      style={{
+                        backgroundColor: "#f2f2f2",
+                        borderColor: "#cecece",
+                      }}
+                    >
+                      Tổng tiền
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>1</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Cy Ganderton</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Thùng 24</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Littel, Schaden and Vandervort</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Canada</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>12/16/2020</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Blue</td>
-                  </tr>
-                  <tr>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>1</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Cy Ganderton</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Thùng 24</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Littel, Schaden and Vandervort</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Canada</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>12/16/2020</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Blue</td>
-                  </tr>
-                  <tr>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>1</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Cy Ganderton</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Thùng 24</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Littel, Schaden and Vandervort</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Canada</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>12/16/2020</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Blue</td>
-                  </tr>
-                  <tr>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>1</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Cy Ganderton</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Thùng 24</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Littel, Schaden and Vandervort</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Canada</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>12/16/2020</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Blue</td>
-                  </tr>
-                  <tr>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>1</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Cy Ganderton</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Thùng 24</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Littel, Schaden and Vandervort</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Canada</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>12/16/2020</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Blue</td>
-                  </tr>
-                  <tr>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>1</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Cy Ganderton</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Thùng 24</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Littel, Schaden and Vandervort</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Canada</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>12/16/2020</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Blue</td>
-                  </tr>
-                  <tr>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>1</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Cy Ganderton</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Thùng 24</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Littel, Schaden and Vandervort</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Canada</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>12/16/2020</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Blue</td>
-                  </tr>
-                  <tr>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>1</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Cy Ganderton</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Thùng 24</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Littel, Schaden and Vandervort</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Canada</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>12/16/2020</td>
-                    <td className="border-2" style={{borderColor:'#cecece'}}>Blue</td>
-                  </tr>
+                  {receipt && receipt.products.length > 0 ? (
+                    receipt.products.map((product, index) => (
+                      <tr key={product._id || index}>
+                        {" "}
+                        {/* Đảm bảo có key duy nhất */}
+                        <td
+                          className="border-2"
+                          style={{ borderColor: "#cecece" }}
+                        >
+                          {index + 1}
+                        </td>
+                        <td
+                          className="border-2"
+                          style={{ borderColor: "#cecece" }}
+                        >
+                          {product.product.title}
+                        </td>
+                        <td
+                          className="border-2"
+                          style={{ borderColor: "#cecece" }}
+                        >
+                          {product.unit.name || "Đơn vị"}
+                        </td>
+                        <td
+                          className="border-2"
+                          style={{ borderColor: "#cecece" }}
+                        >
+                          {formatDate(product.expires) || "Chưa xác định"}
+                        </td>
+                        <td
+                          className="border-2"
+                          style={{ borderColor: "#cecece" }}
+                        >
+                          {product.importPrice.toLocaleString() || "0"}
+                        </td>
+                        <td
+                          className="border-2"
+                          style={{ borderColor: "#cecece" }}
+                        >
+                          {product.quantity}
+                        </td>
+                        <td
+                          className="border-2"
+                          style={{ borderColor: "#cecece" }}
+                        >
+                          {(
+                            product.quantity * product.importPrice
+                          ).toLocaleString() || "0"}{" "}
+                          đ
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="7"
+                        className="border-2"
+                        style={{ borderColor: "#cecece", textAlign: "center" }}
+                      >
+                        Chưa có sản phẩm
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
+
                 <tfoot>
                   <tr>
-                    <td colspan="5" className="border-2 font-bold justify-center text-black" style={{borderColor:'#cecece'}}>
-                      Tổng cộng  
+                    <td
+                      colspan="5"
+                      className="border-2 font-bold justify-center text-black"
+                      style={{ borderColor: "#cecece" }}
+                    >
+                      Tổng cộng
                     </td>
-                    <td className="border-2 font-bold text-black" style={{borderColor:'#cecece'}}>100</td>
-                    <td className="border-2 font-bold text-black" style={{borderColor:'#cecece'}}>10.000.000 đ</td>
+                    <td
+                      className="border-2 font-bold text-black"
+                      style={{ borderColor: "#cecece" }}
+                    >
+                      {totalQuantity}
+                    </td>
+                    <td
+                      className="border-2 font-bold text-black"
+                      style={{ borderColor: "#cecece" }}
+                    >
+                      {totalPrice.toLocaleString()} đ
+                    </td>
                   </tr>
                 </tfoot>
               </table>

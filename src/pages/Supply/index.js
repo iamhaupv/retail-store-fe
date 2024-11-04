@@ -27,19 +27,19 @@ export default function Supply() {
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const nameRegex = /^[\w\d.A-Za-zÀ-ỹ\s()'-]{2,}$/;
+    const nameRegex = /^[\w\d.A-Za-zÀ-ỹ\s()'-]{1,50}$/;
     const supplyNameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/;
-    const descriptionRegex = /^.{10,}$/; // min 10 character
+    const descriptionRegex = /^([\s\S]{10,1000})$/
     const phoneRegex =
       /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
-    const addressRegex = /^\w+|\d+\s[A-Za-zÀ-ỹ0-9\s./,'-]+$/;
+    const addressRegex = /^.{1,100}$/
     let errorMessage;
     // title
     if (name === "name") {
       if (!value) {
         errorMessage = "Không được để trống!";
       } else if (!nameRegex.test(value)) {
-        errorMessage = "Tên phải có chữ hoa đầu";
+        errorMessage = "Tên không dài quá 50 ký tự";
       }
     }
     // price
@@ -72,7 +72,7 @@ export default function Supply() {
       if (!value) {
         errorMessage = "Không được để trống!";
       } else if (!addressRegex.test(value)) {
-        errorMessage = "Địa không hợp lệ";
+        errorMessage = "Địa chỉ không được quá 100 ký tự";
       }
     }
     setError((prev) => ({ ...prev, [name]: errorMessage }));
