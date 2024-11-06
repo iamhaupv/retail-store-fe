@@ -1,10 +1,21 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas-pro";
 import { Link, useLocation } from "react-router-dom";
 import logo_form from "../../Image/LogoForm.png";
+import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
 
 export default function EntryForm() {
+  const [user, setUser] = useState("");
+  const fetchUser = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("Token is valid!");
+    const user = await apiGetCurrentUser(token);
+    setUser(user.rs);
+  };
+  useEffect(() => {
+    fetchUser();
+  }, []);
   const location = useLocation();
   const { receipt } = location.state || {};
   const totalQuantity = receipt.products.reduce(
@@ -124,7 +135,7 @@ export default function EntryForm() {
                   <h1 className="font-bold">Công ty TNHH 24 Hour</h1>
                   <h1>294/23/513 Phạm Văn Đồng Q.Bình Thạnh Tp.HCM</h1>
                   <h1 className="flex">
-                    Hotline:<h1 className="font-bold ml-1">0374892431</h1>{" "}
+                    Hotline:<h1 className="font-bold ml-1">{user.mobile}</h1>{" "}
                   </h1>
                 </div>
               </div>
@@ -139,8 +150,8 @@ export default function EntryForm() {
             <div className="flex justify-between">
               <div className=" justify-items-start">
                 <h1 className="flex">
-                  Người gửi:
-                  <h1 className="font-bold ml-1">Nguyễn Thanh Khoa</h1>{" "}
+                  Người lập:
+                  <h1 className="font-bold ml-1">{user.lastname + " " + user.firstname}</h1>{" "}
                 </h1>
                 <h1 className="flex">
                   Địa chỉ:
