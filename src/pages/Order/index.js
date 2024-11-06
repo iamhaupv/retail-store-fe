@@ -30,7 +30,7 @@ export default function Order() {
         className="w-11/12 h-auto justify-center flex "
         style={{ backgroundColor: "#F5F5F5" }}
       >
-        <div className="w-full animate__animated animate__fadeInRight">
+        <div className="w-full animate__animated animate__fadeInRight ">
           <div className=" mt-3 mr-3 flex justify-between">
             <h4 className="font-bold text-xl w-full ml-4">Tạo hóa đơn</h4>
             <div className="flex w-fit">

@@ -4,42 +4,42 @@ import { Link } from "react-router-dom";
 import TableProductDetail from "../../components/TableProductDetail";
 
 export default function ListProductOutStock() {
-    const [products, setProducts] = useState([]);
-    const [brands, setBrands] = useState([]);
-    const fetch = async () => {
-      const response = await apiGetListProduct();
-      setProducts(response.products);
-    };
-    const fetchBrans = async () => {
-      try {
-        const response = await apiGetListBrand();
-        setBrands(response.brands);
-      } catch (error) {
-        throw new Error(error);
-      }
-    };
-    useEffect(() => {
-      fetchBrans();
-      fetch();
-    }, []);
-    // const {inputRef} = useBarcode({
-    //   value:'ASM001',
-    //   options: {
-    //       displayValue: false,
-    //       background: '#ffffff',
-    //       width: 1,
-    //       height: 25,
-    //   }
-    //  })
-    const suggestion = [
-      { id: 1, name: "Tom Cook" },
-      { id: 2, name: "Wade Cooper" },
-      { id: 3, name: "Tanya Fox" },
-      { id: 4, name: "Arlene Mccoy" },
-      { id: 5, name: "Devon Webb" },
-      { id: 6, name: "Nguyễn Thanh Khoa" },
-      { id: 7, name: "Nguyễn Đức Long" },
-    ];
+  const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const fetch = async () => {
+    const response = await apiGetListProduct();
+    setProducts(response.products);
+  };
+  const fetchBrans = async () => {
+    try {
+      const response = await apiGetListBrand();
+      setBrands(response.brands);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  useEffect(() => {
+    fetchBrans();
+    fetch();
+  }, []);
+  // const {inputRef} = useBarcode({
+  //   value:'ASM001',
+  //   options: {
+  //       displayValue: false,
+  //       background: '#ffffff',
+  //       width: 1,
+  //       height: 25,
+  //   }
+  //  })
+  const suggestion = [
+    { id: 1, name: "Tom Cook" },
+    { id: 2, name: "Wade Cooper" },
+    { id: 3, name: "Tanya Fox" },
+    { id: 4, name: "Arlene Mccoy" },
+    { id: 5, name: "Devon Webb" },
+    { id: 6, name: "Nguyễn Thanh Khoa" },
+    { id: 7, name: "Nguyễn Đức Long" },
+  ];
   return (
     <>
       <div className="">
@@ -61,10 +61,7 @@ export default function ListProductOutStock() {
           </select> */}
 
           <div className="ml-4 mt-2 w-52 h-11">
-            <Autocomplete
-              suggestion={suggestion}
-              placeholder="Nhà cung cấp"
-            />
+            <Autocomplete suggestion={suggestion} placeholder="Nhà cung cấp" />
           </div>
 
           {/* status Option */}
@@ -102,7 +99,12 @@ export default function ListProductOutStock() {
         </div>
         {/* table Product */}
 
-        <div className="overflow-y-auto h-80 mt-7">
+        <div
+          className="overflow-y-auto  mt-7"
+          style={{
+            height: "calc(90vh - 280px)",
+          }}
+        >
           <table className="table table-pin-rows ">
             {/* head */}
             <thead>
@@ -131,5 +133,5 @@ export default function ListProductOutStock() {
         </div>
       </div>
     </>
-  )
+  );
 }

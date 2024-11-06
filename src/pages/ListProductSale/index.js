@@ -99,7 +99,12 @@ export default function ListProductSale() {
         </div>
         {/* table Product */}
 
-        <div className="overflow-y-auto h-80 mt-7">
+        <div
+          className="overflow-y-auto  mt-7"
+          style={{
+            height: "calc(90vh - 280px)",
+          }}
+        >
           <table className="table table-pin-rows ">
             {/* head */}
             <thead>
