@@ -262,8 +262,11 @@ export default function Category() {
             type="checkbox"
             className="drawer-toggle"
           />
-          <div className="drawer-content">
-            <div className="w-full h-5/6 card bg-white rounded-md top-7 grid ml-4 mr-4 animate__animated animate__fadeInRight">
+          <div className="drawer-content overflow-x-hidden">
+            <div className="w-full card bg-white rounded-md top-7 grid ml-4 mr-4 animate__animated animate__fadeInRight"
+            style={{
+              height: "calc(100vh - 100px)",
+            }}>
               <div className="flex mt-5 w-full h-1/6 justify-end">
                 <label
                   htmlFor="UpdateDrawer-side"
@@ -286,7 +289,10 @@ export default function Category() {
                   Thêm mới
                 </label>
               </div>
-              <div className="h-5/6 overflow-y-auto">
+              <div className=" overflow-y-auto"
+              style={{
+                height: "calc(100vh - 255px)",
+              }}>
                 <table className="table h-full table-pin-rows">
                   <thead>
                     <tr>
