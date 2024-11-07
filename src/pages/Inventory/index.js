@@ -291,15 +291,6 @@ export default function Inventory() {
                 </tr>
               </thead>
               <tbody>
-                {/* row 1 */}
-                <ListProductInventory />
-                {/* row 2 */}
-                <ListProductInventory />
-                {/* row 3 */}
-                <ListProductInventory />
-                {/* row 4 */}
-                <ListProductInventory />
-                {/* row 5 */}
                 <ListProductInventory />
               </tbody>
               {/* foot */}

@@ -1,21 +1,54 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductInventory from "../ProductInventory";
-import ListProductInventory from "../ListProductInventory";
+import apiGetListShelf from "../../apis/apiGetListShelf";
+import apiGetProductsByShelf from "../../apis/apiProductByShelfName";
 
 export default function InventoryProduct({onChangeModal}) {
+  const [shelfs, setShelfs] = useState([]);
+  const [shelf, setShelf] = useState('')
+  const [products, setProducts] = useState([])
+  const fetchProductByShelf = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetProductsByShelf(token, {name: shelf})
+      setProducts(response.products || [])
+    } catch (error) {
+      console.log("fetch product by shelf is error " + error);
+    }
+  }
+  useEffect(() => {
+    fetchProductByShelf();
+  }, [shelf]);  
+  console.log(shelf);
   
-
+  const fetchShelfs = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListShelf(token);
+      setShelfs(response.shelfs);
+    } catch (error) {
+      console.log("fetch shelfs is error " + error);
+    }
+  };
+  useEffect(() => {
+    fetchShelfs();
+  }, []);  
+  const handleChangeInput = (e) => {
+    setShelf(e.target.value)
+  }
+  console.log(products);
+  
   return (
     <div className="w-auto">
-      <select className="select-sm select-bordered w-32">
+      <select value={shelf} onChange={handleChangeInput} className="select-sm select-bordered w-32">
         <option disabled selected>
           Kệ
         </option>
-        <option>Kệ 1</option>
-        <option>Kệ 2</option>
-        <option>Kệ 3</option>
-        <option>Kệ 4</option>
-        <option>Kệ 5</option>
+        {shelfs ? shelfs.map((shelf) => (
+          <option key={shelf._id} value={shelf.name}>{shelf.name}</option>
+        )) : <div>Chưa có kệ</div>}
       </select>
       <div className="flex justify-between items-center pt-5">
         <h4 className="font-bold text-xl w-32 ml-4">Hàng tồn kho</h4>
@@ -57,14 +90,13 @@ export default function InventoryProduct({onChangeModal}) {
             </tr>
           </thead>
           <tbody>
-            <ProductInventory />
-            <ProductInventory />
-            <ProductInventory />
-            <ProductInventory />
-            <ProductInventory />
-            <ProductInventory />
-            <ProductInventory />
-            <ProductInventory />
+          {products.length > 0 ? (
+              <ProductInventory products={products} />
+            ) : (
+              <tr>
+                <td colSpan="8" className="text-center">Không có sản phẩm nào</td>
+              </tr>
+            )}
           </tbody>
           <tfoot>
             <tr></tr>
