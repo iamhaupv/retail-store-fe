@@ -9,7 +9,7 @@ export default function EmployeeSchedule() {
         <div class="w-full ml-2 mr-2 lg:flex lg:h-[calc(100vh-50px)] lg:flex-col animate__animated animate__fadeInRight ">
           <header class="flex items-center justify-between border-b border-gray-200 px-6 py-4 lg:flex-none">
             <h1 class="text-base font-semibold leading-6 text-gray-900">
-              <time datetime="2022-01">January 2022</time>
+              {/* <time datetime="2022-01">January 2022</time> */}
             </h1>
             <div class="flex items-center">
               <button
@@ -206,7 +206,7 @@ export default function EmployeeSchedule() {
                   {/*
                         Is today, include: "flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white"
                     */}
-                  <time datetime="2021-12-27">27</time>
+                  <time datetime="2021-12-27">7:30 - 12:30 </time>
                 </div>
                 <div class="relative bg-gray-50 px-3 py-2 text-gray-500 h-11/12">
                   <time datetime="2021-12-28">28</time>
@@ -227,7 +227,7 @@ export default function EmployeeSchedule() {
                   <time datetime="2022-01-01">2</time>
                 </div>
                 <div class="relative bg-white px-3 py-2">
-                  <time datetime="2022-01-03">3</time>
+                  <time datetime="2022-01-03">12:30 - 17:30</time>
                   <ol class="mt-2">
                     <li>
                       <a href="#" class="group flex">
@@ -291,7 +291,7 @@ export default function EmployeeSchedule() {
                   <time datetime="2022-01-09">9</time>
                 </div>
                 <div class="relative bg-white px-3 py-2">
-                  <time datetime="2022-01-10">10</time>
+                  <time datetime="2022-01-10">17:30 - 22:30</time>
                 </div>
                 <div class="relative bg-white px-3 py-2">
                   <time datetime="2022-01-11">11</time>

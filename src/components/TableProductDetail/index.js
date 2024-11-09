@@ -76,7 +76,7 @@ export default function TableProductDetail() {
             {product.brand.name}
             
           </td>
-          <td>{product.status === "in_stock" ? "Đang bán" : "Hết hàng"}</td>
+          <td className="whitespace-nowrap">{product.status === "in_stock" ? "Đang bán" : "Hết hàng"}</td>
           <td>
             <h1 className="">{product.quantity}</h1>
           </td>
