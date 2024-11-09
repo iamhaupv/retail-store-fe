@@ -61,8 +61,8 @@ export default function SideBar() {
             <h1>Nhân viên</h1>
           </div>
           <div>
-            <Link to={"/employee"}onClick={() => handleItemClick("Thêm nhân viên")}
-            className={`whitespace-nowrap pr-1 ${selectedItem ==='Thêm nhân viên' ? 'text-green-400':''} `}>[+] Thêm nhân viên</Link>
+            <Link to={"/employeeSchedule"}onClick={() => handleItemClick("Lịch làm việc")}
+            className={`whitespace-nowrap pr-1 ${selectedItem ==='Lịch làm việc' ? 'text-green-400':''} `}>Lịch làm việc</Link>
           </div>
           <div>
             <Link to={"/employeelist"}onClick={() => handleItemClick("Danh sách nhân viên")}
