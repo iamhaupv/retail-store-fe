@@ -212,11 +212,6 @@ export default function WarehouseReceipt() {
       throw new Error("handle submit is error " + error);
     }
   };
-
-  useEffect(() => {
-    fetchProducts();
-    generateWarehouseReceiptCode();
-  }, []);
   const generateWarehouseReceiptCode = async () => {
     const prefix = "PNK";
     const date = new Date();

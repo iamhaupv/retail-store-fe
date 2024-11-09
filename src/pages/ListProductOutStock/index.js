@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Autocomplete from "../../components/AutoComplete";
 import { Link } from "react-router-dom";
 import TableProductDetail from "../../components/TableProductDetail";
+import apiGetListProduct from "../../apis/apiGetListProduct";
+import apiGetListBrands from "../../apis/apiGetListBrand";
 
 export default function ListProductOutStock() {
   const [products, setProducts] = useState([]);
@@ -12,7 +14,7 @@ export default function ListProductOutStock() {
   };
   const fetchBrans = async () => {
     try {
-      const response = await apiGetListBrand();
+      const response = await apiGetListBrands();
       setBrands(response.brands);
     } catch (error) {
       throw new Error(error);

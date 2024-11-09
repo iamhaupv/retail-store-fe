@@ -84,7 +84,10 @@ export const routes = [
         path: "/order",
         element: <Order />,
       },
-
+      // {
+      //   path: "/reciept",
+      //   element: < />,
+      // },
       {
         path: "/createOrder",
         element: <CreateOrder />,
