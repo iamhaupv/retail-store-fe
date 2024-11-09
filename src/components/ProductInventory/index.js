@@ -70,13 +70,16 @@ export default function ProductInventory({ products }) {
         ))
       ) : (
         <tr>
-          <td colSpan="8" className="text-center">Không có sản phẩm nào</td>
+          <td colSpan="8" className="text-center">
+            Không có sản phẩm nào
+          </td>
         </tr>
       )}
-
       <dialog id="Delete" className="modal">
         <div className="modal-box w-3/12">
-          <h3 className="font-bold text-lg">Bạn muốn xóa sản phẩm này khỏi kệ?</h3>
+          <h3 className="font-bold text-lg">
+            Bạn muốn xóa sản phẩm này khỏi kệ?
+          </h3>
           <div className="flex modal-action justify-between">
             <button className="btn w-20 bg-orange-500">Đồng ý</button>
             <form method="dialog">

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import TableProductDetail from "../TableProductDetail";
-import apiGetListProduct from "../../apis/apiGetListProduct";
-
-import apiGetListBrand from "../../apis/apiGetListBrand";
-
-import Autocomplete from "../AutoComplete";
+import Autocomplete from "../../components/AutoComplete";
 import { Link } from "react-router-dom";
+import TableProductDetail from "../../components/TableProductDetail";
+import apiGetListProduct from "../../apis/apiGetListProduct";
+import apiGetListBrands from "../../apis/apiGetListBrand";
 
-export default function ListProductTable() {
+export default function ListProductSale() {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const fetch = async () => {
@@ -16,7 +14,7 @@ export default function ListProductTable() {
   };
   const fetchBrans = async () => {
     try {
-      const response = await apiGetListBrand();
+      const response = await apiGetListBrands();
       setBrands(response.brands);
     } catch (error) {
       throw new Error(error);
@@ -44,7 +42,7 @@ export default function ListProductTable() {
     { id: 6, name: "Nguyễn Thanh Khoa" },
     { id: 7, name: "Nguyễn Đức Long" },
   ];
- return (
+  return (
     <>
       <div className="">
         {/* filter */}
@@ -65,20 +63,17 @@ export default function ListProductTable() {
           </select> */}
 
           <div className="ml-4 mt-2 w-52 h-11">
-            <Autocomplete
-              suggestion={suggestion}
-              placeholder="Nhà cung cấp"
-            />
+            <Autocomplete suggestion={suggestion} placeholder="Nhà cung cấp" />
           </div>
 
           {/* status Option */}
-          <select className="select select-bordered h-4 w-52 ml-4">
+          {/* <select className="select select-bordered h-4 w-52 ml-4">
             <option disabled selected>
               Trạng thái
             </option>
             <option>Đang bán</option>
             <option>Hết hàng</option>
-          </select>
+          </select> */}
         </div>
         {/* Nofication and Button Add */}
 
@@ -106,9 +101,12 @@ export default function ListProductTable() {
         </div>
         {/* table Product */}
 
-        <div className="overflow-y-auto  mt-7" style={{
+        <div
+          className="overflow-y-auto  mt-7"
+          style={{
             height: "calc(90vh - 280px)",
-          }}>
+          }}
+        >
           <table className="table table-pin-rows ">
             {/* head */}
             <thead>

@@ -30,7 +30,7 @@ export default function Order() {
         className="w-11/12 h-auto justify-center flex "
         style={{ backgroundColor: "#F5F5F5" }}
       >
-        <div className="w-full animate__animated animate__fadeInRight">
+        <div className="w-full animate__animated animate__fadeInRight ">
           <div className=" mt-3 mr-3 flex justify-between">
             <h4 className="font-bold text-xl w-full ml-4">Tạo hóa đơn</h4>
             <div className="flex w-fit">
@@ -172,7 +172,10 @@ export default function Order() {
           </div>
           {isClicked ? (
             <div className="w-full h-dvh">
-              <div className="card bg-white h-4/6 rounded-lg ml-4 mr-4 mt-2 grid overflow-y-auto animate__animated animate__fadeInRight">
+              <div className="card bg-white  rounded-lg ml-4 mr-4 mt-2 grid overflow-y-auto animate__animated animate__fadeInRight"
+              style={{
+                height: "calc(100vh - 200px)",
+              }}>
                 <table className="table table-pin-rows ">
                   {/* head */}
                   <thead>
@@ -206,7 +209,10 @@ export default function Order() {
             </div>
           ) : (
             <div className="flex w-full h-dvh animate__animated animate__fadeInRight">
-              <div className="card bg-white w-3/12 h-5/6 rounded-none ml-4 mr-2 mt-2 grid overflow-y-auto ">
+              <div className="card bg-white w-3/12  rounded-none ml-4 mr-2 mt-2 grid overflow-y-auto "
+              style={{
+                height: "calc(100vh - 170px)",
+              }}>
                 {/* <div className="card bg-white w-3/12 h-2/6 overflow-y-auto grid"> */}
                 {/* <div className="stats stats-vertical shadow   "> */}
                 {/* <div className="overflow-y-auto w-3/12 h-4/6"> */}
@@ -239,7 +245,10 @@ export default function Order() {
                 </table>
               </div>
 
-              <div className="card bg-white w-9/12 h-5/6 rounded-none  mr-4 mt-2 grid ">
+              <div className="card bg-white w-9/12  rounded-none  mr-4 mt-2 grid "
+              style={{
+                height: "calc(100vh - 170px)",
+              }}>
                 <div>
                   <div className="flex w-fit h-8 mt-2 ml-2">
                     <div className="flex justify-center items-center">
@@ -294,7 +303,10 @@ export default function Order() {
                     <h2 className="font-medium text-sm">Mã nhân viên:</h2>
                     <h2 className=" font-sans text-xs ml-1">H7003241</h2>
                   </div>
-                  <div className=" h-72 overflow-y-auto">
+                  <div className=" overflow-y-auto"
+                  style={{
+                    height: "calc(100vh - 450px)",
+                  }}>
                     <table className="table table-pin-rows">
                       {/* head */}
                       <thead>

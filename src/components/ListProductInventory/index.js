@@ -168,9 +168,11 @@ export default function ListProductInventory() {
               <td>
                 <div>
                   <div className="font-bold">ASM001</div>
+                  {/* <svg ref={inputRef} /> */}
                 </div>
               </td>
               <td>
+
                 <div>
                   <div className="font-bold">{warehouse.idPNK}</div>
                 </div>
@@ -182,6 +184,7 @@ export default function ListProductInventory() {
                       <img
                         src={item.product.images[0]}
                         alt={item.product.title}
+
                       />
                     </div>
                   </div>

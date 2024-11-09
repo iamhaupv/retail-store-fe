@@ -230,8 +230,8 @@ export default function Inventory() {
         style={{ backgroundColor: "#F5F5F5" }}
       >
         <div className="w-11/12 justify-center  ">
-          <div className=" w-full h-fit mb-2 animate__animated animate__fadeInRight ">
-            <div className="card bg-white rounded-lg top-7  grid h-52 ">
+          <div className=" w-full h-fit  animate__animated animate__fadeInRight ">
+            <div className="card bg-white mb-2 rounded-lg top-7  grid h-52 ">
               <h4 className="font-bold text-xl w-32 ml-4 mt-4 h-fit">
                 Thông tin kho
               </h4>
@@ -467,6 +467,7 @@ export default function Inventory() {
                   viewBox="0 0 16 16"
                   fill="currentColor"
                   className="h-4 w-4 opacity-70"
+
                 >
                   <path
                     fillRule="evenodd"

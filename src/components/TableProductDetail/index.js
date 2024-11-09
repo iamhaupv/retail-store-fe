@@ -3,6 +3,7 @@ import { CarouselProduct } from "../CarouselProduct";
 import React, { useEffect, useState } from "react";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
 import apiIsDisplay from "../../apis/apiIsDisplay";
+import { Link } from "react-router-dom";
 
 export default function TableProductDetail() {
   const [products, setProducts] = useState([]);
@@ -71,16 +72,16 @@ export default function TableProductDetail() {
               </div>
             </div>
           </td>
-          <td>
+          <td className="text-ellipsis">
             {product.brand.name}
-            <br />
+            
           </td>
           <td>{product.status === "in_stock" ? "Còn hàng" : "Hết hàng"}</td>
           <td>
             <h1 className="">{product.quantity}</h1>
           </td>
           <td>
-            <h1 className="">{product.price.toLocaleString()} đ</h1>
+            <h1 className="whitespace-nowrap">{product.price.toLocaleString()} đ</h1>
           </td>
           <td>
             <div className="flex w-fit">
@@ -110,6 +111,7 @@ export default function TableProductDetail() {
                   />
                 </svg>
               </button>
+              <Link to="/update-product">
               <button
                 className=" w-6 h-6 rounded-lg mr-2"
                 style={{ backgroundColor: "#ebf3fe", outline: "" }}
@@ -130,7 +132,7 @@ export default function TableProductDetail() {
                   />
                 </svg>
               </button>
-
+              </Link>
               <button
                 onClick={() => handleChangeIsDisplay(product._id, false)}
                 id="btn__delete"

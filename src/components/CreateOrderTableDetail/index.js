@@ -1,7 +1,7 @@
 import React from "react";
 import Autocomplete from "../AutoComplete";
 
-export default function CreateOrderTableDetail() {
+export default function CreateOrderTableDetail({ index, removeRow }) {
   const suggestion = [
     { id: 1, name: "Nước ngọt pepsi dung tích 120ml" },
     { id: 2, name: "Snack Khoai tây lays" },
@@ -45,7 +45,7 @@ export default function CreateOrderTableDetail() {
             id="btn__delete"
             className="w-6 h-6 rounded-lg "
             style={{ backgroundColor: "#feebe8", outline: "" }}
-            onClick={() => document.getElementById("Delete").showModal()}
+            onClick={() => removeRow(index)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

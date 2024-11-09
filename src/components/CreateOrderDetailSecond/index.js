@@ -1,10 +1,46 @@
-import React from "react";
+import React,{ useEffect, useState } from "react";
 import CreateOrderTableDetail from "../CreateOrderTableDetail";
+import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
 
 export default function CreateOrderDetailSecond() {
+  const [user, setUser] = useState("");
+  const [orderDetails, setOrderDetails] = useState([]);
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+    if(!token) throw new Error("Token is invalid!")
+    const response = await apiGetCurrentUser(token)
+    setUser(response.rs)
+    } catch (error) {
+      throw new Error("Fetch user is error " + error)
+    }
+  };
+  const handleDate =  () => {
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+     return `${day}/${month}/${year}`;
+  };
+  const addNewRow = () => {
+    const newRow = {
+      id: orderDetails.length + 1,
+      productCode: "",
+      productName: "",
+      quantity: 0,
+      unit: "",
+      price: 0,
+      total: 0,
+    };
+    setOrderDetails([...orderDetails, newRow]);
+  };
+  
+  useEffect(() => {
+    fetchUser();
+  }, []);
   return (
     <>
-      <div className="card bg-white rounded-none w-full overflow-y-auto ">
+      <div className="card bg-white h-full rounded-none w-full overflow-y-hidden ">
         <h1 className="font-bold text-xl ml-2 mt-2">Thông tin </h1>
         <div>
           <div className="flex">
@@ -20,8 +56,8 @@ export default function CreateOrderDetailSecond() {
             <div className="flex w-fit h-auto justify-center items-center ml-2 mt-2">
               <h1 className="font-medium w-24 text-sm ">Thời gian:</h1>
               <input
-                type="datetime-local"
-                placeholder=""
+                type="text"
+                value={handleDate()}
                 className="input w-60  h-7 text-black"
                 disabled
               />
@@ -40,14 +76,14 @@ export default function CreateOrderDetailSecond() {
             <div className="flex w-fit h-auto justify-center items-center ml-2 mt-2">
               <h1 className="font-medium w-24 text-sm ">Tên nhân viên:</h1>
               <input
+                value={user.lastname + " " + user.firstname}
                 type="text"
-                placeholder="Nguyễn Thanh Khoa"
                 className="input w-60  h-7 text-black"
                 disabled
               />
             </div>
-            <div className="w-2/6"></div>
-            <button className="drawer-button btn btn-success text-white w-36 h-8 mt-3 ">
+            <div className="w-5/6 justify-items-end grid mr-2">
+            <button onClick={addNewRow}  className="drawer-button btn btn-success text-white w-36 h-8 mt-3 ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -64,8 +100,12 @@ export default function CreateOrderDetailSecond() {
               </svg>
               Thêm dòng
             </button>
+            </div>
           </div>
-          <div className="h-72 overflow-x-auto">
+          <div className=" overflow-y-auto"
+          style={{
+            height: "calc(90vh - 350px)",
+          }}>
             <table className="table table-pin-rows">
               {/* head */}
               <thead>
@@ -80,12 +120,9 @@ export default function CreateOrderDetailSecond() {
                 </tr>
               </thead>
               <tbody>
-                <CreateOrderTableDetail />
-                <CreateOrderTableDetail />
-                <CreateOrderTableDetail />
-                <CreateOrderTableDetail />
-                <CreateOrderTableDetail />
-                <CreateOrderTableDetail />
+              {orderDetails.map((detail, index) => (
+                <CreateOrderTableDetail key={index} detail={detail} />
+              ))}
               </tbody>
             </table>
           </div>

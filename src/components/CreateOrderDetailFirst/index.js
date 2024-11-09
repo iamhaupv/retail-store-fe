@@ -35,12 +35,16 @@ export default function CreateOrderDetailFirst() {
     setOrderDetails([...orderDetails, newRow]);
   };
   
+  const removeRow = (index) => {
+    setOrderDetails(orderDetails.filter((_, i) => i !== index));
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
   return (
     <>
-      <div className="card bg-white rounded-none w-full overflow-y-auto ">
+      <div className="card bg-white h-full rounded-none w-full overflow-y-hidden ">
         <h1 className="font-bold text-xl ml-2 mt-2">Thông tin </h1>
         <div>
           <div className="flex">
@@ -82,7 +86,7 @@ export default function CreateOrderDetailFirst() {
                 disabled
               />
             </div>
-            <div className="w-2/6"></div>
+            <div className="w-5/6 justify-items-end grid mr-2">
             <button onClick={addNewRow}  className="drawer-button btn btn-success text-white w-36 h-8 mt-3 ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -100,8 +104,12 @@ export default function CreateOrderDetailFirst() {
               </svg>
               Thêm dòng
             </button>
+            </div>
           </div>
-          <div className="h-72 overflow-x-auto">
+          <div className=" overflow-y-auto"
+          style={{
+            height: "calc(90vh - 350px)",
+          }}>
             <table className="table table-pin-rows">
               {/* head */}
               <thead>
@@ -117,7 +125,7 @@ export default function CreateOrderDetailFirst() {
               </thead>
               <tbody>
               {orderDetails.map((detail, index) => (
-                <CreateOrderTableDetail key={index} detail={detail} />
+                <CreateOrderTableDetail key={index} detail={detail} removeRow={removeRow} />
               ))}
               </tbody>
             </table>
