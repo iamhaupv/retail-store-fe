@@ -20,6 +20,7 @@ import WarehouseReceipt from "../pages/WarehouseReceipt";
 import UpdateProduct from "../pages/UpdateProduct";
 import EntryForm from "../pages/EntryForm";
 import EmployeeSchedule from "../pages/EmployeeSchedule";
+import Reciept from "../pages/Reciept";
 
 export const routes = [
   { path: "/signin", element: <SignIn /> },
@@ -62,6 +63,10 @@ export const routes = [
       {
         path: "/employeeSchedule",
         element: <EmployeeSchedule />,
+      },
+      {
+        path: "/reciept",
+        element: <Reciept />,
       },
       {
         path: "/employeelist",

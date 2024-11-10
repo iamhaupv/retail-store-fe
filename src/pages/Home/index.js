@@ -1,19 +1,36 @@
 import React from "react";
 import "./Home.css";
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 export default function Home() {
   const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
       {
-        label: 'My First dataset',
+        label: "My First dataset",
         data: [65, 59, 70, 56, 55, 40],
         fill: false,
-        backgroundColor: 'rgb(75, 192, 192)',
-        borderColor: 'rgba(75, 192, 192, 0.2)',
+        backgroundColor: "rgb(75, 192, 192)",
+        borderColor: "rgba(75, 192, 192, 0.2)",
       },
     ],
   };
@@ -22,11 +39,11 @@ export default function Home() {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       title: {
         display: true,
-        text: 'Line Chart Example',
+        text: "Line Chart Example",
       },
     },
   };
@@ -137,21 +154,29 @@ export default function Home() {
               </h1>
             </div>
           </div>
-          <div className="w-full h-4/6 ">
-            <div className=" card  bg-white rounded-xl mt-12  ml-4 mr-4">
-              <div className="flex w-full justify-between">
-                <h1 className="font-bold text-xl w-1/3 mt-2 ml-2">
-                  Tình hình kinh doanh
-                </h1>
-                <select className="select select-bordered w-40 mt-2 mr-2">
-                  <option selected>Tháng</option>
-                  <option>Năm</option>
-                  <option>Quý</option>
-                </select>
-              </div>
-              <div className="w-full h-2/3 justify-center">
-              <Line data={data} options={options}  />
-              </div>
+          <div
+            className="w-full  card  bg-white rounded-xl mt-12  ml-4 mr-4"
+            style={{
+              height: "calc(100vh - 270px)",
+            }}
+          >
+            <div className="flex w-full justify-between">
+              <h1 className="font-bold text-xl w-1/3 mt-2 ml-2">
+                Tình hình kinh doanh
+              </h1>
+              <select className="select select-bordered w-40 mt-2 mr-4">
+                <option selected>Tháng</option>
+                <option>Năm</option>
+                <option>Quý</option>
+              </select>
+            </div>
+            <div
+              className="w-full justify-items-center "
+              style={{
+                height: "calc(100vh - 343px)",
+              }}
+            >
+              <Line data={data} options={options} />
             </div>
           </div>
         </div>

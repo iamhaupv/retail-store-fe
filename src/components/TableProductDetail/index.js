@@ -46,7 +46,7 @@ export default function TableProductDetail() {
     document.getElementById("modal_Quick_View").showModal();
   };
   console.log(products);
-  
+
   return (
     <>
       {products.map((product) => (
@@ -72,16 +72,17 @@ export default function TableProductDetail() {
               </div>
             </div>
           </td>
-          <td className="text-ellipsis">
-            {product.brand.name}
-            
+          <td className="text-ellipsis">{product.brand.name}</td>
+          <td className="whitespace-nowrap">
+            {product.status === "in_stock" ? "Còn hàng" : "Hết hàng"}
           </td>
-          <td>{product.status === "in_stock" ? "Còn hàng" : "Hết hàng"}</td>
           <td>
             <h1 className="">{product.quantity}</h1>
           </td>
           <td>
-            <h1 className="whitespace-nowrap">{product.price.toLocaleString()} đ</h1>
+            <h1 className="whitespace-nowrap">
+              {product.price.toLocaleString()} đ
+            </h1>
           </td>
           <td>
             <div className="flex w-fit">
@@ -112,26 +113,26 @@ export default function TableProductDetail() {
                 </svg>
               </button>
               <Link to="/update-product">
-              <button
-                className=" w-6 h-6 rounded-lg mr-2"
-                style={{ backgroundColor: "#ebf3fe", outline: "" }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-6"
-                  style={{ color: "#2f80ed" }}
+                <button
+                  className=" w-6 h-6 rounded-lg mr-2"
+                  style={{ backgroundColor: "#ebf3fe", outline: "" }}
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                    style={{ color: "#2f80ed" }}
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                    />
+                  </svg>
+                </button>
               </Link>
               <button
                 onClick={() => handleChangeIsDisplay(product._id, false)}
@@ -285,10 +286,10 @@ export default function TableProductDetail() {
               <h1 className="card-title text-3xl font-medium">
                 {selectedProduct ? selectedProduct.title : ""}
               </h1>
-              <h1>
-                {selectedProduct ? selectedProduct.description : ""}
+              <h1>{selectedProduct ? selectedProduct.description : ""}</h1>
+              <h1 className="text-xl font-medium">
+                {selectedProduct ? selectedProduct.price : ""} đ
               </h1>
-              <h1 className="text-xl font-medium">{selectedProduct ? selectedProduct.price : ""} đ</h1>
 
               <div className="card-actions justify-start">
                 {/* <div>

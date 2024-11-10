@@ -22,10 +22,34 @@ export default function Product() {
     { id: 6, name: "Nguyễn Thanh Khoa" },
     { id: 7, name: "Nguyễn Đức Long" },
   ];
+
+  const [value, setValue] = useState("");
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
+  };
+
+  const handleBlurCurrencyInput = () => {
+    const numericValue = parseFloat(value.replace(/,/g, ""));
+    if (!isNaN(numericValue)) {
+      setValue(formatCurrency(numericValue));
+    }
+  };
+
+  const handleChangeCurrencyInput = (e) => {
+    setValue(e.target.value);
+  };
+
   const handleBlur = (e) => {
     const { name } = e.target;
     if (!payload[name]) {
       setError((prev) => ({ ...prev, [name]: `Không được để trống!` }));
+    }
+    if(name =="price"){
+      handleBlurCurrencyInput();
     }
   };
   const handleChangeInput = (e) => {
@@ -49,6 +73,7 @@ export default function Product() {
       } else if (!priceRegex.test(value)) {
         errorMessage = "Giá không hợp lệ. Vui lòng nhập số hợp lệ!";
       }
+      handleChangeCurrencyInput(e);
     }
     // description
     if (name === "description") {
@@ -117,7 +142,7 @@ export default function Product() {
   const handleSubmit = async () => {
     try {
       const { title, price, description, brand, category } = payload;
-      console.log(payload);
+      console.log("payload"+ payload);
       
       if (!title || !price || !description || !brand || !image) {
         Swal.fire(
@@ -127,6 +152,7 @@ export default function Product() {
         );
         return;
       }
+      
 
       const result = await Swal.fire({
         title: "Xác nhận",

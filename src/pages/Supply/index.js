@@ -183,8 +183,8 @@ export default function Supply() {
                   </div>
                 <input
                   type="text"
-                  placeholder="Mã thương hiệu"
-                  className="input input-bordered w-5/12 h-10 ml-4"
+                  placeholder="Mã nhà cung cấp"
+                  className="input input-bordered w-5/12 h-10 ml-8"
                   disabled
                 />
               </div>

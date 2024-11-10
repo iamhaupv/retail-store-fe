@@ -35,12 +35,12 @@ export default function SupplyTableDetail() {
                 alt={`Logo brand ${brand.name}`} />
             </div>
           </div>
-          <h1 className='font-bold'>
+          <h1 className='font-bold whitespace-nowrap'>
             {brand.name}
           </h1>
         </div>
       </td>
-      <td>{brand.address}</td>
+      <td className='text-ellipsis'>{brand.address}</td>
       <td>{brand.phone}</td>
       <td className='whitespace-nowrap'>{brand.supplyName}</td>
 

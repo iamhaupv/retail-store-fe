@@ -55,11 +55,11 @@ export default function StockInDetail() {
           <td>
             {receipt.products
               .reduce((total, product) => {
-                return total + product.quantity * product.importPrice;
+                return total + product.quantity * product.importPrice ;
               }, 0)
-              .toLocaleString()}
+              .toLocaleString()+" đ"}
           </td>
-          <td>
+          <td className="justify-items-center">
             <Link to="/entry-form" state={{ receipt: receipt }}>
               <button
                 className=" w-6 h-6 rounded-sm mr-2"
@@ -87,7 +87,7 @@ export default function StockInDetail() {
                 </svg>
               </button>
             </Link>
-            <button
+            {/* <button
               id="btn__delete"
               className="w-6 h-6 rounded-sm "
               style={{ backgroundColor: "#feebe8", outline: "" }}
@@ -111,7 +111,7 @@ export default function StockInDetail() {
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-            </button>
+            </button> */}
 
             {/* Alert Delete */}
           </td>
