@@ -14,7 +14,7 @@ export default function InventoryProduct({onChangeModal}) {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
       const response = await apiFilterProductByShelf(token, {name: shelf})
-      setProducts(response.data || [])
+      setProducts(response.products || [])
     } catch (error) {
       console.log("fetch product by shelf is error " + error);
     }

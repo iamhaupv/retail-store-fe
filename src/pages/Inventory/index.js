@@ -15,90 +15,21 @@ export default function Inventory() {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
+
       const response = await apiGetAllProductByReceipt(token);
-      if (response.products && response.products.length > 0) {
+      if (response && response.success && Array.isArray(response.products)) {
         setProducts(response.products);
       } else {
-        setProducts([]);
+        setProducts([]); // Không có sản phẩm
       }
     } catch (error) {
-      console.log("fetch products is error " + error);
+      console.error("Fetch products error: ", error); // In ra lỗi
+      setProducts([]); // Reset sản phẩm khi có lỗi
     }
   };
   useEffect(() => {
     fetchProducts();
   }, []);
-  const [selectedProducts, setSelectedProducts] = useState({});
-  // const handleCheckboxChange = (warehouseId, productId) => {
-  //   setSelectedProducts((prev) => {
-  //     const warehouseProducts = prev[warehouseId] || {};
-  //     const isSelected = !!warehouseProducts[productId];
-
-  //     // Tạo một đối tượng kho mới để tránh thay đổi trạng thái trực tiếp
-  //     const updatedWarehouseProducts = {
-  //       ...warehouseProducts,
-  //       ...(isSelected ? { [productId]: undefined } : { [productId]: true }), // Bỏ chọn nếu đã chọn, thêm vào nếu chưa chọn
-  //     };
-
-  //     // Dọn dẹp bất kỳ giá trị undefined nào
-  //     const cleanedWarehouseProducts = Object.fromEntries(
-  //       Object.entries(updatedWarehouseProducts).filter(
-  //         ([_, v]) => v !== undefined
-  //       )
-  //     );
-
-  //     return {
-  //       ...prev,
-  //       [warehouseId]: cleanedWarehouseProducts,
-  //     };
-  //   });
-  // };
-  const handleCheckboxChange = (warehouseId, productId) => {
-    setSelectedProducts((prev) => {
-      const warehouseProducts = prev[warehouseId] || {};
-      const isSelected = !!warehouseProducts[productId];
-  
-      const updatedWarehouseProducts = {
-        ...warehouseProducts,
-        ...(isSelected ? { [productId]: undefined } : { [productId]: true }),
-      };
-  
-      const cleanedWarehouseProducts = Object.fromEntries(
-        Object.entries(updatedWarehouseProducts).filter(([, v]) => v !== undefined)
-      );
-  
-      return {
-        ...prev,
-        [warehouseId]: cleanedWarehouseProducts,
-      };
-    });
-  };
-  
-  const [productQuantities, setProductQuantities] = useState({});
-  const handleQuantityChange = (productId, newQuantity) => {
-    setProductQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [productId]: Number(newQuantity), // Sử dụng productId trực tiếp
-    }));
-  };
-  
-  const getProductsWithQuantity = () => {
-    return Object.entries(productQuantities)
-      .filter(([, quantity]) => quantity > 0)
-      .map(([productId, quantity]) => ({
-        productId,
-        quantity,
-      }));
-  };
-  
-  // Usage
-  const productsWithQuantity = getProductsWithQuantity();
-  console.log(productsWithQuantity);
-  
-  // useEffect(() => {
-  //   console.log(productQuantities);
-  // }, [productQuantities]);
-
   const [activeTab, setActiveTab] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -114,114 +45,21 @@ export default function Inventory() {
   const handleReload = () => {
     window.location.reload(); // This will reload the page
   };
-  // const handleSubmit = async () => {
-  //   try {
-  //     const token = localStorage.getItem("accessToken");
-  //     if (!token) throw new Error("Token is invalid!");
-  
-  //     const productsWithQuantities = getProductsWithQuantity(); // Lấy danh sách sản phẩm có số lượng
-  
-  //     // Tạo một đối tượng để lưu trữ sản phẩm
-  //     const payload = {};
-      
-  //     for (const { productId, quantity } of productsWithQuantities) {
-  //       // Nếu sản phẩm đã tồn tại, tăng số lượng
-  //       if (payload[productId]) {
-  //         payload[productId] += quantity;
-  //       } else {
-  //         // Nếu chưa tồn tại, thêm sản phẩm mới vào payload
-  //         payload[productId] = quantity;
-  //       }
-  //     }
-  
-  //     // Chuyển đổi payload thành định dạng mà API cần
-  //     const productsToSend = {
-  //       name: shelf,
-  //       products: Object.entries(payload).map(([productId, quantity]) => ({
-  //         productId,
-  //         quantity,
-  //       })),
-  //     };
-  
-  //     const response = await apiAddProductToShelf(token, productsToSend);
-  
-  //     if (response.success) {
-  //       // Xử lý khi thêm sản phẩm thành công
-  //       console.log("Products added successfully");
-  //       toggleModal()
-  //       navigate("/inventory"); // Chuyển hướng về trang kho
-  //     } else {
-  //       // Xử lý khi có lỗi
-  //       console.error("Failed to add products:", response.message);
-  //     }
-  //   } catch (error) {
-  //     console.log("handle submit is error:", error);
-  //   }
-  // };
-  const handleSubmit = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("Token is invalid!");
-  
-      const productsWithQuantities = getProductsWithQuantity(); // Lấy danh sách sản phẩm có số lượng
-  
-      // Tạo một đối tượng để lưu trữ sản phẩm
-      const payload = {};
-      
-      // Lặp qua danh sách các sản phẩm và cập nhật số lượng vào payload
-      for (const { productId, quantity } of productsWithQuantities) {
-        // Nếu sản phẩm đã tồn tại trong payload, cộng thêm số lượng
-        if (payload[productId]) {
-          payload[productId] += quantity;
-        } else {
-          // Nếu chưa tồn tại, thêm sản phẩm vào payload
-          payload[productId] = quantity;
-        }
-      }
-  
-      // Chuyển đổi payload thành định dạng mà API cần
-      const productsToSend = {
-        name: shelf,
-        products: Object.entries(payload).map(([productId, quantity]) => ({
-          productId,
-          quantity,
-        })),
-      };
-  
-      // Gửi API thêm sản phẩm vào kệ
-      const response = await apiAddProductToShelf(token, productsToSend);
-  
-      if (response.success) {
-        // Xử lý khi thêm sản phẩm thành công
-        console.log("Products added successfully");
-  
-        // Cập nhật lại số lượng trong state sau khi thêm vào kệ
-        // Giảm số lượng trong productQuantities
-        setProductQuantities((prevQuantities) => {
-          const updatedQuantities = { ...prevQuantities };
-  
-          // Giảm số lượng trong kho sau khi thêm vào kệ
-          Object.entries(payload).forEach(([productId, quantity]) => {
-            if (updatedQuantities[productId]) {
-              updatedQuantities[productId] -= quantity;
-            }
-          });
-  
-          return updatedQuantities;
-        });
-  
-        toggleModal(); // Đóng modal sau khi thêm thành công
-        handleReload()
-        navigate("/inventory"); // Chuyển hướng về trang kho
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const handleCheckboxChange = (productId) => {
+    setSelectedProducts((prevSelected) => {
+      if (prevSelected.includes(productId)) {
+        return prevSelected.filter((id) => id !== productId);
       } else {
-        // Xử lý khi có lỗi
-        console.error("Failed to add products:", response.message);
+        return [...prevSelected, productId];
       }
-    } catch (error) {
-      console.log("handle submit is error:", error);
-    }
+    });
   };
-  
+  const handleGetSelectedProducts = () => {
+    const selected = products.filter((product) => selectedProducts.includes(product._id));
+    console.log("Selected Products:", selected);
+    // Bạn có thể xử lý danh sách sản phẩm đã chọn ở đây (ví dụ: gửi đến server)
+  };
   return (
     <>
       {/* Tab table */}
@@ -467,7 +305,6 @@ export default function Inventory() {
                   viewBox="0 0 16 16"
                   fill="currentColor"
                   className="h-4 w-4 opacity-70"
-
                 >
                   <path
                     fillRule="evenodd"
@@ -510,152 +347,61 @@ export default function Inventory() {
                     <th>Số lượng</th>
                   </tr>
                 </thead>
+
                 <tbody>
-                  {/* <ListProductInventory /> */}
                   {products.length > 0 ? (
-                    products.map((warehouse) =>
-                      warehouse.products.map((item) => (
-                        <tr key={item.product._id}>
-                          <th>
-                            <label>
-                              {/* <input
-                                className="checkbox"
-                                type="checkbox"
-                                checked={
-                                  !!selectedProducts[warehouse._id]?.[
-                                    item.product._id
-                                  ]
-                                } // Kiểm tra trạng thái chọn
-                                onChange={() =>
-                                  handleCheckboxChange(
-                                    warehouse._id,
-                                    item.product._id
-                                  )
-                                } // Gọi hàm thay đổi
-                              /> */}
-                              {/* <input
-              className="checkbox"
-              type="checkbox"
-              checked={!!selectedProducts[warehouse._id]?.[item.product._id]}
-              onChange={() => handleCheckboxChange(warehouse._id, item.product._id)} // Truyền warehouseId và productId
-            /> */}
-            <input
-    className="checkbox"
-    type="checkbox"
-    checked={!!selectedProducts[warehouse._id]?.[item.product._id]}
-    onChange={() => handleCheckboxChange(warehouse._id, item.product._id)} // Truyền warehouseId và productId
-  />
-                            </label>
-                          </th>
-                          <td>
-                            <div>
-                              <div className="font-bold">ASM001</div>
-                            </div>
-                          </td>
-                          <td>
-                            <div>
-                              <div className="font-bold">{warehouse.idPNK}</div>
-                            </div>
-                          </td>
-                          <td>
-                            <div className="flex items-center gap-3">
-                              <div className="avatar">
-                                <div className="mask mask-squircle h-12 w-12">
-                                  <img
-                                    src={item.product.images[0]}
-                                    alt={item.product.title}
-                                  />
-                                </div>
-                              </div>
-                              <div>
-                                <div className="font-bold">
-                                  {item.product.title}
-                                </div>
-                                <div className="badge badge-ghost badge-sm">
-                                  {item.product.category.name}
-                                </div>
+                    products.map((product) => (
+                      <tr key={product._id}>
+                        <input className="checkbox" onChange={() => handleCheckboxChange(product._id)} type="checkbox" />
+                        <td>123456</td>
+                        <td>{product.idPNK}</td>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                                <img
+                                  src={product.images[0]}
+                                  alt={product.title}
+                                />
                               </div>
                             </div>
-                          </td>
+                            <div>
+                              <div className="font-bold">{product.title}</div>
+                              <div className="badge badge-ghost badge-sm">
+                                {product.category}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>{product.brand}</td>
+                        <td>
+                          <span className="badge badge-ghost badge-sm">
+                            {product.quantity}
+                          </span>
+                        </td>
+                        <td>
                           <td>
-                            {item.product.brand.name}
-                            <br />
-                          </td>
-                          <th>
-                            <h3 className="badge badge-ghost badge-sm">
-                              {item.quantity}
-                            </h3>
-                          </th>
-                          <td>
-                            {/* <input
+                            <input
                               type="number"
-                              value={
-                                productQuantities[
-                                  `${warehouse.idPNK}-${item.product.id}`
-                                ] !== undefined
-                                  ? productQuantities[
-                                      `${warehouse.idPNK}-${item.product.id}`
-                                    ]
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                if (selectedProducts[warehouse._id]?.[item.product._id]) { 
-                                  handleQuantityChange(
-                                    warehouse.idPNK,
-                                    item.product.id,
-                                    e.target.value
-                                  );
-                                }
-                              }}
-                              disabled={!selectedProducts[warehouse._id]?.[item.product._id]}
-                              className="input input-bordered w-full max-w-xs"
-                            /> */}
-                            {/* <input
-  type="number"
-  value={productQuantities[`${warehouse.idPNK}-${item.product._id}`] || ""}
-  onChange={(e) => {
-    if (selectedProducts[warehouse._id]?.[item.product._id]) {
-      handleQuantityChange(
-        warehouse.idPNK,
-        item.product._id,
-        e.target.value
-      );
-    }
-  }}
-  disabled={!selectedProducts[warehouse._id]?.[item.product._id]}
-  className="input input-bordered w-full max-w-xs"
-/> */}
-<input
-    type="number"
-    value={productQuantities[item.product._id] || ""} // Sử dụng productId trực tiếp
-    onChange={(e) => {
-      // Chỉ thay đổi số lượng nếu sản phẩm đã được chọn
-      if (selectedProducts[warehouse._id]?.[item.product._id]) {
-        handleQuantityChange(item.product._id, e.target.value); // Chỉ truyền productId
-      }
-    }}
-    disabled={!selectedProducts[warehouse._id]?.[item.product._id]} // Vô hiệu hóa nếu chưa chọn
-    className="input input-bordered w-full max-w-xs ml-2"
-  />
-
-
+                              className="input input-bordered w-full max-w-xs ml-2"
+                            />
                           </td>
-                        </tr>
-                      ))
-                    )
+                        </td>
+                      </tr>
+                    ))
                   ) : (
-                    <div>Không có sản phẩm nào</div>
+                    <tr>
+                      <td colSpan="2">Khong co san pham nao</td>
+                    </tr>
                   )}
                 </tbody>
-                {/* foot */}
-                <tfoot></tfoot>
               </table>
             </div>
 
             <div className="modal-action ">
               <div className="flex w-full">
                 <button
-                  onClick={handleSubmit}
+                onClick={handleGetSelectedProducts} 
                   class="btn w-28 text-white"
                   style={{ backgroundColor: "#f13612" }}
                 >

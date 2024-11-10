@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Autocomplete from "../AutoComplete";
+import { useState } from "react";
+import apiFilterProductByName from "../../apis/apiFilterProductByName";
 
 export default function CreateOrderTableDetail({ index, removeRow }) {
   const suggestion = [
@@ -21,13 +23,37 @@ export default function CreateOrderTableDetail({ index, removeRow }) {
     { id: 6, name: "Nguyễn Thanh Khoa" },
     { id: 7, name: "Nguyễn Đức Long" },
   ];
+  const [products, setProducts] = useState([])
+  const [name, setName] = useState("")
+  const fetchProductByName = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid")
+      const response = await apiFilterProductByName(token, {title: name})
+      setProducts(response.products)
+    } catch (error) {
+      console.log("fetch products by name is error " + error);
+    }
+  }
+  // console.log(products);
+  const handleChangeInput = async (e) => {
+    setName(e.target.value)
+  }
+  useEffect(()=> {
+    fetchProductByName()
+  }, [name])
+  console.log(name);
+  
   return (
     <>
       <tr className="hover:bg-slate-100">
         <td>SP034213</td>
         <td>
             <div className="w-56">
-                <Autocomplete suggestion={suggestion} placeholder=""/>
+                {/* <Autocomplete suggestion={suggestion} placeholder=""/> */}
+                <div>
+                  <input onChange={handleChangeInput} value={name}   />
+                </div>
             </div>
         </td>
         <td>

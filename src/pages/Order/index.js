@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import NavSideBar from "../../components/SideBar";
 import Content from "../../components/Content";
@@ -7,8 +7,24 @@ import Datepicker from "react-tailwindcss-datepicker";
 import StatOrderDetail from "../../components/statOrderDetail";
 import OrderTableDetail from "../../components/OrderTableDetail";
 import { Link } from "react-router-dom";
+import apiGetListEmployee from "../../apis/apiGetListEmployee";
 
 export default function Order() {
+  const [employees, setEmployees] = useState([])
+  const fetchEmployees = async() => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid!")
+      const response = await apiGetListEmployee(token)
+      setEmployees(response.data)
+    } catch (error) {
+      console.log("fetch employees is error " + error);
+      
+    }
+  }
+  useEffect(()=> {
+    fetchEmployees()
+  }, [])
   const [value, setValue] = useState({
     startDate: null,
     endDate: null,
@@ -77,8 +93,10 @@ export default function Order() {
               <option disabled selected>
                 Người tạo
               </option>
-              <option>nguyễn Thanh Khoa</option>
-              <option>Phạm Văn Hậu</option>
+              {employees.length > 0 ? employees.map((employee) => (
+                <option value={employee._id}>{employee.name}</option>
+              )) : <div>Không có nhân viên nào</div>}
+              
             </select>
             <div className="flex w-fit">
               <div className="w-72 mr-2">
