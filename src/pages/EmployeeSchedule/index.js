@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
 export default function EmployeeSchedule() {
+  const [date, setDate] = useState("");
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
+  const handleBlur = () => {
+    if (date) {
+      const [year, month, day] = date.split("-");
+      setDate(`${day}/${month}/${year}`);
+    }
+  };
+
   return (
     <>
       <div
@@ -50,7 +63,12 @@ export default function EmployeeSchedule() {
               </button>
               <div class="hidden md:ml-4 md:flex md:items-center">
                 <div class="relative">
-                  <input type="date" className="input border-2  rounded-md" />
+                  <input
+                    type="date"
+                    className="input border-2  rounded-md"
+                    
+                  />
+                  
                 </div>
                 <div class="ml-6 h-6 w-px bg-gray-300"></div>
                 <button
@@ -199,10 +217,12 @@ export default function EmployeeSchedule() {
                     Is current month, include: "bg-white"
                     Is not current month, include: "bg-gray-50 text-gray-500"
                     */}
-                <div class="relative bg-gray-50 px-3 py-2 text-gray-500 "
-                style={{
+                <div
+                  class="relative bg-gray-50 px-3 py-2 text-gray-500 "
+                  style={{
                     height: "calc(100vh - 564px)",
-                  }}>
+                  }}
+                >
                   {/*
                         Is today, include: "flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white"
                     */}
