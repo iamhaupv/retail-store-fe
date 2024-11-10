@@ -35,7 +35,7 @@ export default function Header(props) {
             alt="logo Store 24 Hour"
           />
           <a class="flex ml-10 w-80 items-center">
-            <FontAwesomeIcon icon={faArrowLeft} />
+            
             <p className="ml-2 w-72">{props.title}</p>
           </a>
         </div>
