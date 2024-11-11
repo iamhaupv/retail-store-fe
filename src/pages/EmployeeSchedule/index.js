@@ -39,7 +39,7 @@ export default function EmployeeSchedule() {
             type="checkbox"
             className="drawer-toggle"
           />
-          <div className="drawer-content overflow-x-hidden">
+          <div className="drawer-content overflow-y-hidden overflow-x-hidden">
             <div class="w-full ml-2 mr-2 lg:flex lg:h-[calc(100vh-50px)] lg:flex-col animate__animated animate__fadeInRight ">
               <header class="flex items-center justify-between border-b border-gray-200 px-6 py-4 lg:flex-none">
                 <h1 class="text-base font-semibold leading-6 text-gray-900">

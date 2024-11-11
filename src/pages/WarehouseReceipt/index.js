@@ -12,6 +12,7 @@ import apiGetListBrands from "../../apis/apiGetListBrand";
 
 export default function WarehouseReceipt() {
   const navigate = useNavigate();
+  const [price, setPrice] = useState('');
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);
@@ -138,6 +139,36 @@ export default function WarehouseReceipt() {
   };
 
   const handleChangeInput = (index, name, value) => {
+    if(name =="importPrice"){
+      value = value.replace(/[^\d.]/g, '');
+
+      // Ensure the value is not less than 0
+      if (parseFloat(value) < 0) {
+        value = '0';
+      }
+    }
+    if(name =="quantity"){
+      value = value.replace(/[^\d.]/g, '');
+
+      // Ensure the value is not less than 0
+      if (parseFloat(value) < 0) {
+        value = '0';
+      }
+    }
+    if(name == "expires"){
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+      const today = formatDate(new Date());
+      // const today = new Date();
+      // today.setHours(0, 0, 0, 0);
+      if(value < today){
+       value = today;
+      }
+    }
     setAddedProducts((prev) => {
       const newProducts = [...prev];
       newProducts[index][name] = value; // Update the specific field for the product
