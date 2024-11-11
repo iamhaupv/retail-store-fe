@@ -26,6 +26,8 @@ export default function Information() {
   useEffect(() => {
     fetchCurrentUser();
   }, []);
+  console.log(user);
+  
   return (
     <>
       <div
@@ -37,7 +39,7 @@ export default function Information() {
             <div className="flex w-full">
               <div className="avatar w-1/4">
                 <div className="size-60 ml-10 mt-16 rounded-full">
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  <img src={`https://res.cloudinary.com/dqazvfqre/image/upload/v1731310102/avt-default_dvk2qz.jpg`} alt="Avatar default" />
                 </div>
               </div>
               <div className="w-3/4 mt-20 ml-4 ">
@@ -63,7 +65,7 @@ export default function Information() {
                 <div className="flex items-center mt-1">
                   <h1 className=" text-lg">Địa chỉ:</h1>
                   <h1 className=" text-lg ml-3">
-                    123/45 Phan Văn Trị P18 Q.Bình Thạnh Tp.HCM
+                   {user.address}
                   </h1>
                 </div>
                 <div className="flex items-center mt-1">

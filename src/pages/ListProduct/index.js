@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import Header from "../../components/Header";
-import { NavLink } from "react-router-dom";
 import ListProductTable from "../../components/ListProductTable";
 import ListProductSale from "../ListProductSale";
 import ListProductOutStock from "../ListProductOutStock";
-import { faCalculator } from "@fortawesome/free-solid-svg-icons";
 
 export default function ListProduct() {
   const [activeTab, setActiveTab] = useState(0);

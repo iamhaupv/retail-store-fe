@@ -5,10 +5,8 @@ import InventoryProduct from "../../components/InventoryProduct";
 import apiGetAllProductByReceipt from "../../apis/apiGetAllProductByReceipt";
 import apiAddProductToShelf from "../../apis/apiAddProductToShelf";
 import { useShelfContext } from "../../contexts/ShelfContext";
-import { useNavigate } from "react-router-dom";
 
 export default function Inventory() {
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const { shelf } = useShelfContext();
   const fetchProducts = async () => {
@@ -46,19 +44,61 @@ export default function Inventory() {
     window.location.reload(); // This will reload the page
   };
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const handleCheckboxChange = (productId) => {
-    setSelectedProducts((prevSelected) => {
-      if (prevSelected.includes(productId)) {
-        return prevSelected.filter((id) => id !== productId);
-      } else {
-        return [...prevSelected, productId];
-      }
-    });
+  const handleCheckboxChange = (productId, receiptId) => {
+    const key = `${productId}-${receiptId}`; // Tạo khóa duy nhất
+    setSelectedProducts((prev) => ({
+      ...prev,
+      [key]: {
+        ...prev[key],
+        selected: !prev[key]?.selected,
+      },
+    }));
   };
-  const handleGetSelectedProducts = () => {
-    const selected = products.filter((product) => selectedProducts.includes(product._id));
-    console.log("Selected Products:", selected);
-    // Bạn có thể xử lý danh sách sản phẩm đã chọn ở đây (ví dụ: gửi đến server)
+  const handleQuantityChange = (productId, receiptId, value) => {
+    const key = `${productId}-${receiptId}`;
+    const product = products.find(
+      (p) => p._id === productId && p.warehouseReceipt === receiptId
+    );
+
+    const quantity = Number(value); // Chuyển đổi giá trị thành số
+
+    if (quantity < 0) {
+      alert("Số lượng không thể nhỏ hơn 0");
+      return; // Không cập nhật nếu số lượng nhỏ hơn 0
+    }
+
+    if (product && quantity > product.quantity) {
+      alert(`Số lượng không thể lớn hơn ${product.quantity}`);
+      return; // Không cập nhật nếu số lượng nhập vào lớn hơn số lượng có
+    }
+
+    setSelectedProducts((prev) => ({
+      ...prev,
+      [key]: { ...prev[key], quantity },
+    }));
+  };
+
+  const handleGetSelectedProducts = async () => {
+    const productsToAdd = Object.entries(selectedProducts)
+      .filter(([_, { selected }]) => selected)
+      .map(([key, { quantity }]) => {
+        const [product, warehouseReceipt] = key.split("-");
+        return { product, quantity, warehouseReceipt }; // Trả về id sản phẩm và mã phiếu
+      });
+    console.log(productsToAdd); // Xử lý thêm sản phẩm vào kho
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const result = await apiAddProductToShelf(token, {
+        name: shelf,
+        products: productsToAdd,
+      });
+      toggleModal();
+      handleReload();
+      console.log("Products added successfully:", result);
+    } catch (error) {
+      console.error("Failed to add products:", error);
+    }
   };
   return (
     <>
@@ -352,7 +392,24 @@ export default function Inventory() {
                   {products.length > 0 ? (
                     products.map((product) => (
                       <tr key={product._id}>
-                        <input className="checkbox" onChange={() => handleCheckboxChange(product._id)} type="checkbox" />
+                        <td>
+                          <input
+                            className="checkbox"
+                            onChange={() =>
+                              handleCheckboxChange(
+                                product._id,
+                                product.warehouseReceipt
+                              )
+                            }
+                            type="checkbox"
+                            checked={
+                              selectedProducts[
+                                `${product._id}-${product.warehouseReceipt}`
+                              ]?.selected || false
+                            }
+                          />
+                        </td>
+                        <h1>{product._id}</h1>
                         <td>123456</td>
                         <td>{product.idPNK}</td>
                         <td>
@@ -384,6 +441,25 @@ export default function Inventory() {
                             <input
                               type="number"
                               className="input input-bordered w-full max-w-xs ml-2"
+                              value={
+                                selectedProducts[
+                                  `${product._id}-${product.warehouseReceipt}`
+                                ]?.quantity || ""
+                              }
+                              onChange={(e) =>
+                                handleQuantityChange(
+                                  product._id,
+                                  product.warehouseReceipt,
+                                  e.target.value
+                                )
+                              }
+                              disabled={
+                                !selectedProducts[
+                                  `${product._id}-${product.warehouseReceipt}`
+                                ]?.selected
+                              }
+                              min="0" // Không cho phép nhập số âm
+                              max={product.quantity} // Giới hạn nhập vào không lớn hơn số lượng hiện có
                             />
                           </td>
                         </td>
@@ -401,7 +477,7 @@ export default function Inventory() {
             <div className="modal-action ">
               <div className="flex w-full">
                 <button
-                onClick={handleGetSelectedProducts} 
+                  onClick={handleGetSelectedProducts}
                   class="btn w-28 text-white"
                   style={{ backgroundColor: "#f13612" }}
                 >

@@ -13,8 +13,9 @@ import { Link, useNavigate } from "react-router-dom";
 export default function Header(props) {
   const [username, setUsername] = useState("");
   useEffect(() => {
-    const user = localStorage.getItem("username");
-    setUsername(user);
+    const lastname = localStorage.getItem("lastname")
+    const firstname = localStorage.getItem("firstname")
+    setUsername(lastname + " " +  firstname);
   }, []);
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -25,6 +26,7 @@ export default function Header(props) {
       throw new Error(error);
     }
   };
+  
   return (
     <>
       <div className="navbar h-11 bg-base-100">
@@ -47,7 +49,7 @@ export default function Header(props) {
                   <div className="flex w-36 items-center">
                     <div className="avatar">
                       <div className="size-10 rounded-full">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                        <img src={`https://res.cloudinary.com/dqazvfqre/image/upload/v1731310102/avt-default_dvk2qz.jpg`} alt="Avatar default" />
                       </div>
                     </div>
                     <h1 className="font-medium ml-2">{username}</h1>
@@ -58,13 +60,13 @@ export default function Header(props) {
                     <div className="flex w-72 items-center">
                       <div className="avatar">
                         <div className="size-10 rounded-full">
-                          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                          <img src={`https://res.cloudinary.com/dqazvfqre/image/upload/v1731310102/avt-default_dvk2qz.jpg`} alt="Avatar default" />
                         </div>
                       </div>
                       <div className="w-full">
                         <h1 className="font-medium ml-2">{username}</h1>
                         <div className="badge bg-blue-200 text-blue-300">
-                          Quản lý
+                          {localStorage.getItem("role") === "admin" ? "Quản lý" : "Nhân viên"}
                         </div>
                       </div>
                     </div>

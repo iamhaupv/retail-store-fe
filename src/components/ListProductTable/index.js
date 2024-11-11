@@ -6,10 +6,38 @@ import apiGetListBrand from "../../apis/apiGetListBrand";
 
 import Autocomplete from "../AutoComplete";
 import { Link } from "react-router-dom";
+import apiFilterProductByName from "../../apis/apiFilterProductByName";
+import TableProductByName from "../TableProductByName";
+import apiFilterProductByStatus from "../../apis/apiFilterProductByStatus";
+import TableProductInStock from "../TableProductInStock";
 
 export default function ListProductTable() {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [productByStatus, setProductByStatus] = useState([])
+  const [productByName, setProductByName] = useState([]);
+  const [status, setStatus] = useState("")
+  const [title, setTitle] = useState("");
+  const fetchProductByStatus = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      const response = await apiFilterProductByStatus(token, { status: status });
+      setProductByStatus(
+        Array.isArray(response.products) ? response.products : []
+      );
+    } catch (error) {
+      console.log("fetch product by status is error " + error);
+    }
+  }
+  useEffect(() => {
+    fetchProductByStatus()
+  }, [status])
+  console.log(status);
+  
+  const handleChangeStatus = async(e) => {
+    setStatus(e.target.value)
+  }
   const fetch = async () => {
     const response = await apiGetListProduct();
     setProducts(response.products);
@@ -44,14 +72,52 @@ export default function ListProductTable() {
     { id: 6, name: "Nguyễn Thanh Khoa" },
     { id: 7, name: "Nguyễn Đức Long" },
   ];
- return (
+  const fetchProductByName = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      const response = await apiFilterProductByName(token, { title: title });
+      setProductByName(
+        Array.isArray(response.products) ? response.products : []
+      );
+    } catch (error) {
+      console.log("fetch product by name is error " + error);
+    }
+  };
+  const handleChangeTitle = async (e) => {
+    setTitle(e.target.value);
+  };
+  useEffect(() => {
+    fetchProductByName();
+  }, [title]);
+  return (
     <>
       <div className="">
         {/* filter */}
         <div className="flex ">
           {/* search Input */}
           <div className="ml-3 mt-2 w-52 h-3 ">
-            <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" />
+            {/* <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" /> */}
+            <label className="input input-bordered flex items-center gap-2">
+              <input
+                type="text"
+                className="grow"
+                placeholder="Search"
+                onChange={handleChangeTitle}
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="h-4 w-4 opacity-70"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </label>
           </div>
           {/* Brand Option */}
 
@@ -65,19 +131,16 @@ export default function ListProductTable() {
           </select> */}
 
           <div className="ml-4 mt-2 w-52 h-11">
-            <Autocomplete
-              suggestion={suggestion}
-              placeholder="Nhà cung cấp"
-            />
+            <Autocomplete suggestion={suggestion} placeholder="Nhà cung cấp" />
           </div>
 
           {/* status Option */}
-          <select className="select select-bordered h-4 w-52 ml-4">
-            <option disabled selected>
+          <select onChange={handleChangeStatus} className="select select-bordered h-4 w-52 ml-4">
+            <option value={""} selected>
               Trạng thái
             </option>
-            <option>Đang bán</option>
-            <option>Hết hàng</option>
+            <option value={"in_stock"}>Đang bán</option>
+            <option value={"out_of_stock"}>Hết hàng</option>
           </select>
         </div>
         {/* Nofication and Button Add */}
@@ -106,9 +169,12 @@ export default function ListProductTable() {
         </div>
         {/* table Product */}
 
-        <div className="overflow-y-auto  mt-7" style={{
+        <div
+          className="overflow-y-auto  mt-7"
+          style={{
             height: "calc(90vh - 280px)",
-          }}>
+          }}
+        >
           <table className="table table-pin-rows ">
             {/* head */}
             <thead>
@@ -128,7 +194,14 @@ export default function ListProductTable() {
               </tr>
             </thead>
             <tbody>
-              <TableProductDetail />
+              {status === "" ? (title === "" ? (
+                <TableProductDetail />
+              ) : productByName.length > 0 ? (
+                <TableProductByName productByName={productByName} />
+              ) : (
+                <div>Không tìm thấy sản phẩm nào</div>
+              )) : <TableProductInStock productByStatus={productByStatus}/> }
+              
             </tbody>
             <tfoot>
               <tr></tr>

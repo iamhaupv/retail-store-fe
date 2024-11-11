@@ -1,68 +1,73 @@
 import React, { useEffect } from "react";
 import Autocomplete from "../AutoComplete";
 import { useState } from "react";
-import apiFilterProductByName from "../../apis/apiFilterProductByName";
+import apiFilterProductByNameInShelf from "../../apis/apiFilterProductByNameInShelf";
+import apiFilterUnitByName from "../../apis/apiFilterUnitByName";
+import apiGetAllUnit from "../../apis/apiGetAllUnit";
+import apiFilterAllProductInShelf from "../../apis/apiFilterAllProductInShelf";
 
 export default function CreateOrderTableDetail({ index, removeRow }) {
-  const suggestion = [
-    { id: 1, name: "Nước ngọt pepsi dung tích 120ml" },
-    { id: 2, name: "Snack Khoai tây lays" },
-    { id: 3, name: "Tanya Fox" },
-    { id: 4, name: "Arlene Mccoy" },
-    { id: 5, name: "Devon Webb" },
-    { id: 6, name: "Nguyễn Thanh Khoa" },
-    { id: 7, name: "Nguyễn Đức Long" },
-  ];
-  
-  const DonViTinh = [
-    { id: 1, name: "Thung24" },
-    { id: 2, name: "Thung30" },
-    { id: 3, name: "Thung20" },
-    { id: 4, name: "Arlene Mccoy" },
-    { id: 5, name: "Devon Webb" },
-    { id: 6, name: "Nguyễn Thanh Khoa" },
-    { id: 7, name: "Nguyễn Đức Long" },
-  ];
-  const [products, setProducts] = useState([])
-  const [name, setName] = useState("")
+  const [products, setProducts] = useState([]);
+  const [units, setUnits] = useState([]);
+  const fetchUnits = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetAllUnit(token);
+      setUnits(response.units);
+    } catch (error) {
+      console.log("fetch unit is error" + error);
+    }
+  };
   const fetchProductByName = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      if(!token) throw new Error("Token is invalid")
-      const response = await apiFilterProductByName(token, {title: name})
-      setProducts(response.products)
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      const response = await apiFilterAllProductInShelf(token);
+      setProducts(response.products);
     } catch (error) {
       console.log("fetch products by name is error " + error);
     }
-  }
-  // console.log(products);
-  const handleChangeInput = async (e) => {
-    setName(e.target.value)
-  }
-  useEffect(()=> {
-    fetchProductByName()
-  }, [name])
-  console.log(name);
-  
+  };
+  const listName = Array.from(
+    new Set(products.map((product) => product.title))
+  ).map((title) => ({
+    _id: products.find((product) => product.title === title)._id,
+    name: title,
+  }));
+
+  const listUnit = Array.from(new Set(units.map((unit) => unit.name))).map(
+    (name) => {
+      const matchedUnit = units.find((unit) => unit.name === name);
+      return {
+        _id: matchedUnit._id,
+        name: matchedUnit.name,
+      };
+    }
+  );
+  console.log(listUnit);
+  useEffect(() => {
+    fetchProductByName();
+  }, []);
+  useEffect(() => {
+    fetchUnits();
+  }, []);
   return (
     <>
       <tr className="hover:bg-slate-100">
         <td>SP034213</td>
         <td>
-            <div className="w-56">
-                {/* <Autocomplete suggestion={suggestion} placeholder=""/> */}
-                <div>
-                  <input onChange={handleChangeInput} value={name}   />
-                </div>
-            </div>
+          <div className="w-56">
+            <Autocomplete suggestion={listName} placeholder="" />
+          </div>
         </td>
         <td>
           <input type="number" placeholder="1" className="input w-32 h-8 " />
         </td>
         <td>
-        <div className="w-56">
-                <Autocomplete suggestion={DonViTinh} placeholder=""/>
-            </div>
+          <div className="w-56">
+            <Autocomplete suggestion={listUnit} placeholder="" />
+          </div>
         </td>
         <td>10.000</td>
         <td>10.000</td>
