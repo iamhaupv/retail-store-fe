@@ -42,6 +42,9 @@ const LayoutDefault = () => {
     case "/category":
       headerContent = <Header title={"Đơn vị tính"} />;
       break;
+      case "/employeeSchedule":
+        headerContent = <Header title={"Ca làm việc"} />;
+        break;
     case "/product":
       headerContent = <Header title={"Thêm sản phẩm"} />;
       break;

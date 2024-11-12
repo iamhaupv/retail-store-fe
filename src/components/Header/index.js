@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Header.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowLeft,
-  faBell,
-  faCaretDown,
-} from "@fortawesome/free-solid-svg-icons";
-import luck from "../../assets/luck.png";
 import logo_company from "../../Image/Logo-removebg-preview.png";
-import ButtonLogout from "../ButtonLogout";
 import { Link, useNavigate } from "react-router-dom";
 export default function Header(props) {
   const [username, setUsername] = useState("");
@@ -34,7 +26,7 @@ export default function Header(props) {
             className="w-48 h-full"
             alt="logo Store 24 Hour"
           />
-          <a class="flex ml-10 w-80 items-center">
+          <a href="" class="flex ml-10 w-80 items-center">
             
             <p className="ml-2 w-72">{props.title}</p>
           </a>
