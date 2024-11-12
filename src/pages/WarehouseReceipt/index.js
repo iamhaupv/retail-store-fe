@@ -24,6 +24,27 @@ export default function WarehouseReceipt() {
   const [brands, setBrands] = useState([])
   const [productFilter, setProductFilter] = useState([])
   const [isBrand, setIsBrand] = useState('')
+  const [value, setValue] = useState("");
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
+  };
+
+  const handleBlurCurrencyInput = (e) => {
+    const numericValue = parseFloat(value.replace(/,/g, ""));
+    if (!isNaN(numericValue)) {
+      setValue(formatCurrency(numericValue));
+    }
+  };
+
+  const handleChangeCurrencyInput = (e) => {
+    setValue(e);
+  };
+
+
   const fetchProductFilter = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("Token is invalid!");
@@ -146,6 +167,8 @@ export default function WarehouseReceipt() {
       if (parseFloat(value) < 0) {
         value = '0';
       }
+      handleChangeCurrencyInput(value);
+
     }
     if(name =="quantity"){
       value = value.replace(/[^\d.]/g, '');
@@ -396,7 +419,8 @@ export default function WarehouseReceipt() {
                             <td>
                               <input
                                 name="importPrice"
-                                value={product.importPrice}
+                                value={value}
+                                onBlur={handleBlurCurrencyInput}
                                 onChange={(e) =>
                                   handleChangeInput(
                                     index,
