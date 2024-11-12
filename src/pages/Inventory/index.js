@@ -352,7 +352,9 @@ export default function Inventory() {
                   {products.length > 0 ? (
                     products.map((product) => (
                       <tr key={product._id}>
+                        <td>
                         <input className="checkbox" onChange={() => handleCheckboxChange(product._id)} type="checkbox" />
+                        </td>
                         <td>123456</td>
                         <td>{product.idPNK}</td>
                         <td>
