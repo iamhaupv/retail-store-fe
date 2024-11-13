@@ -174,10 +174,18 @@ export default function EmployeeSchedule() {
               className="drawer-overlay"
             ></label>
             <ul className="menu bg-white text-base-content min-h-full w-2/6 p-4">
-              <h1 className="font-bold text-xl">Đơn vị tính</h1>
+              <h1 className="font-bold text-xl">Đăng ký ca làm</h1>
+              <input type="date" className="input border-2  rounded-md"/>
               <div className="flex justify-start items-center mt-3">
                 <h1>Nhân viên:</h1>
-                
+                <select className="select select-bordered w-full ml-2 max-w-xs">
+                  <option disabled selected>
+                    Chọn nhân viên
+                  </option>
+                  <option>Nguyễn Thanh khoa</option>
+                  <option>Phạm Văn Hậu</option>
+                  <option>Nguyễn Đức Long</option>
+                </select>
               </div>
               <div className="flex justify-start items-center mt-2">
                 <h1>Ca làm:</h1>
