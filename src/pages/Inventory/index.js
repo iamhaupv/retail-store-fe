@@ -355,8 +355,8 @@ export default function Inventory() {
                         <td>
                         <input className="checkbox" onChange={() => handleCheckboxChange(product._id)} type="checkbox" />
                         </td>
-                        <td>123456</td>
-                        <td>{product.idPNK}</td>
+                        <td className="whitespace-nowrap">123456</td>
+                        <td className="whitespace-nowrap">{product.idPNK}</td>
                         <td>
                           <div className="flex items-center gap-3">
                             <div className="avatar">
@@ -368,8 +368,8 @@ export default function Inventory() {
                               </div>
                             </div>
                             <div>
-                              <div className="font-bold">{product.title}</div>
-                              <div className="badge badge-ghost badge-sm">
+                              <div className="font-bold text-ellipsis">{product.title}</div>
+                              <div className="badge badge-ghost badge-sm whitespace-nowrap">
                                 {product.category}
                               </div>
                             </div>
