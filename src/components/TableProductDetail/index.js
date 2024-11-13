@@ -9,6 +9,7 @@ export default function TableProductDetail() {
   const [products, setProducts] = useState([]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  //#region Tạo barcode
   // const { inputRef } = useBarcode({
   //   value: "ASM001",
   //   options: {
@@ -18,6 +19,9 @@ export default function TableProductDetail() {
   //     height: 25,
   //   },
   // });
+   //#endregion
+   
+   //#region Lấy dữ liệu sản phẩm
   const fetchPrducts = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -46,7 +50,7 @@ export default function TableProductDetail() {
     document.getElementById("modal_Quick_View").showModal();
   };
   console.log(products);
-
+  //#endregion
   return (
     <>
       {products.map((product) => (

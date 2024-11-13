@@ -21,6 +21,7 @@ import UpdateProduct from "../pages/UpdateProduct";
 import EntryForm from "../pages/EntryForm";
 import EmployeeSchedule from "../pages/EmployeeSchedule";
 import Reciept from "../pages/Reciept";
+import Report from "../pages/Report";
 
 export const routes = [
   { path: "/signin", element: <SignIn /> },
@@ -84,10 +85,10 @@ export const routes = [
         path: "/order",
         element: <Order />,
       },
-      // {
-      //   path: "/reciept",
-      //   element: < />,
-      // },
+      {
+        path: "/report",
+        element: <Report />,
+      },
       {
         path: "/createOrder",
         element: <CreateOrder />,

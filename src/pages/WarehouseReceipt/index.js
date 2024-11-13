@@ -26,6 +26,7 @@ export default function WarehouseReceipt() {
   const [isBrand, setIsBrand] = useState('')
   const [value, setValue] = useState("");
 
+  //#region format tiền tệ
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -43,7 +44,7 @@ export default function WarehouseReceipt() {
   const handleChangeCurrencyInput = (e) => {
     setValue(e);
   };
-
+ //#endregion
 
   const fetchProductFilter = async () => {
     const token = localStorage.getItem("accessToken");
