@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import Autocomplete from "../../components/AutoComplete";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
 import apiGetAllUnit from "../../apis/apiGetAllUnit";
 import apiCreateWarehouseReceipt from "../../apis/apiCreateWarehouseReceipt";
 import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
 import apiLastIdWarehouseReceipt from "../../apis/apiLastIdWarehouseReceipt";
 import { Link, useNavigate } from "react-router-dom";
-import apiGetProductsByFilter from "../../apis/apiGetProductsByFilter";
 import Swal from "sweetalert2";
 import apiGetListBrands from "../../apis/apiGetListBrand";
+import apiFilterProductMultiCondition from "../../apis/apiFilterProductMultiCondition";
+import Autocomplete from "../../components/AutoComplete";
+import apiFilterCategoryByBrand from "../../apis/apiFilterCategoryByBrand";
+import apiFilterProductByBrand from "../../apis/apiFilterProductByBrand";
 
 export default function WarehouseReceipt() {
+  const [listProduct, setListProduct] = useState([]);
   const navigate = useNavigate();
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
@@ -20,47 +23,153 @@ export default function WarehouseReceipt() {
   const [user, setUser] = useState("");
   const [code, setCode] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [brands, setBrands] = useState([])
-  const [productFilter, setProductFilter] = useState([])
-  const [isBrand, setIsBrand] = useState('')
-  const fetchProductFilter = async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) throw new Error("Token is invalid!");
+  const [brands, setBrands] = useState([]);
+  const [name, setName] = useState("")
+  const [productByBrandName, setProductByBrandName] = useState([])
+  const [brand, setBrand] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
+  const fetchProductByBrandName = async () => {
     try {
-      const response = await apiGetProductsByFilter(token, { name: isBrand });
-      // Kiểm tra xem sản phẩm có phải là mảng không
-      if (Array.isArray(response.products)) {
-        setProductFilter(response.products);
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiFilterProductByBrand(token, { brandName: brand });
+      if (response.success) {
+        setProductByBrandName(
+          Array.isArray(response.products) ? response.products : []
+        );
       } else {
-        // Nếu không, đặt thành mảng rỗng
-        setProductFilter([]);
-        console.warn(response.products); // Ghi lại thông báo "No products found!" nếu cần
+        console.warn("No product found for the selected brand");
+        setProductByBrandName([]);
       }
     } catch (error) {
-      setProductFilter([]); // Đặt lại thành mảng rỗng nếu có lỗi
+      console.log("fetch product by brand name is error " + error);
     }
   };
-
   useEffect(() => {
-    fetchProductFilter();
-  }, [isBrand]);
+    if (brand) {
+      fetchProductByBrandName();
+    }
+  }, [brand]);
+  const listProductName = Array.from(new Set(productByBrandName.map(unit => unit.title)))
+    .map(title => {
+      const matchedUnit = productByBrandName.find(unit => unit.title === title);
+      return {
+        _id: matchedUnit._id,
+        name: matchedUnit.title,
+      };
+    });
+  const handleChangeProductName = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setName(selectedBrandName); // Cập nhật trạng thái thương hiệu
+      console.log("Selected brand:", selectedBrandName);
+    } else {
+      setName(""); // Đặt lại giá trị thương hiệu về rỗng khi không có lựa chọn
+      console.log("Brand selection cleared");
+    }
+  };
+  const fetchCategories = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiFilterCategoryByBrand(token, { name: brand });
+      if (response.success) {
+        setCategories(
+          Array.isArray(response.categories) ? response.categories : []
+        );
+      } else {
+        console.warn("No categories found for the selected brand");
+        setCategories([]);
+      }
+    } catch (error) {
+      console.log("fetch categories is error " + error);
+    }
+  };
+  useEffect(() => {
+    if (brand) {
+      fetchCategories();
+    }
+  }, [brand]);
+  const listCategory = Array.from(
+    new Set(categories.map((unit) => unit.name))
+  ).map((name) => {
+    const matchedUnit = categories.find((unit) => unit.name === name);
+    return {
+      _id: matchedUnit._id,
+      name: matchedUnit.name,
+    };
+  });
+  const handleChangeCateogry = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setCategory(selectedBrandName); // Cập nhật trạng thái thương hiệu
+      console.log("Selected brand:", selectedBrandName);
+    } else {
+      setCategory(""); // Đặt lại giá trị thương hiệu về rỗng khi không có lựa chọn
+      console.log("Brand selection cleared");
+    }
+  };
+  // fetch product filter
+  // const fetchProductFilter = async () => {
+  //   const token = localStorage.getItem("accessToken");
+  //   if (!token) throw new Error("Token is invalid!");
+  //   try {
+  //     const response = await apiGetProductsByFilter(token, { name: isBrand });
+  //     // Kiểm tra xem sản phẩm có phải là mảng không
+  //     if (Array.isArray(response.products)) {
+  //       setProductFilter(response.products);
+  //     } else {
+  //       // Nếu không, đặt thành mảng rỗng
+  //       setProductFilter([]);
+  //       console.warn(response.products); // Ghi lại thông báo "No products found!" nếu cần
+  //     }
+  //   } catch (error) {
+  //     setProductFilter([]); // Đặt lại thành mảng rỗng nếu có lỗi
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchProductFilter();
+  // }, [isBrand]);
   const fetchBrands = async () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
       const response = await apiGetListBrands();
-      setBrands(response.brands);
+      setBrands(Array.isArray(response.brands) ? response.brands : []);
     } catch (error) {
       throw new Error("fetch brand is error " + error);
     }
   };
+  const listBrand = Array.from(new Set(brands.map((unit) => unit.name))).map(
+    (name) => {
+      const matchedUnit = brands.find((unit) => unit.name === name);
+      return {
+        _id: matchedUnit._id,
+        name: matchedUnit.name,
+      };
+    }
+  );
+  const fetchProductMultiCondition = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      const response = await apiFilterProductMultiCondition(token, {
+        brandName: brand,
+        categoryName: category,
+        title: name
+      });
+      setListProduct(Array.isArray(response.products) ? response.products : []);
+    } catch (error) {
+      console.log("api fetch product multi condtion is error " + error);
+    }
+  };
+  useEffect(() => {
+    fetchProductMultiCondition();
+  }, [brand, category, name]);
   const openModal = () => {
     setIsModalOpen(true);
-    setIsBrand(""); // Reset brand filter on close
-    setProductFilter([]);
+    setListProduct([]);
   };
-  console.log(brands);
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -108,7 +217,15 @@ export default function WarehouseReceipt() {
   useEffect(() => {
     fetchProducts();
   }, []);
-
+  const handleChangeBrand = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setBrand(selectedBrandName); // Cập nhật trạng thái thương hiệu
+      console.log("Selected brand:", selectedBrandName);
+    } else {
+      setBrand(""); // Đặt lại giá trị thương hiệu về rỗng khi không có lựa chọn
+      console.log("Brand selection cleared");
+    }
+  };
   const handleCheckboxChange = (productId) => {
     if (!selectedProducts.includes(productId)) {
       setSelectedProducts((prev) => [...prev, productId]);
@@ -168,12 +285,25 @@ export default function WarehouseReceipt() {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
       if (!code || addedProducts.length === 0) {
-        Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin!", "error");
+        Swal.fire(
+          "Thiếu thông tin!",
+          "Vui lòng điền đầy đủ thông tin!",
+          "error"
+        );
         return;
       }
       for (const product of addedProducts) {
-        if (!product.quantity || !product.importPrice || !product.expires || !product.unit) {
-          Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin cho tất cả sản phẩm!", "error");
+        if (
+          !product.quantity ||
+          !product.importPrice ||
+          !product.expires ||
+          !product.unit
+        ) {
+          Swal.fire(
+            "Thiếu thông tin!",
+            "Vui lòng điền đầy đủ thông tin cho tất cả sản phẩm!",
+            "error"
+          );
           return;
         }
       }
@@ -197,7 +327,7 @@ export default function WarehouseReceipt() {
             quantity: product.quantity,
             importPrice: product.importPrice,
             expires: product.expires,
-            unit: product.unit
+            unit: product.unit,
           })),
         };
         const response = await apiCreateWarehouseReceipt(token, payload);
@@ -245,9 +375,9 @@ export default function WarehouseReceipt() {
 
     return code; // Trả về mã đã tạo
   };
-  const handleBrand = async (e) => {
-    setBrands(e.target);
-  };
+  // const handleBrand = async (e) => {
+  //   setBrands(e.target);
+  // };
   useEffect(() => {
     fetchProducts();
     generateWarehouseReceiptCode();
@@ -290,7 +420,7 @@ export default function WarehouseReceipt() {
           <div className="w-full h-fit mr-4 rounded-sm pt-4 pb-8">
             <div className="card bg-white h-fit rounded-sm top-7 grid pt-6">
               <h4 className="font-bold text-xl w-full ml-4">
-                Danh sách mặt hàng {isBrand}
+                Danh sách mặt hàng {brand}
               </h4>
               <div className="flex pt-8 h-fit w-full pb-2">
                 <button className="hidden" onClick={openModal} id="FileMain" />
@@ -492,26 +622,48 @@ export default function WarehouseReceipt() {
                 </option>
               ))}
             </select> */}
-                <input
+                {/* <input
                   className="border"
                   name="category"
                   onChange={(e) => setIsBrand(e.target.value)}
-                />
+                /> */}
+                {/* <Autocomplete
+                  placeholder="Chọn nhà cung cấp"
+                  suggestion={listBrand}
+                  onchange={handleChangeBrand}
+                  value={brand} // Đây sẽ là chuỗi rỗng, không có giá trị
+                /> */}
                 <Autocomplete
-                  suggestion={suggestion}
-                  placeholder="Nhà cung cấp.."
+                  suggestion={listBrand}
+                  onchange={handleChangeBrand} // This should call your API or update state
+                  placeholder="Chọn thương hiệu"
+                  value={brand} // Pass the current brand state
                 />
               </div>
               {/* Product */}
-              <div className="w-52 ml-3 mr-3">
-                <Autocomplete
-                  suggestion={suggestion}
-                  placeholder="Loại sản phẩm.."
-                />
-              </div>
+              {brand && (
+                <div className="w-52 ml-3 mr-3">
+                  <Autocomplete
+                    suggestion={listCategory}
+                    onchange={handleChangeCateogry} // This should call your API or update state
+                    placeholder="Chọn loại"
+                    value={category} // Pass the current brand state
+                  />
+                </div>
+              )}
+              {brand && (
+                <div className="w-52 ml-3 mr-3">
+                  <Autocomplete
+                    suggestion={listProductName}
+                    onchange={handleChangeProductName} // This should call your API or update state
+                    placeholder="Nhập tên sản phẩm"
+                    value={name} // Pass the current brand state
+                  />
+                </div>
+              )}
               {/* Search Input  */}
               <div className="w-52  mr-3">
-                <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" />
+                {/* <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" /> */}
               </div>
             </div>
             {/* table product  */}
@@ -525,7 +677,7 @@ export default function WarehouseReceipt() {
                   </tr>
                 </thead>
                 <tbody>
-                  {productFilter.length > 0 ? (
+                  {/* {productFilter.length > 0 ? (
                     productFilter.map((product) => (
                       <tr className="hover:bg-slate-100">
                         <th key={product._id}>
@@ -572,6 +724,58 @@ export default function WarehouseReceipt() {
                     ))
                   ) : (
                     <div>Chưa có sản phẩm</div>
+                  )} */}
+                  {brand === "" ? (
+                    <div>Vui lòng chọn nhà cung cấp</div>
+                  ) : listProduct.length > 0 ? (
+                    listProduct.map((product) => (
+                      <tr className="hover:bg-slate-100">
+                        <th key={product._id}>
+                          <label>
+                            <input
+                              type="checkbox"
+                              className="checkbox"
+                              checked={
+                                selectedProducts.includes(product._id) ||
+                                addedProducts.includes(product)
+                              }
+                              onChange={() => handleCheckboxChange(product._id)}
+                              disabled={addedProducts.some(
+                                (addedProduct) =>
+                                  addedProduct._id === product._id
+                              )}
+                            />
+                          </label>
+                        </th>
+                        <td>
+                          <div>
+                            <div className="font-bold">ASM001</div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="flex items-center gap-3">
+                            <div class="avatar">
+                              <div class="mask mask-squircle h-12 w-12">
+                                <img
+                                  src={product.images[0]}
+                                  alt="Avatar Tailwind CSS Component"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <div class="font-bold">{product.title}</div>
+                              <div class="text-sm opacity-50">
+                                {product.category.name}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <td>
+                      <div>Không có sản phẩm nào</div>
+                    </td>
                   )}
                 </tbody>
                 <tfoot></tfoot>

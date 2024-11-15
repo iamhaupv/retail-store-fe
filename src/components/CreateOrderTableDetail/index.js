@@ -1,38 +1,93 @@
-import React, { useEffect } from "react";
-import Autocomplete from "../AutoComplete";
-import { useState } from "react";
-import apiFilterProductByNameInShelf from "../../apis/apiFilterProductByNameInShelf";
-import apiFilterUnitByName from "../../apis/apiFilterUnitByName";
+import React, { useEffect, useState } from "react";
 import apiGetAllUnit from "../../apis/apiGetAllUnit";
 import apiFilterAllProductInShelf from "../../apis/apiFilterAllProductInShelf";
-
+import apiFilterPriceByProductName from "../../apis/apiFilterPriceByProductName";
+import ChangeInput from "../ChangeInput";
+import apiFilterConvertQuantityByUnitName from "../../apis/apiFilterConvertQuantityByUnitName";
 export default function CreateOrderTableDetail({ index, removeRow }) {
   const [products, setProducts] = useState([]);
+  const [price, setPrice] = useState(null);
+  const [unit, setUnit] = useState("");
+  const [productName, setProductName] = useState("");
   const [units, setUnits] = useState([]);
+  const [convertQuantity, setConverQuantity] = useState("");
+  const [quantity, setQuantity] = useState("");
+
+  const handleSubmit = async () => {
+    try {
+      
+    } catch (error) {
+      console.log("handle submit is error " + error);
+      
+    }
+  }
+
+  const handleChangeTotal = () => {
+    const total = quantity * convertQuantity * price;
+    return total;
+  };
+  const handleChangeConvertQuantity = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiFilterConvertQuantityByUnitName(token, {
+        name: unit,
+      });
+      setConverQuantity(response.unit ? response.unit.convertQuantity : 0);
+    } catch (error) {
+      console.log("handle change convert quantity is error " + error);
+    }
+  };
+  useEffect(() => {
+    if (unit) handleChangeConvertQuantity();
+  }, [unit]);
+  const handleFilterPriceByProductName = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token không hợp lệ!");
+      const response = await apiFilterPriceByProductName(token, {
+        title: productName,
+      });
+      setPrice(response.product.price || 0);
+    } catch (error) {
+      console.error("Lỗi khi lấy giá sản phẩm: ", error);
+    }
+  };
+  const handleChangeQuantity = async (e) => {
+    setQuantity(e.target.value);
+  };
+  useEffect(() => {
+    if (productName) handleFilterPriceByProductName();
+  }, [productName]);
+
   const fetchUnits = async () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
+
       const response = await apiGetAllUnit(token);
-      setUnits(response.units);
+      setUnits(response.units || []);
     } catch (error) {
-      console.log("fetch unit is error" + error);
+      console.log("fetch unit error: ", error);
     }
   };
+
   const fetchProductByName = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("Token is invalid");
+      if (!token) throw new Error("Token is invalid!");
+
       const response = await apiFilterAllProductInShelf(token);
-      setProducts(response.products);
+      setProducts(Array.isArray(response.products) ? response.products : []);
     } catch (error) {
-      console.log("fetch products by name is error " + error);
+      console.log("fetch products by name error: ", error);
     }
   };
+
   const listName = Array.from(
     new Set(products.map((product) => product.title))
   ).map((title) => ({
-    _id: products.find((product) => product.title === title)._id,
+    _id: products.find((product) => product.title === title)?._id,
     name: title,
   }));
 
@@ -40,41 +95,64 @@ export default function CreateOrderTableDetail({ index, removeRow }) {
     (name) => {
       const matchedUnit = units.find((unit) => unit.name === name);
       return {
-        _id: matchedUnit._id,
-        name: matchedUnit.name,
+        _id: matchedUnit?._id,
+        name: matchedUnit?.name,
       };
     }
   );
-  console.log(listUnit);
+
   useEffect(() => {
     fetchProductByName();
-  }, []);
-  useEffect(() => {
     fetchUnits();
   }, []);
+
+  const handleChangeUnit = (selectedBrandName) => {
+    setUnit(selectedBrandName || "");
+  };
+
+  const handleChangeProductName = (selectedProductName) => {
+    setProductName(selectedProductName || "");
+  };
+
   return (
     <>
       <tr className="hover:bg-slate-100">
         <td>SP034213</td>
         <td>
           <div className="w-56">
-            <Autocomplete suggestion={listName} placeholder="" />
+            <ChangeInput
+              suggestion={listName}
+              onchange={handleChangeProductName}
+              value={productName}
+              placeholder="Nhập tên sản phẩm"
+            />
           </div>
         </td>
         <td>
-          <input type="number" placeholder="1" className="input w-32 h-8 " />
+          <input
+            type="number"
+            value={quantity}
+            onChange={handleChangeQuantity}
+            placeholder="1"
+            className="input w-32 h-8"
+          />
         </td>
         <td>
           <div className="w-56">
-            <Autocomplete suggestion={listUnit} placeholder="" />
+            <ChangeInput
+              suggestion={listUnit}
+              onchange={handleChangeUnit}
+              placeholder="Nhập tên đơn vị tính"
+            />
           </div>
         </td>
-        <td>10.000</td>
-        <td>10.000</td>
+        <td>{price || "0"}</td>
+        {/* Hiển thị giá hoặc "0" nếu không có */}
+        <td>{handleChangeTotal() || 0}</td>
         <td>
           <button
             id="btn__delete"
-            className="w-6 h-6 rounded-lg "
+            className="w-6 h-6 rounded-lg"
             style={{ backgroundColor: "#feebe8", outline: "" }}
             onClick={() => removeRow(index)}
           >

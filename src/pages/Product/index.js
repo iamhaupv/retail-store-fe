@@ -3,27 +3,47 @@ import apiGetListBrand from "../../apis/apiGetListBrand";
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
-import Autocomplete from "../../components/AutoComplete";
 import { useNavigate } from "react-router-dom";
+import InputValue from "../../components/InputValue";
 export default function Product() {
-  const navigate = useNavigate()
+  const [brand, setBrand] = useState("");
+  const navigate = useNavigate();
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [image, setImage] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
   const [error, setError] = useState({});
   const [payload, setPayload] = useState({});
-  const suggestion = [
-    { id: 1, name: "Tom Cook" },
-    { id: 2, name: "Wade Cooper" },
-    { id: 3, name: "Tanya Fox" },
-    { id: 4, name: "Arlene Mccoy" },
-    { id: 5, name: "Devon Webb" },
-    { id: 6, name: "Nguyễn Thanh Khoa" },
-    { id: 7, name: "Nguyễn Đức Long" },
-  ];
-
   const [value, setValue] = useState("");
+  const [category, setCategory] = useState("");
+  const listCategories = () => {
+    return categories.map((category) => ({
+      _id: category._id,
+      name: category.name,
+    }));
+  };
+
+  const listBrands = () => {
+    return brands.map((brand) => ({
+      _id: brand._id,
+      name: brand.name,
+    }));
+  };
+  const handleChangeBrand = (selectedBrand) => {
+    if (selectedBrand) {
+      setBrand(selectedBrand.name); // Lưu tên brand vào state `brand`
+    } else {
+      setBrand(""); // Nếu không chọn gì, trả về chuỗi trống
+    }
+  };
+
+  const handleChangeCategory = (selectedCategory) => {
+    if (selectedCategory) {
+      setCategory(selectedCategory.name); // Lưu tên category vào state `category`
+    } else {
+      setCategory(""); // Nếu không chọn gì, trả về chuỗi trống
+    }
+  };
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -31,14 +51,12 @@ export default function Product() {
       currency: "VND",
     }).format(value);
   };
-
   const handleBlurCurrencyInput = () => {
     const numericValue = parseFloat(value.replace(/,/g, ""));
     if (!isNaN(numericValue)) {
       setValue(formatCurrency(numericValue));
     }
   };
-
   const handleChangeCurrencyInput = (e) => {
     setValue(e.target.value);
   };
@@ -48,7 +66,7 @@ export default function Product() {
     if (!payload[name]) {
       setError((prev) => ({ ...prev, [name]: `Không được để trống!` }));
     }
-    if(name =="price"){
+    if (name === "price") {
       handleBlurCurrencyInput();
     }
   };
@@ -56,7 +74,7 @@ export default function Product() {
     const { name, value } = e.target;
     const titleRegex = /^[A-Za-zÀ-ỹ\s'-.\d]{2,}$/;
     const priceRegex = /^\d+(\.\d{1,2})?$/;
-    const descriptionRegex = /^([\s\S]{10,1000})$/
+    const descriptionRegex = /^([\s\S]{10,1000})$/;
     let errorMessage;
     // title
     if (name === "title") {
@@ -138,13 +156,10 @@ export default function Product() {
     fetchBrands();
     fetchCategories();
   }, []);
-
   const handleSubmit = async () => {
     try {
-      const { title, price, description, brand, category } = payload;
-      console.log("payload"+ payload);
-      
-      if (!title || !price || !description || !brand || !image) {
+      const { title, price, description } = payload;
+      if (!title || !price || !description || !image) {
         Swal.fire(
           "Thiếu thông tin!",
           "Vui lòng điền đầy đủ thông tin!",
@@ -152,8 +167,6 @@ export default function Product() {
         );
         return;
       }
-      
-
       const result = await Swal.fire({
         title: "Xác nhận",
         text: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
@@ -184,7 +197,7 @@ export default function Product() {
         const response = await apiCreateProduct(token, formData);
         if (response.success) {
           Swal.fire("Success", "Thêm thành công!", "success");
-          navigate("/product-list")
+          navigate("/product-list");
         } else {
           Swal.fire("Error", "Thêm không thành công!", "error");
         }
@@ -211,10 +224,8 @@ export default function Product() {
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Tên sản phẩm
                   <h5 className="ml-1 text-red-600">(*)</h5>
-                  
                 </h4>
                 <h4 className="font-sans text-base w-5/12 ml-4">Mã sản phẩm</h4>
-                
               </div>
               <div className="flex items-center pt-2">
                 <input
@@ -233,9 +244,7 @@ export default function Product() {
                   disabled
                 />
               </div>
-              {error && (
-                    <h5 className="ml-4 text-red-500">{error.title}</h5>
-                  )}
+              {error && <h5 className="ml-4 text-red-500">{error.title}</h5>}
               <div className="flex items-center pt-3">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Đơn giá
@@ -253,9 +262,7 @@ export default function Product() {
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
               </div>
-              {error && (
-                    <h5 className="ml-4 text-red-500">{error.price}</h5>
-                  )}
+              {error && <h5 className="ml-4 text-red-500">{error.price}</h5>}
               <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
                 Mô tả
                 <h5 className="ml-1 text-red-600">(*)</h5>
@@ -269,8 +276,8 @@ export default function Product() {
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-3"
               />
               {error && (
-                  <h5 className="ml-4 text-red-500 mb-3">{error.description}</h5>
-                )}
+                <h5 className="ml-4 text-red-500 mb-3">{error.description}</h5>
+              )}
             </div>
           </div>
           {/* Hình ảnh sản phẩm */}
@@ -857,10 +864,9 @@ export default function Product() {
             <h4 className="flex font-sans text-base w-full h-10 ml-4 pt-2">
               Nhà cung cấp
               <h5 className="ml-1 text-red-600">(*)</h5>
-              
             </h4>
             {/* Select type  */}
-            <select
+            {/* <select
               name="brand"
               onChange={handleChangeInput}
               onBlur={handleBlur}
@@ -875,16 +881,20 @@ export default function Product() {
                   {product.name}
                 </option>
               ))}
-            </select>
-            {error && (
-                <h5 className="ml-4 text-red-500">{error.brand}</h5>
-              )}
+            </select> */}
+            <InputValue
+              onchange={handleChangeCategory}
+              value={category}
+              suggestion={listCategories()}
+              placeholder={"Nhập loại"}
+            />
+            {error && <h5 className="ml-4 text-red-500">{error.brand}</h5>}
             <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
               Loại sản phẩm
               <h5 className="ml-1 text-red-600">(*)</h5>
             </h4>
             {/* Select type  */}
-            <select
+            {/* <select
               name="category"
               onBlur={handleBlur}
               onChange={handleChangeInput}
@@ -899,13 +909,14 @@ export default function Product() {
                   {category.name}
                 </option>
               ))}
-            </select>
-            <div className="w-11/12 h-11 ml-4 mb-8 ">
-              <Autocomplete suggestion={suggestion}/>
-            </div>
-            {error && (
-                <h5 className="ml-1 text-red-500">{error.categories}</h5>
-              )}
+            </select> */}
+            <InputValue
+              suggestion={listBrands()} // Mảng [{_id, name}]
+              onchange={handleChangeBrand} // Hàm xử lý khi thay đổi
+              value={brand} // _id của brand đã chọn
+              placeholder="Nhập nhà cung cấp"
+            />
+            {error && <h5 className="ml-1 text-red-500">{error.categories}</h5>}
           </div>
         </div>
       </div>

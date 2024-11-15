@@ -5,10 +5,100 @@ import InventoryProduct from "../../components/InventoryProduct";
 import apiGetAllProductByReceipt from "../../apis/apiGetAllProductByReceipt";
 import apiAddProductToShelf from "../../apis/apiAddProductToShelf";
 import { useShelfContext } from "../../contexts/ShelfContext";
-
+import ChangeInput from "../../components/ChangeInput";
+import apiGetListCategory from "../../apis/apiGetListCategory";
+import apiGetListBrands from "../../apis/apiGetListBrand";
+import apiFilterProductInShelfByMultiCondition from "../../apis/apiFilterProductInShelfByMultiCondition";
 export default function Inventory() {
+  const [title, setTitle] = useState("");
+  const [listProduct, setListProduct] = useState([]);
   const [products, setProducts] = useState([]);
   const { shelf } = useShelfContext();
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
+  const [brands, setBrands] = useState([]);
+  const [brand, setBrand] = useState("");
+  const fetchProductMultiCondition = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      const response = await apiFilterProductInShelfByMultiCondition(token, {
+        title,
+        brandName: brand,
+        categoryName: category,
+      });
+      setListProduct(Array.isArray(response.products) ? response.products : []);
+    } catch (error) {
+      console.log("api fetch product multi condtion is error " + error);
+    }
+  };
+  useEffect(() => {
+    fetchProductMultiCondition();
+  }, [brand, title, category]);
+  const handleChangeTitle = async (e) => {
+    setTitle(e.target.value);
+  };
+  const fetchBrands = async () => {
+    try {
+      const response = await apiGetListBrands();
+      setBrands(response.brands);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+  const handleChangeBrand = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setBrand(selectedBrandName); // Cập nhật trạng thái thương hiệu
+      console.log("Selected brand:", selectedBrandName);
+    } else {
+      setBrand(""); // Đặt lại giá trị thương hiệu về rỗng khi không có lựa chọn
+      console.log("Brand selection cleared");
+    }
+  };
+  const listBrand = Array.from(new Set(brands.map((unit) => unit.name))).map(
+    (name) => {
+      const matchedUnit = brands.find((unit) => unit.name === name);
+      return {
+        _id: matchedUnit._id,
+        name: matchedUnit.name,
+      };
+    }
+  );
+  const fetchCategories = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListCategory(token);
+      setCategories(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.log("fetch categories is error " + error);
+    }
+  };
+  const listCategory = Array.from(
+    new Set(categories.map((unit) => unit.name))
+  ).map((name) => {
+    const matchedUnit = categories.find((unit) => unit.name === name);
+    return {
+      _id: matchedUnit._id,
+      name: matchedUnit.name,
+    };
+  });
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  const handleChangeCateogry = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setCategory(selectedBrandName); // Cập nhật trạng thái thương hiệu
+      console.log("Selected brand:", selectedBrandName);
+    } else {
+      setCategory(""); // Đặt lại giá trị thương hiệu về rỗng khi không có lựa chọn
+      console.log("Brand selection cleared");
+    }
+  };
+
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -334,11 +424,26 @@ export default function Inventory() {
             <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
             <div className="flex items-center mb-4 w-full">
               {/* Search Input  */}
-              <label className="input input-bordered w-52 h-12 flex  items-center gap-2">
+              {/* <Autocomplete suggestion={listCategory} onchange={handleChangeCategory} placeholder={"Chọn thương hiệu"} /> */}
+              {/* Product */}
+              <ChangeInput
+                suggestion={listCategory} // List of categories passed as suggestions
+                onchange={handleChangeCateogry} // Handling change event
+                placeholder="Nhập loại" // Placeholder for input field
+                value={category} // Binding value to category state
+              />
+              <ChangeInput
+                suggestion={listBrand} // List of categories passed as suggestions
+                onchange={handleChangeBrand} // Handling change event
+                placeholder="Nhập nhà cung cấp" // Placeholder for input field
+                value={brand} // Binding value to category state
+              />
+              <label className="input input-bordered flex items-center gap-2">
                 <input
                   type="text"
                   className="grow"
-                  placeholder="Tên sản phẩm"
+                  placeholder="Search"
+                  onChange={handleChangeTitle}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -353,22 +458,6 @@ export default function Inventory() {
                   />
                 </svg>
               </label>
-              {/* Product */}
-              <select className="select select-bordered w-52 ml-3 mr-3">
-                <option disabled selected>
-                  Loại sản phẩm
-                </option>
-                <option>Đồ ăn</option>
-                <option>Thức uống</option>
-              </select>
-              {/* Brand */}
-              <select className="select select-bordered h-12 w-52 ">
-                <option disabled selected>
-                  Thương hiệu
-                </option>
-                <option>KFC</option>
-                <option>Pepsi</option>
-              </select>
             </div>
             {/* table product  */}
             <div className=" overflow-y-scroll h-4/6">
@@ -387,10 +476,91 @@ export default function Inventory() {
                     <th>Số lượng</th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {products.length > 0 ? (
-                    products.map((product) => (
+                  {category === "" && title === "" && brand === "" ? (
+                    products.length > 0 ? (
+                      products.map((product) => (
+                        <tr key={product._id}>
+                          <td>
+                            <input
+                              className="checkbox"
+                              onChange={() =>
+                                handleCheckboxChange(
+                                  product._id,
+                                  product.warehouseReceipt
+                                )
+                              }
+                              type="checkbox"
+                              checked={
+                                selectedProducts[
+                                  `${product._id}-${product.warehouseReceipt}`
+                                ]?.selected || false
+                              }
+                            />
+                          </td>
+                          <h1>{product._id}</h1>
+                          <td>123456</td>
+                          <td>{product.idPNK}</td>
+                          <td>
+                            <div className="flex items-center gap-3">
+                              <div className="avatar">
+                                <div className="mask mask-squircle h-12 w-12">
+                                  <img
+                                    src={product.images[0]}
+                                    alt={product.title}
+                                  />
+                                </div>
+                              </div>
+                              <div>
+                                <div className="font-bold">{product.title}</div>
+                                <div className="badge badge-ghost badge-sm">
+                                  {product.category}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td>{product.brand}</td>
+                          <td>
+                            <span className="badge badge-ghost badge-sm">
+                              {product.quantity}
+                            </span>
+                          </td>
+                          <td>
+                            <td>
+                              <input
+                                type="number"
+                                className="input input-bordered w-full max-w-xs ml-2"
+                                value={
+                                  selectedProducts[
+                                    `${product._id}-${product.warehouseReceipt}`
+                                  ]?.quantity || ""
+                                }
+                                onChange={(e) =>
+                                  handleQuantityChange(
+                                    product._id,
+                                    product.warehouseReceipt,
+                                    e.target.value
+                                  )
+                                }
+                                disabled={
+                                  !selectedProducts[
+                                    `${product._id}-${product.warehouseReceipt}`
+                                  ]?.selected
+                                }
+                                min="0" // Không cho phép nhập số âm
+                                max={product.quantity} // Giới hạn nhập vào không lớn hơn số lượng hiện có
+                              />
+                            </td>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="2">Khong co san pham nao</td>
+                      </tr>
+                    )
+                  ) : listProduct.length > 0 ? (
+                    listProduct.map((product) => (
                       <tr key={product._id}>
                         <td>
                           <input

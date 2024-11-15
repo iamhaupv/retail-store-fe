@@ -3,12 +3,8 @@ import "./Header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
-  faBell,
-  faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
-import luck from "../../assets/luck.png";
 import logo_company from "../../Image/Logo-removebg-preview.png";
-import ButtonLogout from "../ButtonLogout";
 import { Link, useNavigate } from "react-router-dom";
 export default function Header(props) {
   const [username, setUsername] = useState("");
@@ -17,6 +13,12 @@ export default function Header(props) {
     const firstname = localStorage.getItem("firstname")
     setUsername(lastname + " " +  firstname);
   }, []);
+  const [image, setImage] = useState("")
+
+  useEffect(()=> {
+    const avatar = localStorage.getItem("image")
+    setImage(avatar)
+  }, [])
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
@@ -49,7 +51,7 @@ export default function Header(props) {
                   <div className="flex w-36 items-center">
                     <div className="avatar">
                       <div className="size-10 rounded-full">
-                        <img src={`https://res.cloudinary.com/dqazvfqre/image/upload/v1731310102/avt-default_dvk2qz.jpg`} alt="Avatar default" />
+                        <img src={`${image}`} alt="Avatar default" />
                       </div>
                     </div>
                     <h1 className="font-medium ml-2">{username}</h1>
@@ -60,7 +62,7 @@ export default function Header(props) {
                     <div className="flex w-72 items-center">
                       <div className="avatar">
                         <div className="size-10 rounded-full">
-                          <img src={`https://res.cloudinary.com/dqazvfqre/image/upload/v1731310102/avt-default_dvk2qz.jpg`} alt="Avatar default" />
+                          <img src={`${image}`} alt="Avatar default" />
                         </div>
                       </div>
                       <div className="w-full">

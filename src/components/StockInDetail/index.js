@@ -1,34 +1,13 @@
-import React, { useEffect, useState } from "react";
-import apiGetAllReceipt from "../../apis/apiGetAllReceipt";
 import { Link } from "react-router-dom";
 import apiIsDisplayWarehouseReceipt from "../../apis/apiIsDisplayWarehouseReceipt";
-export default function StockInDetail() {
-  const [receipts, setReceipts] = useState([]);
-  const fetchReceipts = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        throw new Error("Token is invalid!");
-      }
-      const response = await apiGetAllReceipt(token);
-      setReceipts(response.receipts);
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
-  useEffect(() => {
-    fetchReceipts();
-  }, []);
-
+export default function StockInDetail({ receipts }) {
   function formatDate(date) {
     if (!(date instanceof Date)) {
-      date = new Date(date); // Chuyển đổi chuỗi thành đối tượng Date
+      date = new Date(date);
     }
-
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-
     return `${day}/${month}/${year}`;
   }
   const handleChangeIsDisplay = async (pid, isDisplay) => {
@@ -36,12 +15,10 @@ export default function StockInDetail() {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid");
       await apiIsDisplayWarehouseReceipt(token, pid, { isDisplay });
-      fetchReceipts();
     } catch (error) {
       throw new Error(error);
     }
   };
-
   return (
     <>
       {receipts.map((receipt) => (
@@ -53,11 +30,15 @@ export default function StockInDetail() {
           </td>
           <td>{receipt.products.length}</td>
           <td>
-            {receipt.products
-              .reduce((total, product) => {
-                return total + product.quantity * product.importPrice ;
-              }, 0)
-              .toLocaleString()+" đ"}
+            {receipt.products.reduce((total, product) => {
+              const importPrice = product.importPrice || 0; // Giá nhập vào
+              const quantity = product.quantity || 0; // Số lượng sản phẩm
+              const convertQuantity = product.unit
+                ? product.unit.convertQuantity
+                : 1; // Hệ số quy đổi
+              return total + importPrice * quantity * convertQuantity; // Cộng dồn tổng giá
+            }, 0)}
+            đ
           </td>
           <td className="justify-items-center">
             <Link to="/entry-form" state={{ receipt: receipt }}>

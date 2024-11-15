@@ -28,6 +28,7 @@ export default function FormLogin() {
       localStorage.setItem("lastname", rs.userData.lastname)
       localStorage.setItem("refreshToken", rs.userData.refreshToken)
       localStorage.setItem("email", rs.userData.email)
+      localStorage.setItem("image", rs.userData.image)
       localStorage.setItem("role", rs.role)
     } else {
       Swal.fire("Oops!", rs.mes, "error");

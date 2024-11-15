@@ -205,18 +205,6 @@ export default function Order() {
                   </thead>
                   <tbody>
                     <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
-                    <OrderTableList />
                   </tbody>
                   {/* foot */}
                   <tfoot>

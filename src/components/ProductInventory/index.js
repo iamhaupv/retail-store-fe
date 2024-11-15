@@ -13,12 +13,26 @@ export default function ProductInventory({ products }) {
 
     return `${day}/${month}/${year}`;
   }
-  console.log(products);
+  const checkExpirationStatus = (expires) => {
+    const currentDate = new Date();
+    const expirationDate = new Date(expires);
+    const timeDifference = expirationDate - currentDate;
+    const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24)); // Tính số ngày còn lại
+
+    if (daysLeft <= 0) {
+      return <span className="text-red-500">Hết hạn</span>; // Hết hạn
+    } else if (daysLeft <= 5) {
+      return <span className="text-orange-500">Gần hết hạn</span>; // Gần hết hạn
+    } else if (daysLeft > 5) {
+      return <span className="text-green-500">Còn hạn</span>; // Còn hạn
+    }
+    
+  };
   return (
     <>
       {Array.isArray(products) && products.length > 0 ? (
         products.map((product) => (
-          <tr>
+          <tr key={product._id}>
             <td>
               <div>
                 <div className="font-bold">{product.code || "ASM001"}</div>
@@ -41,7 +55,7 @@ export default function ProductInventory({ products }) {
               </div>
             </td>
             <td>
-                <span>{product.status === "in_stock" ?  "Còn hàng" : "Hết hàng"}</span>
+                <span>{checkExpirationStatus(product.expires)}</span>
               </td>
               <td>
                 {formatDate(product.createdAt)}

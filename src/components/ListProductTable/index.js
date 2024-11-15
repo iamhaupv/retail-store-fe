@@ -1,46 +1,92 @@
 import React, { useEffect, useState } from "react";
 import TableProductDetail from "../TableProductDetail";
-import apiGetListProduct from "../../apis/apiGetListProduct";
-
 import apiGetListBrand from "../../apis/apiGetListBrand";
-
 import Autocomplete from "../AutoComplete";
 import { Link } from "react-router-dom";
-import apiFilterProductByName from "../../apis/apiFilterProductByName";
 import TableProductByName from "../TableProductByName";
-import apiFilterProductByStatus from "../../apis/apiFilterProductByStatus";
-import TableProductInStock from "../TableProductInStock";
+import apiFilterProductMultiCondition from "../../apis/apiFilterProductMultiCondition";
+import apiGetListCategory from "../../apis/apiGetListCategory";
 
 export default function ListProductTable() {
-  const [products, setProducts] = useState([]);
+  const [listProduct, setListProduct] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [productByStatus, setProductByStatus] = useState([])
-  const [productByName, setProductByName] = useState([]);
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState("");
   const [title, setTitle] = useState("");
-  const fetchProductByStatus = async () => {
+  const [brand, setBrand] = useState("");
+  const [categories, setCategories] = useState([])
+  const [category, setCategory] = useState("")
+  const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("Token is invalid");
-      const response = await apiFilterProductByStatus(token, { status: status });
-      setProductByStatus(
-        Array.isArray(response.products) ? response.products : []
-      );
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid!")
+      const response = await apiGetListCategory(token)
+      setCategories(Array.isArray(response.data) ? response.data : [])
     } catch (error) {
-      console.log("fetch product by status is error " + error);
+      console.log("fetch categories is error " + error);
+      
     }
   }
   useEffect(() => {
-    fetchProductByStatus()
-  }, [status])
-  console.log(status);
+    fetchCategories()
+  }, [])
+  const listCategory = Array.from(new Set(categories.map((unit) => unit.name))).map(
+    (name) => {
+      const matchedUnit = categories.find((unit) => unit.name === name);
+      return {
+        _id: matchedUnit._id,
+        name: matchedUnit.name,
+      };
+    }
+  );
+  const fetchProductMultiCondition = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      const response = await apiFilterProductMultiCondition(token, {
+        title,
+        status,
+        brandName: brand,
+        categoryName: category
+      });
+      setListProduct(Array.isArray(response.products) ? response.products : []);
+    } catch (error) {
+      console.log("api fetch product multi condtion is error " + error);
+    }
+  };
+  useEffect(() => {
+    fetchProductMultiCondition();
+  }, [status, brand, title, category]);
   
-  const handleChangeStatus = async(e) => {
-    setStatus(e.target.value)
-  }
-  const fetch = async () => {
-    const response = await apiGetListProduct();
-    setProducts(response.products);
+  const handleChangeBrand = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setBrand(selectedBrandName); // Cập nhật trạng thái thương hiệu
+      console.log("Selected brand:", selectedBrandName);
+    } else {
+      setBrand(""); // Đặt lại giá trị thương hiệu về rỗng khi không có lựa chọn
+      console.log("Brand selection cleared");
+    }
+  };
+  const handleChangeCateogry = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setCategory(selectedBrandName); // Cập nhật trạng thái thương hiệu
+      console.log("Selected brand:", selectedBrandName);
+    } else {
+      setCategory(""); // Đặt lại giá trị thương hiệu về rỗng khi không có lựa chọn
+      console.log("Brand selection cleared");
+    }
+  };
+  // get all name brand
+  const listBrand = Array.from(new Set(brands.map((unit) => unit.name))).map(
+    (name) => {
+      const matchedUnit = brands.find((unit) => unit.name === name);
+      return {
+        _id: matchedUnit._id,
+        name: matchedUnit.name,
+      };
+    }
+  );
+  const handleChangeStatus = async (e) => {
+    setStatus(e.target.value);
   };
   const fetchBrans = async () => {
     try {
@@ -52,7 +98,6 @@ export default function ListProductTable() {
   };
   useEffect(() => {
     fetchBrans();
-    fetch();
   }, []);
   // const {inputRef} = useBarcode({
   //   value:'ASM001',
@@ -63,33 +108,9 @@ export default function ListProductTable() {
   //       height: 25,
   //   }
   //  })
-  const suggestion = [
-    { id: 1, name: "Tom Cook" },
-    { id: 2, name: "Wade Cooper" },
-    { id: 3, name: "Tanya Fox" },
-    { id: 4, name: "Arlene Mccoy" },
-    { id: 5, name: "Devon Webb" },
-    { id: 6, name: "Nguyễn Thanh Khoa" },
-    { id: 7, name: "Nguyễn Đức Long" },
-  ];
-  const fetchProductByName = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("Token is invalid");
-      const response = await apiFilterProductByName(token, { title: title });
-      setProductByName(
-        Array.isArray(response.products) ? response.products : []
-      );
-    } catch (error) {
-      console.log("fetch product by name is error " + error);
-    }
-  };
   const handleChangeTitle = async (e) => {
     setTitle(e.target.value);
   };
-  useEffect(() => {
-    fetchProductByName();
-  }, [title]);
   return (
     <>
       <div className="">
@@ -97,7 +118,6 @@ export default function ListProductTable() {
         <div className="flex ">
           {/* search Input */}
           <div className="ml-3 mt-2 w-52 h-3 ">
-            {/* <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" /> */}
             <label className="input input-bordered flex items-center gap-2">
               <input
                 type="text"
@@ -119,29 +139,34 @@ export default function ListProductTable() {
               </svg>
             </label>
           </div>
-          {/* Brand Option */}
-
-          {/* <select className="select select-bordered select-sm w-52  mr-5">
-            <option disabled selected>
-              Thương hiệu
-            </option>
-            {brands.map((brand) => (
-              <option key={brand._id}>{brand.name}</option>
-            ))}
-          </select> */}
-
           <div className="ml-4 mt-2 w-52 h-11">
-            <Autocomplete suggestion={suggestion} placeholder="Nhà cung cấp" />
+            {/* filter brand */}
+            <Autocomplete
+              suggestion={listBrand}
+              onchange={handleChangeBrand} // This should call your API or update state
+              placeholder="Chọn thương hiệu"
+              value={brand} // Pass the current brand state
+            />
           </div>
 
           {/* status Option */}
-          <select onChange={handleChangeStatus} className="select select-bordered h-4 w-52 ml-4">
+          <select
+            onChange={handleChangeStatus}
+            className="select select-bordered h-4 w-52 ml-4"
+          >
             <option value={""} selected>
               Trạng thái
             </option>
             <option value={"in_stock"}>Đang bán</option>
             <option value={"out_of_stock"}>Hết hàng</option>
           </select>
+          {/* filter category */}
+          <Autocomplete
+              suggestion={listCategory}
+              onchange={handleChangeCateogry} // This should call your API or update state
+              placeholder="Chọn loại sản phẩm"
+              value={category} // Pass the current brand state
+            />
         </div>
         {/* Nofication and Button Add */}
 
@@ -194,14 +219,15 @@ export default function ListProductTable() {
               </tr>
             </thead>
             <tbody>
-              {status === "" ? (title === "" ? (
+              {category === "" && title === "" && status === "" && brand === "" ? (
                 <TableProductDetail />
-              ) : productByName.length > 0 ? (
-                <TableProductByName productByName={productByName} />
+              ) : listProduct.length > 0 ? (
+                <TableProductByName listProduct={listProduct} />
               ) : (
-                <div>Không tìm thấy sản phẩm nào</div>
-              )) : <TableProductInStock productByStatus={productByStatus}/> }
-              
+                <td>
+                  <div>Không có sản phẩm nào</div>
+                </td>
+              )}
             </tbody>
             <tfoot>
               <tr></tr>

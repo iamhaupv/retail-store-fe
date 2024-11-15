@@ -6,7 +6,6 @@ import apiFilterProductByShelf from "../../apis/apiFilterProductByShelf";
 
 export default function InventoryProduct({onChangeModal}) {
   const [shelfs, setShelfs] = useState([]);
-  // const [shelf, setShelf] = useState('')
   const { shelf, setShelf } = useShelfContext();
   const [products, setProducts] = useState([])
   const fetchProductByShelf = async () => {
