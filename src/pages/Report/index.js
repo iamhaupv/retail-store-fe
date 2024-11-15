@@ -16,7 +16,7 @@ export default function Report() {
           <div
             className=" w-full card bg-white rounded-none mt-2 "
             style={{
-              height: "calc(100vh - 685px)",
+              height: "calc(100vh - 490px)",
             }}
           >
             <div className="w-full flex justify-between"> 
