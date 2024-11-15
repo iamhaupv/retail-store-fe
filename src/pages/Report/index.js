@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function Report() {
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabClick = (index) => {
+    setActiveTab(index);
+  };
   return (
     <>
       <div
@@ -80,12 +85,57 @@ export default function Report() {
           <div
             className="w-full card bg-white rounded-none mt-6 "
             style={{
-              height: "calc(100vh - 381px)",
+              height: "calc(100vh - 348px)",
             }}
           >
             <div className="w-full justify-items-start">
               <h1 className="font-bold text-xl mt-5 ml-4">Doanh thu theo</h1>
             </div>
+            <div
+            role="tablist"
+            className="tabs tabs-bordered mt-4  "
+            style={{ borderColor: "#f89a88" }}
+          >
+            <input
+              type="radio"
+              name="my_tabs_1"
+              role="tab"
+              className="tab  w-2/5 whitespace-nowrap"
+              aria-label="Sản phẩm"
+              defaultChecked
+              style={activeTab === 0 ? { borderColor: "#f89a88" } : {}}
+              onClick={() => handleTabClick(0)}
+            />
+            <div
+              role="tabpanel"
+              className="tab-content h-full p-10"
+              style={{
+                borderTop: "2px solid #ededed",
+              }}
+            >
+              
+            </div>
+
+            <input
+              type="radio"
+              name="my_tabs_1"
+              role="tab"
+              className="tab w-2/5 border-b-2 whitespace-nowrap"
+              aria-label="Loại sản phẩm"
+              style={activeTab === 1 ? { borderColor: "#f89a88" } : {}}
+              onClick={() => handleTabClick(1)}
+            />
+            <div
+              role="tabpanel"
+              className="tab-content p-10 h-full"
+              style={{
+                borderTop: "2px solid #ededed",
+              }}
+            >
+              
+            </div>
+
+          </div>
           </div>
         </div>
       </div>
