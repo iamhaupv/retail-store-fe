@@ -593,8 +593,8 @@ export default function Inventory() {
                               </div>
                             </div>
                             <div>
-                              <div className="font-bold">{product.title}</div>
-                              <div className="badge badge-ghost badge-sm">
+                              <div className="font-bold text-ellipsis">{product.title}</div>
+                              <div className="badge badge-ghost badge-sm whitespace-nowrap">
                                 {product.category}
                               </div>
                             </div>

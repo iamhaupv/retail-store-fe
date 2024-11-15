@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./Header.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowLeft,
-} from "@fortawesome/free-solid-svg-icons";
 import logo_company from "../../Image/Logo-removebg-preview.png";
 import { Link, useNavigate } from "react-router-dom";
 export default function Header(props) {
@@ -38,8 +34,8 @@ export default function Header(props) {
             className="w-48 h-full"
             alt="logo Store 24 Hour"
           />
-          <a class="flex ml-10 w-80 items-center">
-            <FontAwesomeIcon icon={faArrowLeft} />
+          <a href="" class="flex ml-10 w-80 items-center">
+            
             <p className="ml-2 w-72">{props.title}</p>
           </a>
         </div>

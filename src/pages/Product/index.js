@@ -254,7 +254,7 @@ export default function Product() {
               <div className="flex items-center pt-2">
                 <input
                   name="price"
-                  value={payload.price}
+                  value={value}
                   onBlur={handleBlur}
                   onChange={handleChangeInput}
                   type="text"

@@ -15,6 +15,7 @@ import apiFilterProductByBrand from "../../apis/apiFilterProductByBrand";
 export default function WarehouseReceipt() {
   const [listProduct, setListProduct] = useState([]);
   const navigate = useNavigate();
+  const [price, setPrice] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);
@@ -23,17 +24,40 @@ export default function WarehouseReceipt() {
   const [user, setUser] = useState("");
   const [code, setCode] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [brands, setBrands] = useState([]);
-  const [name, setName] = useState("")
-  const [productByBrandName, setProductByBrandName] = useState([])
+  const [name, setName] = useState("");
+  const [productByBrandName, setProductByBrandName] = useState([]);
   const [brand, setBrand] = useState("");
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
+  const [brands, setBrands] = useState([]);
+  // const [productFilter, setProductFilter] = useState([]);
+  // const [isBrand, setIsBrand] = useState("");
+  const [value, setValue] = useState("");
+
+  //#region format tiền tệ
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
+  };
+
+  const handleBlurCurrencyInput = (e) => {
+    const numericValue = parseFloat(value.replace(/,/g, ""));
+    if (!isNaN(numericValue)) {
+      setValue(formatCurrency(numericValue));
+    }
+  };
+  const handleChangeCurrencyInput = (e) => {
+    setValue(e);
+  };
   const fetchProductByBrandName = async () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
-      const response = await apiFilterProductByBrand(token, { brandName: brand });
+      const response = await apiFilterProductByBrand(token, {
+        brandName: brand,
+      });
       if (response.success) {
         setProductByBrandName(
           Array.isArray(response.products) ? response.products : []
@@ -51,14 +75,15 @@ export default function WarehouseReceipt() {
       fetchProductByBrandName();
     }
   }, [brand]);
-  const listProductName = Array.from(new Set(productByBrandName.map(unit => unit.title)))
-    .map(title => {
-      const matchedUnit = productByBrandName.find(unit => unit.title === title);
-      return {
-        _id: matchedUnit._id,
-        name: matchedUnit.title,
-      };
-    });
+  const listProductName = Array.from(
+    new Set(productByBrandName.map((unit) => unit.title))
+  ).map((title) => {
+    const matchedUnit = productByBrandName.find((unit) => unit.title === title);
+    return {
+      _id: matchedUnit._id,
+      name: matchedUnit.title,
+    };
+  });
   const handleChangeProductName = (selectedBrandName) => {
     if (selectedBrandName) {
       setName(selectedBrandName); // Cập nhật trạng thái thương hiệu
@@ -156,7 +181,7 @@ export default function WarehouseReceipt() {
       const response = await apiFilterProductMultiCondition(token, {
         brandName: brand,
         categoryName: category,
-        title: name
+        title: name,
       });
       setListProduct(Array.isArray(response.products) ? response.products : []);
     } catch (error) {
@@ -205,15 +230,6 @@ export default function WarehouseReceipt() {
       console.error(error);
     }
   };
-  const suggestion = [
-    { id: 1, name: "Nước ngọt " },
-    { id: 2, name: "Nước ép trái cây" },
-    { id: 3, name: "Nước tăng lực" },
-    { id: 4, name: "Nước trà" },
-    { id: 5, name: "Cà phê hòa tan" },
-    { id: 6, name: "Cà phê pha phin" },
-    { id: 7, name: "Cà phê lon" },
-  ];
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -255,6 +271,37 @@ export default function WarehouseReceipt() {
   };
 
   const handleChangeInput = (index, name, value) => {
+    if (name == "importPrice") {
+      value = value.replace(/[^\d.]/g, "");
+
+      // Ensure the value is not less than 0
+      if (parseFloat(value) < 0) {
+        value = "0";
+      }
+      handleChangeCurrencyInput(value);
+    }
+    if (name == "quantity") {
+      value = value.replace(/[^\d.]/g, "");
+
+      // Ensure the value is not less than 0
+      if (parseFloat(value) < 0) {
+        value = "0";
+      }
+    }
+    if (name == "expires") {
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+      const today = formatDate(new Date());
+      // const today = new Date();
+      // today.setHours(0, 0, 0, 0);
+      if (value < today) {
+        value = today;
+      }
+    }
     setAddedProducts((prev) => {
       const newProducts = [...prev];
       newProducts[index][name] = value; // Update the specific field for the product
@@ -495,7 +542,8 @@ export default function WarehouseReceipt() {
                             <td>
                               <input
                                 name="importPrice"
-                                value={product.importPrice}
+                                value={value}
+                                onBlur={handleBlurCurrencyInput}
                                 onChange={(e) =>
                                   handleChangeInput(
                                     index,
@@ -608,31 +656,6 @@ export default function WarehouseReceipt() {
             <div className="flex items-center mb-4">
               {/* Brand */}
               <div className="w-52 ">
-                {/* <select
-              onChange={(e) => setIsBrand(e.target.value)} 
-              name="category"
-              className="select select-bordered w-11/12 h-11 ml-4 mb-8"
-            >
-              <option value="" disabled selected>
-                Loại sản phẩm
-              </option>
-              {brands.map((brand) => (
-                <option key={brand._id} value={brand.name}>
-                  {brand.name}
-                </option>
-              ))}
-            </select> */}
-                {/* <input
-                  className="border"
-                  name="category"
-                  onChange={(e) => setIsBrand(e.target.value)}
-                /> */}
-                {/* <Autocomplete
-                  placeholder="Chọn nhà cung cấp"
-                  suggestion={listBrand}
-                  onchange={handleChangeBrand}
-                  value={brand} // Đây sẽ là chuỗi rỗng, không có giá trị
-                /> */}
                 <Autocomplete
                   suggestion={listBrand}
                   onchange={handleChangeBrand} // This should call your API or update state
@@ -662,9 +685,7 @@ export default function WarehouseReceipt() {
                 </div>
               )}
               {/* Search Input  */}
-              <div className="w-52  mr-3">
-                {/* <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" /> */}
-              </div>
+              <div className="w-52  mr-3"></div>
             </div>
             {/* table product  */}
             <div className=" overflow-y-scroll h-4/6">
@@ -677,54 +698,6 @@ export default function WarehouseReceipt() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* {productFilter.length > 0 ? (
-                    productFilter.map((product) => (
-                      <tr className="hover:bg-slate-100">
-                        <th key={product._id}>
-                          <label>
-                            <input
-                              type="checkbox"
-                              className="checkbox"
-                              checked={
-                                selectedProducts.includes(product._id) ||
-                                addedProducts.includes(product)
-                              }
-                              onChange={() => handleCheckboxChange(product._id)}
-                              disabled={addedProducts.some(
-                                (addedProduct) =>
-                                  addedProduct._id === product._id
-                              )}
-                            />
-                          </label>
-                        </th>
-                        <td>
-                          <div>
-                            <div className="font-bold">ASM001</div>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="flex items-center gap-3">
-                            <div class="avatar">
-                              <div class="mask mask-squircle h-12 w-12">
-                                <img
-                                  src={product.images[0]}
-                                  alt="Avatar Tailwind CSS Component"
-                                />
-                              </div>
-                            </div>
-                            <div>
-                              <div class="font-bold">{product.title}</div>
-                              <div class="text-sm opacity-50">
-                                {product.title}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <div>Chưa có sản phẩm</div>
-                  )} */}
                   {brand === "" ? (
                     <div>Vui lòng chọn nhà cung cấp</div>
                   ) : listProduct.length > 0 ? (
