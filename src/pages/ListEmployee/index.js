@@ -1,11 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import EmployeeTableDetail from "../../components/EmployeeTableDetail";
-import Autocomplete from "../../components/AutoComplete";
 import apiFindEmployeeByName from "../../apis/apiFindEmployeeByName";
+import InputValue from "../../components/InputValue";
+import apiGetListEmployee from "../../apis/apiGetListEmployee";
 
 export default function ListEmployee() {
   const [employees, setEmployees] = useState([]);
+  const fetchEmployees = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("Token is invalid!");
+      }
+      const response = await apiGetListEmployee(token);
+      setEmployees(response.data);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+  const [employeesFilter, setEmployeesFilter] = useState([]);
   const [employeeName, setEmployeeName] = useState("");
   const fetchFindEmployeeByName = async () => {
     try {
@@ -14,34 +31,26 @@ export default function ListEmployee() {
       const response = await apiFindEmployeeByName(token, {
         name: employeeName,
       });
-      setEmployees(response.employees || []);
+      setEmployeesFilter(response.employees || []);
     } catch (error) {
       console.error("Failed to fetch employees:", error);
-      // Optionally set an error state here
     }
   };
-
+  const ListEmployees = () => {
+    return employees.map((employee) => ({
+      _id: employee._id,
+      name: employee.name,
+    }));
+  };
+  const handleChangeName = (e) => {
+    if (e) setEmployeeName(e);
+    else setEmployeeName("");
+  };
   useEffect(() => {
     if (employeeName) {
       fetchFindEmployeeByName();
     }
   }, [employeeName]);
-  const handleChangeInput = (e) => {
-    const { value } = e.target;
-    setEmployeeName(value);
-  };
-
-  console.log(employees);
-
-  const suggestion = [
-    { id: 1, name: "Nguyễn Thanh Khoa" },
-    { id: 2, name: "Phạm Văn Hậu" },
-    { id: 3, name: "Nguyễn Đức Long" },
-    { id: 4, name: "Lê Trọng Nghĩa" },
-    { id: 5, name: "Devon Webb" },
-    { id: 6, name: "Nguyễn Thanh Khoa" },
-    { id: 7, name: "Nguyễn Đức Long" },
-  ];
   return (
     <>
       <div
@@ -56,18 +65,11 @@ export default function ListEmployee() {
         >
           {/* search Input */}
           <div className="ml-4 mt-4 w-4/12">
-            <input
-              id="employeeName"
-              type="text"
-              name="employeeName"
+            <InputValue
+              onchange={handleChangeName}
+              suggestion={ListEmployees()}
+              placeholder={"Nhập tên nhân viên"}
               value={employeeName}
-              onChange={handleChangeInput}
-              className="border rounded p-2 w-full"
-              placeholder="Nhập tên nhân viên..."
-            />
-            <Autocomplete
-              suggestion={suggestion}
-              placeholder="Tên nhân viên.."
             />
           </div>
           {/* Nofication and Button Add */}
@@ -118,16 +120,16 @@ export default function ListEmployee() {
               </thead>
               <tbody>
                 {/* <EmployeeTableDetail /> */}
-
-                {employees.length > 0 ? (
-                  employees.map((employee) => (
-                    <EmployeeTableDetail
-                      key={employee.id}
-                      employee={employee}
-                    />
-                  ))
+                {employeeName === "" ? (
+                  employees.length > 0 ? (
+                    <EmployeeTableDetail employees={employees} />
+                  ) : (
+                    <div>Không tìm thấy</div>
+                  )
+                ) : employeesFilter.length > 0 ? (
+                  <EmployeeTableDetail employees={employeesFilter} />
                 ) : (
-                  <div>Không có nhân viên nào</div>
+                  <div>Không tìm thấy</div>
                 )}
               </tbody>
               <tfoot>

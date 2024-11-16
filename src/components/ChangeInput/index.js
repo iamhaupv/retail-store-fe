@@ -7,6 +7,7 @@ import {
 } from "@headlessui/react";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
+
 export default function ChangeInput({
   suggestion,
   value,
@@ -48,12 +49,12 @@ export default function ChangeInput({
   };
 
   return (
-    <div className="mx-auto h-full w-full">
+    <div className="mx-auto h-full w-full relative"> {/* relative để tạo không gian cho absolute */}
       <Combobox
         value={selected}
         onChange={handleSelect} // Xử lý khi chọn mục từ danh sách
       >
-        <div className="relative">
+        <div className="relative"> {/* Đảm bảo các thành phần con có position relative */}
           <ComboboxInput
             className={clsx(
               "w-full max-w-xs rounded-lg border py-1.5 pr-8 pl-3 text-sm text-black",
@@ -92,7 +93,8 @@ export default function ChangeInput({
           className={clsx(
             "w-full max-w-xs rounded-xl border bg-white p-1",
             "transition duration-100 ease-in",
-            "overflow-y-auto max-h-48" // Giới hạn chiều cao và thanh cuộn
+            "overflow-y-auto max-h-48", // Giới hạn chiều cao và thanh cuộn
+            "absolute left-0 top-full z-10" // Đảm bảo ComboboxOptions không bị đè lên
           )}
         >
           {filteredSuggestion.length === 0 ? (

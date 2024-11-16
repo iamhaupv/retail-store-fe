@@ -14,17 +14,16 @@ export default function InputValue({
   onchange,
   placeholder,
 }) {
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [query, setQuery] = useState(value || "");
+  const [selected, setSelected] = useState(
+    suggestion.find((item) => item._id === value) || null
+  );
+
   useEffect(() => {
-    if (value) {
-      setQuery(value);
-      setSelected(suggestion.find((item) => item._id === value));
-    } else {
-      setQuery("");
-      setSelected(null);
-    }
+    setQuery(value || "");
+    setSelected(suggestion.find((item) => item._id === value) || null);
   }, [value, suggestion]);
+
   const filteredSuggestion =
     query === ""
       ? suggestion
@@ -32,38 +31,43 @@ export default function InputValue({
           const name = item.name || "";
           return name.toLowerCase().includes(query.toLowerCase());
         });
+
   const handleSelect = (item) => {
     if (item) {
-      setSelected(item); // Lưu đối tượng đầy đủ khi chọn
-      setQuery(item.name || ""); // Hiển thị tên của item trong input
-      onchange(item._id); // Truyền _id của item lên onchange thay vì toàn bộ đối tượng
-    } else {
-      setSelected(null);
-      setQuery("");
-      onchange(""); // Nếu không chọn gì, truyền giá trị rỗng
+      setSelected(item);
+      setQuery(item.name || "");
+      onchange(item._id);
     }
   };
 
   return (
-    <div className="mx-auto h-full w-full">
+    <div className="relative mx-auto w-full max-w-xs rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
       <Combobox value={selected} onChange={handleSelect}>
-        <div className="relative">
+        <div className="relative flex items-center">
           <ComboboxInput
             className={clsx(
-              "w-full max-w-xs rounded-lg border py-1.5 pr-8 pl-3 text-sm text-black",
-              "focus:outline-none focus:ring focus:ring-black"
+              "w-full max-w-xs py-3 pr-10 pl-3 text-sm",
+              "text-gray-800 bg-white placeholder-gray-500",
+              "rounded-lg shadow-md border border-gray-300",
+              "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+              "transition-all duration-300 ease-in-out transform",
+              "hover:shadow-lg hover:scale-105"
             )}
             onChange={(event) => {
               const inputValue = event.target.value;
-              setQuery(inputValue); // Cập nhật giá trị người dùng nhập
-              onchange(inputValue); // Cập nhật giá trị cha khi nhập
+              setQuery(inputValue);
+              onchange(inputValue);
             }}
             placeholder={placeholder}
-            value={query} // Đảm bảo giá trị của input là query
+            value={query}
           />
           <ComboboxButton
-            className="group absolute inset-y-0 right-0 px-2.5"
-            onClick={() => setQuery("")}
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800 transition duration-200"
+            onClick={() => {
+              setQuery("");
+              setSelected(null);
+              onchange("");
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -71,7 +75,7 @@ export default function InputValue({
               viewBox="0 0 24 24"
               strokeWidth="1.5"
               stroke="currentColor"
-              className="size-4 fill-white/60 group-hover:bg-slate-100"
+              className="w-4 h-4"
             >
               <path
                 strokeLinecap="round"
@@ -84,9 +88,11 @@ export default function InputValue({
 
         <ComboboxOptions
           className={clsx(
-            "w-full max-w-xs rounded-xl border bg-white p-1",
-            "transition duration-100 ease-in",
-            "overflow-y-auto max-h-48" // Giới hạn chiều cao và thanh cuộn
+            "absolute w-full max-w-xs mt-1",
+            "bg-white rounded-lg shadow-md border border-gray-300",
+            "overflow-y-auto max-h-48 ring-1 ring-gray-200",
+            "transition-opacity duration-300 ease-in-out",
+            "z-50"
           )}
         >
           {filteredSuggestion.length === 0 ? (
@@ -95,11 +101,16 @@ export default function InputValue({
             filteredSuggestion.map((object) => (
               <ComboboxOption
                 key={object._id}
-                value={object} // Lưu nguyên object vào value để xử lý trong onChange
-                className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none"
+                value={object}
+                className={clsx(
+                  "group flex cursor-pointer items-center gap-2",
+                  "py-2 px-3 rounded-lg",
+                  "text-gray-700 hover:text-gray-900",
+                  "hover:bg-blue-100 hover:shadow-sm",
+                  "transition duration-200 ease-in-out transform hover:scale-105"
+                )}
               >
-                <div className="text-sm">{object.name || "Unnamed"}</div>
-                {/* Hiển thị tên của item */}
+                <div className="text-sm font-medium">{object.name || "Unnamed"}</div>
               </ComboboxOption>
             ))
           )}
