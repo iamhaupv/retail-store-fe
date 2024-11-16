@@ -69,14 +69,14 @@ export default function TableProductDetail() {
                 </div>
               </div>
               <div>
-                <div className="font-bold">{product.title}</div>
+                <div className="font-bold  text-ellipsis">{product.title}</div>
                 <span className="badge badge-ghost badge-sm">
                   {product.category.name}
                 </span>
               </div>
             </div>
           </td>
-          <td className="text-ellipsis">{product.brand.name}</td>
+          <td className="text-ellipsis whitespace-nowrap">{product.brand.name}</td>
           <td className="whitespace-nowrap">
             {product.status === "in_stock" ? "Còn hàng" : "Hết hàng"}
           </td>
@@ -85,6 +85,11 @@ export default function TableProductDetail() {
           </td>
           <td>
             <h1 className="whitespace-nowrap">
+              {product.price.toLocaleString()} đ
+            </h1>
+          </td>
+          <td>
+          <h1 className="whitespace-nowrap">
               {product.price.toLocaleString()} đ
             </h1>
           </td>

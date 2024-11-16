@@ -212,11 +212,11 @@ export default function Inventory() {
               >
                 <div className="flex w-12/12">
                   <div className="avatar">
-                    <div className="size-28 rounded-full  mt-4 mb-4 ml-4 mr-4">
+                    <div className="size-28  rounded-full  mt-4 mb-4 ml-4 mr-4">
                       <img
                         src={logo_form}
                         alt="ảnh đại diện"
-                        className="size-23"
+                        className="object-contain max-h-full max-w-full"
                       />
                     </div>
                   </div>

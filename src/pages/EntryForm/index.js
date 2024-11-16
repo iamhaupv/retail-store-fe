@@ -384,7 +384,7 @@ export default function EntryForm() {
     return products.reduce((total, product) => {
       const quantity = product.quantity || 0;
       const importPrice = product.importPrice || 0; // Giá nhập vào
-      return total + (quantity * importPrice); // Tính tổng bằng giá nhập
+      return total + (quantity * importPrice * product.unit.convertQuantity); // Tính tổng bằng giá nhập
     }, 0);
   };
 
@@ -511,7 +511,7 @@ export default function EntryForm() {
                     receipt.products.map((product, index) => {
                       const quantity = product.quantity || 0;
                       const importPrice = product.importPrice || 0; // Lấy giá nhập
-                      const totalProductPrice = quantity * importPrice;
+                      const totalProductPrice = quantity * importPrice * product.unit.convertQuantity;
 
                       return (
                         <tr key={product._id || index}>

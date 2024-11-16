@@ -16,7 +16,7 @@ export default function ChangeInput({
 }) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null);
-
+  
   // Cập nhật khi nhận giá trị mới từ prop `value`
   useEffect(() => {
     if (value) {
@@ -54,11 +54,11 @@ export default function ChangeInput({
         value={selected}
         onChange={handleSelect} // Xử lý khi chọn mục từ danh sách
       >
-        <div className="relative"> {/* Đảm bảo các thành phần con có position relative */}
+        <div className="w-fit items-center justify-center rounded-lg border-2 border-gray-100" > {/* Đảm bảo các thành phần con có position relative */}
           <ComboboxInput
             className={clsx(
-              "w-full max-w-xs rounded-lg border py-1.5 pr-8 pl-3 text-sm text-black",
-              "focus:outline-none focus:ring focus:ring-black"
+              "w-72 rounded-lg border-none py-1.5 pr-8 pl-3 text-sm text-black",
+              "focus: border-none"
             )}
             onChange={(event) => {
               const inputValue = event.target.value;
@@ -69,7 +69,7 @@ export default function ChangeInput({
             value={query} // Đảm bảo giá trị của input là query
           />
           <ComboboxButton
-            className="group absolute inset-y-0 right-0 px-2.5"
+            className=" mr-2"
             onClick={() => setQuery("")}
           >
             <svg
@@ -91,14 +91,14 @@ export default function ChangeInput({
 
         <ComboboxOptions
           className={clsx(
-            "w-full max-w-xs rounded-xl border bg-white p-1",
+            "w-full max-w-xs rounded-xl  bg-white p-1",
             "transition duration-100 ease-in",
             "overflow-y-auto max-h-48", // Giới hạn chiều cao và thanh cuộn
             "absolute left-0 top-full z-10" // Đảm bảo ComboboxOptions không bị đè lên
           )}
         >
           {filteredSuggestion.length === 0 ? (
-            <div className="py-2 px-3 text-gray-500">No suggestions found.</div>
+            <div className="py-2 px-3 text-gray-500">Không tìm thấy.</div>
           ) : (
             filteredSuggestion.map((object) => (
               <ComboboxOption

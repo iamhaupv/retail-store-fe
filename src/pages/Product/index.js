@@ -885,12 +885,13 @@ export default function Product() {
                 </option>
               ))}
             </select> */}
+            <div className="ml-1 mr-1">
             <AutoCompleteInput
               data={listBrands()}
               onChange={handleInputChangeBrand}
               placeholder={"Nhập nhà cung cấp"}
             />
-            
+            </div>
             {error && <h5 className="ml-4 text-red-500">{error.brand}</h5>}
             <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
               Loại sản phẩm
@@ -913,11 +914,13 @@ export default function Product() {
                 </option>
               ))}
             </select> */}
+            <div className="ml-1 mr-1 mb-3">
             <AutoCompleteInput
               data={listCategories()}
               onChange={handleInputChangeCategory}
               placeholder={"Nhập loại"}
             />
+            </div>
             {error && <h5 className="ml-1 text-red-500">{error.categories}</h5>}
           </div>
         </div>
