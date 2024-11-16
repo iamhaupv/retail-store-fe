@@ -93,6 +93,8 @@ export default function StockIn() {
   useEffect(() => {
     handleFilterIdPNK();
   }, [idPNK]);
+  console.log(receipts);
+  
   return (
     <div className="">
       <div className="flex justify-between">

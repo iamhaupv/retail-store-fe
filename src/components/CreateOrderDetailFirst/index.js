@@ -176,55 +176,113 @@ export default function CreateOrderDetailFirst() {
   const calculateChange = () => {
     return Math.max(0, receivedAmount - calculateTotalAmount());
   };
+  // const handleSubmit = async () => {
+  //   try {
+  //     // Kiểm tra nếu orderDetails là rỗng hoặc không có sản phẩm
+  //     if (orderDetails.length === 0) {
+  //       alert("Vui lòng thêm ít nhất một sản phẩm.");
+  //       return;
+  //     }
+
+  //     // Kiểm tra xem có dữ liệu thiếu trong từng dòng không
+  //     for (let i = 0; i < orderDetails.length; i++) {
+  //       const detail = orderDetails[i];
+  //       if (
+  //         !detail.productName ||
+  //         !detail.quantity ||
+  //         !detail.unit ||
+  //         !detail.price
+  //       ) {
+  //         alert(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
+  //         return;
+  //       }
+  //     }
+  //     // lấy convertQuantity của unit theo từng mã tương ứng
+  //     // Tính tổng tiền của hóa đơn
+  //     const totalAmount = calculateTotalAmount();
+  //     const change = calculateChange();
+
+  //     // Tạo đối tượng dữ liệu để gửi
+  //     const orderData = {
+  //       products: orderDetails.map((detail) => ({
+  //         product: detail.productId,
+  //         quantity: Number(detail.quantity),
+  //         unit: detail.unitId, // chổ này lấy kèm theo id nè
+  //         price: detail.price,
+  //         total: detail.total,
+  //       })),
+  //       totalAmount: totalAmount,
+  //       receiveAmount: receivedAmount,
+  //       change: change,
+  //       user: user._id,
+  //     };
+  //     const token = localStorage.getItem("accessToken");
+  //     if (!token) throw new Error("Token không hợp lệ!");
+
+  //     // Giả sử API tạo đơn hàng là apiCreateOrder
+  //     const response = await apiCreateOrder(token, orderData);
+
+  //     if (response.success) {
+  //       alert("Đơn hàng đã được tạo thành công.");
+  //       // Thực hiện các thao tác khác sau khi submit thành công
+  //     } else {
+  //       alert("Đã có lỗi khi tạo đơn hàng.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi khi submit: ", error);
+  //     alert("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
+  //   }
+  // };
+
+
   const handleSubmit = async () => {
     try {
-      // Kiểm tra nếu orderDetails là rỗng hoặc không có sản phẩm
+      // Check if orderDetails is empty
       if (orderDetails.length === 0) {
         alert("Vui lòng thêm ít nhất một sản phẩm.");
         return;
       }
-
-      // Kiểm tra xem có dữ liệu thiếu trong từng dòng không
+  
+      // Check for missing data in each row
       for (let i = 0; i < orderDetails.length; i++) {
         const detail = orderDetails[i];
-        if (
-          !detail.productName ||
-          !detail.quantity ||
-          !detail.unit ||
-          !detail.price
-        ) {
+        if (!detail.productName || !detail.quantity || !detail.unit || !detail.price) {
           alert(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
           return;
         }
       }
-
-      // Tính tổng tiền của hóa đơn
+  
+      // Calculate total amount and change
       const totalAmount = calculateTotalAmount();
       const change = calculateChange();
-
-      // Tạo đối tượng dữ liệu để gửi
+  
+      // Create order data object to send
       const orderData = {
-        products: orderDetails.map((detail) => ({
-          product: detail.productId,
-          quantity: Number(detail.quantity),
-          unit: detail.unitId, // chổ này lấy kèm theo id nè
-          price: detail.price,
-          total: detail.total,
-        })),
+        products: orderDetails.map((detail) => {
+          const quantityWithConversion = Number(detail.quantity) * detail.convertQuantity; // Apply conversion
+          return {
+            product: detail.productId,
+            quantity: quantityWithConversion, // Use converted quantity
+            unit: detail.unitId, // Unit ID
+            price: detail.price,
+            total: detail.total, // Total is already calculated in your row
+          };
+        }),
         totalAmount: totalAmount,
         receiveAmount: receivedAmount,
         change: change,
         user: user._id,
       };
+  
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token không hợp lệ!");
-
-      // Giả sử API tạo đơn hàng là apiCreateOrder
+  
+      // Create the order using the API
       const response = await apiCreateOrder(token, orderData);
-
+  
       if (response.success) {
         alert("Đơn hàng đã được tạo thành công.");
-        // Thực hiện các thao tác khác sau khi submit thành công
+        // Additional actions on successful submit can be placed here
       } else {
         alert("Đã có lỗi khi tạo đơn hàng.");
       }
@@ -233,7 +291,8 @@ export default function CreateOrderDetailFirst() {
       alert("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
     }
   };
-
+  
+  
   return (
     <>
       <div className="card bg-white h-full rounded-none w-full overflow-y-hidden ">
