@@ -96,6 +96,8 @@ export default function UpdateProduct() {
   };
   const fetchBrands = async () => {
     try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
       const response = await apiGetListBrand();
       setBrands(response.brands);
     } catch (error) {

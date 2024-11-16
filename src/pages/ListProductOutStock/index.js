@@ -14,7 +14,9 @@ export default function ListProductOutStock() {
   };
   const fetchBrans = async () => {
     try {
-      const response = await apiGetListBrands();
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListBrands(token);
       setBrands(response.brands);
     } catch (error) {
       throw new Error(error);

@@ -159,7 +159,7 @@ export default function WarehouseReceipt() {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
-      const response = await apiGetListBrands();
+      const response = await apiGetListBrands(token);
       setBrands(Array.isArray(response.brands) ? response.brands : []);
     } catch (error) {
       throw new Error("fetch brand is error " + error);

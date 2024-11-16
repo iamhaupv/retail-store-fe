@@ -88,16 +88,18 @@ export default function ListProductTable() {
   const handleChangeStatus = async (e) => {
     setStatus(e.target.value);
   };
-  const fetchBrans = async () => {
+  const fetchBrands = async () => {
     try {
-      const response = await apiGetListBrand();
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListBrand(token);
       setBrands(response.brands);
     } catch (error) {
       throw new Error(error);
     }
   };
   useEffect(() => {
-    fetchBrans();
+    fetchBrands();
   }, []);
   // const {inputRef} = useBarcode({
   //   value:'ASM001',

@@ -1,18 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SupplyTableDetail from "../../components/SupplyTableDetail";
 import { Link } from "react-router-dom";
-import Autocomplete from "../../components/AutoComplete";
+import ChangeInput from "../../components/ChangeInput";
+import apiGetListBrands from "../../apis/apiGetListBrand";
+import apiFilterBrandByMultiCondition from "../../apis/apiFilterBrandByMultiCondition";
+import InputPhone from "../../components/InputPhone";
+import InputSupplyName from "../../components/InputSupplyName";
 
 export default function SupplierList() {
-  const suggestion = [
-    { id: 1, name: "Thùng 24 " },
-    { id: 2, name: "Thùng 30" },
-    { id: 3, name: "Lốc" },
-    { id: 4, name: "Chai" },
-    { id: 5, name: "Devon Webb" },
-    { id: 6, name: "Nguyễn Thanh Khoa" },
-    { id: 7, name: "Nguyễn Đức Long" },
-  ];
+  const [brands, setBrands] = useState([]);
+  const [brandSupplyName, setBrandSupplyName] = useState("");
+  const [brandPhone, setBrandPhone] = useState("");
+  const [brandByName, setBrandByName] = useState("");
+  const [brandsByMultiCondition, setBrandsByMultiCondition] = useState([]);
+  const fetchBrandsByMultiCondition = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiFilterBrandByMultiCondition(token, {
+        name: brandByName,
+        supplyName: brandSupplyName,
+        phone: brandPhone,
+      });
+      setBrandsByMultiCondition(
+        Array.isArray(response.brands) ? response.brands : []
+      );
+    } catch (error) {
+      console.log("fetch brand by name is error" + error);
+    }
+  };
+  useEffect(() => {
+    fetchBrandsByMultiCondition();
+  }, [brandByName, brandPhone, brandSupplyName]);
+  const fetchBrands = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListBrands(token);
+      setBrands(Array.isArray(response.brands) ? response.brands : []);
+    } catch (error) {
+      console.log("fetch brand is error" + error);
+    }
+  };
+  const listBrands = () => {
+    return brands.map((brand) => ({
+      _id: brand._id,
+      name: brand.name,
+    }));
+  };
+  const listBrandPhone = () => {
+    return brands.map((brand) => ({
+      _id: brand._id,
+      phone: brand.phone,
+    }));
+  }
+  const listBrandSupplyName = () => {
+    return brands.map((brand) => ({
+      _id: brand._id,
+      supplyName: brand.supplyName,
+    }));
+  }
+  useEffect(() => {
+    fetchBrands();
+  }, []);
+  const handleChangeBrand = async (e) => {
+    if (e) setBrandByName(e);
+    else setBrandByName("");
+  };
+  const handleChangeBrandPhone = async (e) => {
+    if (e) setBrandPhone(e);
+    else setBrandPhone("");
+  };
+  const handleChangeBrandSupplyName = async (e) => {
+    if (e) setBrandSupplyName(e);
+    else setBrandSupplyName("");
+  };
   return (
     <>
       <div
@@ -27,7 +89,28 @@ export default function SupplierList() {
         >
           {/* search Input */}
           <div className="ml-4 mt-4 w-4/12">
-            <Autocomplete suggestion={suggestion} placeholder="Tìm kiếm" />
+            <ChangeInput
+              onchange={handleChangeBrand}
+              value={brandByName}
+              suggestion={listBrands()}
+              placeholder={"Nhập tên nhà cung cấp"}
+            />
+          </div>
+          <div className="ml-4 mt-4 w-4/12">
+            <InputPhone
+              onchange={handleChangeBrandPhone}
+              value={brandPhone}
+              suggestion={listBrandPhone()}
+              placeholder={"Nhập số điện thoại"}
+            />
+          </div>
+          <div className="ml-4 mt-4 w-4/12">
+            <InputSupplyName
+              onchange={handleChangeBrandSupplyName}
+              value={brandSupplyName}
+              suggestion={listBrandSupplyName()}
+              placeholder={"Nhập người cung cấp"}
+            />
           </div>
           {/* Nofication and Button Add */}
 
@@ -55,9 +138,12 @@ export default function SupplierList() {
           </div>
           {/* table Product */}
 
-          <div className="overflow-y-auto  mt-7" style={{
+          <div
+            className="overflow-y-auto  mt-7"
+            style={{
               height: "calc(90vh - 220px)",
-            }}>
+            }}
+          >
             <table className="table table-pin-rows">
               {/* head */}
               <thead>
@@ -71,7 +157,13 @@ export default function SupplierList() {
                 </tr>
               </thead>
               <tbody>
-                <SupplyTableDetail />
+                {brandByName === "" && brandPhone === "" && brandSupplyName === "" ? (
+                  <SupplyTableDetail brands={brands} />
+                ) : brandsByMultiCondition.length > 0 ? (
+                  <SupplyTableDetail brands={brandsByMultiCondition} />
+                ) : (
+                  <div>Khong tim thay</div>
+                )}
               </tbody>
               <tfoot>
                 <tr></tr>

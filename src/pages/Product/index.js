@@ -5,8 +5,10 @@ import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
 import { useNavigate } from "react-router-dom";
 import InputValue from "../../components/InputValue";
+import AutoCompleteInput from "../../components/AutocompleteInput";
 export default function Product() {
-  const [brand, setBrand] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState({ _id: "", name: "" });
+  const [selectedCategory, setSelectedCategory] = useState({ _id: "", name: "" });
   const navigate = useNavigate();
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -15,7 +17,20 @@ export default function Product() {
   const [error, setError] = useState({});
   const [payload, setPayload] = useState({});
   const [value, setValue] = useState("");
-  const [category, setCategory] = useState("");
+  const handleInputChangeBrand = (selectedBrand) => {
+    if (selectedBrand) {
+      setSelectedBrand({ _id: selectedBrand._id, name: selectedBrand.name });
+    } else {
+      setSelectedBrand({ _id: "", name: "" });
+    }
+  };
+  const handleInputChangeCategory = (selectedCategory) => {
+    if (selectedBrand) {
+      setSelectedCategory({ _id: selectedCategory._id, name: selectedCategory.name });
+    } else {
+      setSelectedCategory({ _id: "", name: "" });
+    }
+  };
   const listCategories = () => {
     return categories.map((category) => ({
       _id: category._id,
@@ -29,22 +44,6 @@ export default function Product() {
       name: brand.name,
     }));
   };
-  const handleChangeBrand = (selectedBrand) => {
-    if (selectedBrand) {
-      setBrand(selectedBrand.name); // Lưu tên brand vào state `brand`
-    } else {
-      setBrand(""); // Nếu không chọn gì, trả về chuỗi trống
-    }
-  };
-
-  const handleChangeCategory = (selectedCategory) => {
-    if (selectedCategory) {
-      setCategory(selectedCategory.name); // Lưu tên category vào state `category`
-    } else {
-      setCategory(""); // Nếu không chọn gì, trả về chuỗi trống
-    }
-  };
-
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -138,7 +137,9 @@ export default function Product() {
   };
   const fetchBrands = async () => {
     try {
-      const response = await apiGetListBrand();
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListBrand(token);
       setBrands(response.brands);
     } catch (error) {
       throw new Error(error);
@@ -186,8 +187,8 @@ export default function Product() {
         formData.append("title", title);
         formData.append("price", price);
         formData.append("description", description);
-        formData.append("brand", brand);
-        formData.append("category", category);
+        formData.append("brand", selectedBrand._id);
+        formData.append("category", selectedCategory._id);
         for (const key in image) {
           if (image[key]) {
             const file = await fetch(image[key]).then((res) => res.blob());
@@ -206,6 +207,8 @@ export default function Product() {
       Swal.fire("Error", "Thêm không thành công", "error");
     }
   };
+  console.log(selectedBrand, selectedCategory);
+
   return (
     <>
       <div
@@ -882,12 +885,12 @@ export default function Product() {
                 </option>
               ))}
             </select> */}
-            <InputValue
-              onchange={handleChangeCategory}
-              value={category}
-              suggestion={listCategories()}
-              placeholder={"Nhập loại"}
+            <AutoCompleteInput
+              data={listBrands()}
+              onChange={handleInputChangeBrand}
+              placeholder={"Nhập nhà cung cấp"}
             />
+            
             {error && <h5 className="ml-4 text-red-500">{error.brand}</h5>}
             <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
               Loại sản phẩm
@@ -910,11 +913,10 @@ export default function Product() {
                 </option>
               ))}
             </select> */}
-            <InputValue
-              suggestion={listBrands()} // Mảng [{_id, name}]
-              onchange={handleChangeBrand} // Hàm xử lý khi thay đổi
-              value={brand} // _id của brand đã chọn
-              placeholder="Nhập nhà cung cấp"
+            <AutoCompleteInput
+              data={listCategories()}
+              onChange={handleInputChangeCategory}
+              placeholder={"Nhập loại"}
             />
             {error && <h5 className="ml-1 text-red-500">{error.categories}</h5>}
           </div>
