@@ -8,6 +8,7 @@ import { useShelfContext } from "../../contexts/ShelfContext";
 import ChangeInput from "../../components/ChangeInput";
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import apiGetListBrands from "../../apis/apiGetListBrand";
+import logo_form from "../../Image/LogoForm.png";
 import apiFilterProductInShelfByMultiCondition from "../../apis/apiFilterProductInShelfByMultiCondition";
 export default function Inventory() {
   const [title, setTitle] = useState("");
@@ -211,10 +212,11 @@ export default function Inventory() {
               >
                 <div className="flex w-12/12">
                   <div className="avatar">
-                    <div className="size-28 rounded-full  mt-4 mb-4 ml-4 mr-4">
+                    <div className="size-28  rounded-full  mt-4 mb-4 ml-4 mr-4">
                       <img
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                        src={logo_form}
                         alt="ảnh đại diện"
+                        className="object-contain max-h-full max-w-full"
                       />
                     </div>
                   </div>
