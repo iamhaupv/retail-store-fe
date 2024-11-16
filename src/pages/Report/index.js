@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import Report2Product from "../Report2Product";
+import Report2Category from "../Report2Category";
+import { Link } from "react-router-dom";
 
 export default function Report() {
   const [activeTab, setActiveTab] = useState(0);
@@ -12,16 +15,18 @@ export default function Report() {
         className="w-11/12 h-screen justify-center flex"
         style={{ backgroundColor: "#F5F5F5" }}
       >
-        <div className="w-full animate__animated animate__fadeInRight  ml-2 mr-2 ">
+        <div className="w-full animate__animated animate__fadeInRight  ml-2 mr-2 overflow-y-auto ">
           <div
             className=" w-full card bg-white rounded-none mt-2 "
             style={{
-              height: "calc(100vh - 490px)",
+              height: "calc(100vh - 460px)",
             }}
           >
             <div className="w-full flex justify-between"> 
             <h1 className="font-bold text-xl mt-5 ml-4">Báo cáo doanh thu</h1>
+            <Link to='/reportDetail'>
             <button className="btn w-36 mr-2 mt-5" style={{ backgroundColor: "#e5edf8", color: "#2f80ed" }}>Xem biểu đồ</button>
+            </Link>
             </div>
             <div className="w-full flex">
               <div className="w-1/4 justify-start ml-4 ">
@@ -83,9 +88,9 @@ export default function Report() {
             </div>
           </div>
           <div
-            className="w-full card bg-white rounded-none mt-6 "
+            className="w-full card bg-white rounded-none mt-2 "
             style={{
-              height: "calc(100vh - 348px)",
+              height: "calc(100vh - 148px)",
             }}
           >
             <div className="w-full justify-items-start">
@@ -108,12 +113,12 @@ export default function Report() {
             />
             <div
               role="tabpanel"
-              className="tab-content h-full p-10"
+              className="tab-content h-full p-10 "
               style={{
                 borderTop: "2px solid #ededed",
               }}
             >
-              
+             <Report2Product/> 
             </div>
 
             <input
@@ -132,7 +137,7 @@ export default function Report() {
                 borderTop: "2px solid #ededed",
               }}
             >
-              
+              <Report2Category/>
             </div>
 
           </div>

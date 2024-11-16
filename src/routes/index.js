@@ -22,6 +22,7 @@ import EntryForm from "../pages/EntryForm";
 import EmployeeSchedule from "../pages/EmployeeSchedule";
 import Reciept from "../pages/Reciept";
 import Report from "../pages/Report";
+import ReportDetail from "../pages/ReportDetail";
 
 export const routes = [
   { path: "/signin", element: <SignIn /> },
@@ -65,6 +66,7 @@ export const routes = [
         path: "/employeeSchedule",
         element: <EmployeeSchedule />,
       },
+
       {
         path: "/reciept",
         element: <Reciept />,
@@ -88,6 +90,10 @@ export const routes = [
       {
         path: "/report",
         element: <Report />,
+      },
+      {
+        path: "/reportDetail",
+        element: <ReportDetail />,
       },
       {
         path: "/createOrder",
