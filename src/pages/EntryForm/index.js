@@ -479,7 +479,7 @@ export default function EntryForm() {
                   <h1 className="font-bold ml-1">{receipt.products[0]?.product.brand.name || "N/A"}</h1>
                 </h1>
                 <h1 className="flex">
-                  Người lập:
+                  Người giao:
                   <h1 className="font-bold ml-1">{user.lastname + " " + user.firstname}</h1>
                 </h1>
                 <h1 className="flex">
@@ -546,7 +546,7 @@ export default function EntryForm() {
             <div className="flex w-full justify-center mb-28">
               <div className="flex w-10/12 justify-between">
                 <div className="justify-items-center">
-                  <h1 className="font-bold text-md">Thủ kho</h1>
+                  <h1 className="font-bold text-md">Người nhận</h1>
                   <h1 className="">(Kí, ghi rõ họ tên)</h1>
                 </div>
                 <div className="justify-items-end mr-2">

@@ -80,8 +80,8 @@ export default function TableProductDetail() {
           <td className="whitespace-nowrap">
             {product.status === "in_stock" ? "Còn hàng" : "Hết hàng"}
           </td>
-          <td>
-            <h1 className="">{product.quantity}</h1>
+          <td className="">
+            <h1 className="flex justify-end items-center">{product.quantity}</h1>
           </td>
           <td>
             <h1 className="whitespace-nowrap">

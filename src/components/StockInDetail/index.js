@@ -28,8 +28,9 @@ export default function StockInDetail({ receipts }) {
           <td>
             {receipt.user.lastname} {receipt.user.firstname}
           </td>
-          <td>{receipt.products.length}</td>
+          <td className="">{receipt.products.length}</td>
           <td>
+            <h1 className="flex justify-end items-center">
             {receipt.products.reduce((total, product) => {
               const importPrice = product.importPrice || 0; // Giá nhập vào
               const quantity = product.quantity || 0; // Số lượng sản phẩm
@@ -37,8 +38,9 @@ export default function StockInDetail({ receipts }) {
                 ? product.unit.convertQuantity
                 : 1; // Hệ số quy đổi
               return total + importPrice * quantity * convertQuantity; // Cộng dồn tổng giá
-            }, 0)}
+            }, 0).toLocaleString()}
             đ
+            </h1>
           </td>
           <td className="justify-items-center">
             <Link to="/entry-form" state={{ receipt: receipt }}>

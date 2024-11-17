@@ -404,10 +404,7 @@ export default function CreateOrderDetailFirst() {
           <div className="flex w-full h-auto">
             <div className="w-9/12"></div>
             <div className="w-3/12 h-auto justify-end items-end mt-4">
-              {/* <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">Thuế VAT:</h2>
-                <h2 className=" font-sans text-sm mr-2">30.000 VNĐ</h2>
-              </div> */}
+              
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Tiền nhận:</h2>
                 <h2 className=" font-sans text-sm mr-2">
@@ -415,10 +412,14 @@ export default function CreateOrderDetailFirst() {
                     type="number"
                     value={receivedAmount}
                     onChange={handleReceivedAmountChange}
-                    className="input input-bordered input-success w-full max-w-xs"
+                    className="input input-bordered input-sm"
                     placeholder="Nhập số tiền nhận"
                   />
                 </h2>
+              </div>
+              <div className="flex justify-between items-center">
+                <h2 className="font-bold text-lg">Thuế VAT:</h2>
+                <h2 className=" font-sans text-sm mr-2">30.000 VNĐ</h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Tiền thừa:</h2>
