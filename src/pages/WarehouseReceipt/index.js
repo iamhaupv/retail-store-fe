@@ -15,7 +15,7 @@ import apiFilterProductByBrand from "../../apis/apiFilterProductByBrand";
 export default function WarehouseReceipt() {
   const [listProduct, setListProduct] = useState([]);
   const navigate = useNavigate();
-  const [price, setPrice] = useState("");
+  // const [price, setPrice] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);
@@ -270,7 +270,7 @@ export default function WarehouseReceipt() {
     setIsModalOpen(false);
   };
 
-  const handleChangeInput = (index, name, value) => {
+  const handleChangeInput = (product,index, name, value) => {
     if (name == "importPrice") {
       value = value.replace(/[^\d.]/g, "");
 
@@ -278,7 +278,14 @@ export default function WarehouseReceipt() {
       if (parseFloat(value) < 0) {
         value = "0";
       }
-      handleChangeCurrencyInput(value);
+      let price = formatCurrency(value);
+      let inputEle = document.getElementById('id-'+product._id);
+      if(inputEle){
+        inputEle.value = price;
+      }
+      
+      // handleChangeCurrencyInput();
+      
     }
     if (name == "quantity") {
       value = value.replace(/[^\d.]/g, "");
@@ -541,11 +548,13 @@ export default function WarehouseReceipt() {
                             </td>
                             <td>
                               <input
+                                id={"id-"+product._id}
                                 name="importPrice"
-                                value={value}
+                                
                                 onBlur={handleBlurCurrencyInput}
                                 onChange={(e) =>
                                   handleChangeInput(
+                                    product,
                                     index,
                                     "importPrice",
                                     e.target.value
