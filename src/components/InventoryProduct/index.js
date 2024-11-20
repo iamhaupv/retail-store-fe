@@ -48,7 +48,7 @@ export default function InventoryProduct({onChangeModal}) {
         )) : <div>Chưa có kệ</div>}
       </select>
       <div className="flex justify-between items-center pt-5">
-        <h4 className="font-bold text-xl w-32 ml-4">Hàng tồn kho</h4>
+        <h4 className="font-bold text-xl w-32 ml-4">Hàng trên kệ</h4>
         <button
           className="btn btn-success text-white w-48"
           onClick={onChangeModal}
@@ -79,9 +79,9 @@ export default function InventoryProduct({onChangeModal}) {
               <th>Mã phiếu</th>
               <th>Sản phẩm</th>
               <th>Tình trạng</th>
-              <th>Ngày Nhập</th>
               <th>Ngày hết hạn</th>
               <th>Số lượng</th>
+              <th>Tổng SL</th>
               <th>Thao tác</th>
             </tr>
           </thead>

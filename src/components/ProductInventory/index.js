@@ -57,14 +57,14 @@ export default function ProductInventory({ products }) {
             <td>
                 <span>{checkExpirationStatus(product.expires)}</span>
               </td>
-              <td>
-                {formatDate(product.createdAt)}
-              </td>
+              
               <td>{formatDate(product.expires)}</td>
               <td>
                 {product.quantity}
               </td>
-
+              <td>
+                 200
+              </td>
           </tr>
         ))
       ) : (
