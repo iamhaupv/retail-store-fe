@@ -272,7 +272,7 @@ export default function WarehouseReceipt() {
 
   const handleChangeInput = (product,index, name, value) => {
     if (name == "importPrice") {
-      value = value.replace(/[^\d.]/g, "");
+      value = value.replace(/[^\d]/g, "");
 
       // Ensure the value is not less than 0
       if (parseFloat(value) < 0) {
@@ -517,6 +517,7 @@ export default function WarehouseReceipt() {
                                 value={product.quantity}
                                 onChange={(e) =>
                                   handleChangeInput(
+                                    product,
                                     index,
                                     "quantity",
                                     e.target.value
@@ -572,6 +573,7 @@ export default function WarehouseReceipt() {
                                 type="date"
                                 onChange={(e) =>
                                   handleChangeInput(
+                                    product,
                                     index,
                                     "expires",
                                     e.target.value
