@@ -196,44 +196,34 @@ export default function ListProductTable() {
     <>
       <div className="">
         {/* filter */}
-        <div className="flex items-center ">
+        <div className="w-full flex items-center justify-start ">
           {/* search Input */}
-          <div className="ml-3 mt-2 w-52 h-3 ">
-            <label className="input input-bordered flex items-center gap-2">
-              <input
-                type="text"
-                className="grow"
-                placeholder="Search"
-                onChange={handleChangeTitle}
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </label>
-          </div>
-          <div className="ml-4 mt-2 w-80 h-20">
-            {/* filter brand */}
-            <Autocomplete
-              suggestion={listBrand}
-              onchange={handleChangeBrand} // This should call your API or update state
-              placeholder="Chọn thương hiệu"
-              value={brand} // Pass the current brand state
+
+          <label className="input input-bordered input-sm flex items-center gap-2">
+            <input
+              type="text"
+              className=" w-32 h-3"
+              placeholder="Search"
+              onChange={handleChangeTitle}
             />
-          </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="h-4 w-4 opacity-70"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </label>
 
           {/* status Option */}
           <select
             onChange={handleChangeStatus}
-            className="select select-bordered h-4 w-52 ml-4"
+            className="select select-bordered select-sm  ml-4"
           >
             <option value={""} selected>
               Trạng thái
@@ -241,13 +231,25 @@ export default function ListProductTable() {
             <option value={"in_stock"}>Đang bán</option>
             <option value={"out_of_stock"}>Hết hàng</option>
           </select>
+          <div className="ml-4 w-72 h-10">
+            {/* filter brand */}
+            <Autocomplete
+              suggestion={listBrand}
+              onchange={handleChangeBrand} // This should call your API or update state
+              placeholder="Chọn nhà cung cấp"
+              value={brand} // Pass the current brand state
+            />
+          </div>
+
           {/* filter category */}
-          <Autocomplete
-            suggestion={listCategory}
-            onchange={handleChangeCateogry} // This should call your API or update state
-            placeholder="Chọn loại sản phẩm"
-            value={category} // Pass the current brand state
-          />
+          <div className="ml-4 w-72 h-10">
+            <Autocomplete
+              suggestion={listCategory}
+              onchange={handleChangeCateogry} // This should call your API or update state
+              placeholder="Chọn loại sản phẩm"
+              value={category} // Pass the current brand state
+            />
+          </div>
         </div>
         {/* Nofication and Button Add */}
 
@@ -283,7 +285,7 @@ export default function ListProductTable() {
         <div
           className="overflow-y-auto  mt-7"
           style={{
-            height: "calc(90vh - 380px)",
+            height: "calc(90vh - 310px)",
           }}
         >
           <table className="table table-pin-rows ">

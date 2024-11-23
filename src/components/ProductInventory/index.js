@@ -26,7 +26,6 @@ export default function ProductInventory({ products }) {
     } else if (daysLeft > 5) {
       return <span className="text-green-500">Còn hạn</span>; // Còn hạn
     }
-    
   };
   return (
     <>
@@ -49,24 +48,43 @@ export default function ProductInventory({ products }) {
                       <img src={product.images[0]} alt={product.title} />
                     ) : (
                       <img src="/path/to/default/image.jpg" alt="Default" />
-                    )} <span>{product.title}</span>
+                    )}{" "}
+                    <span>{product.title}</span>
                   </div>
                 </div>
                 {product.title}
               </div>
-              
             </td>
             <td>
-                <span>{checkExpirationStatus(product.expires)}</span>
-              </td>
-              <td>
-                {formatDate(product.expires)}
-              </td>
-              <td> {product.quantity}   </td>
-              <td>
-                {product.sumQuantity}
-              </td>
-
+              <span>{checkExpirationStatus(product.expires)}</span>
+            </td>
+            <td>{formatDate(product.expires)}</td>
+            <td> {product.quantity} </td>
+            <td>{product.sumQuantity}</td>
+            <td>200</td>
+            <td>
+              <button
+                id="btn__delete"
+                className="w-6 h-6 rounded-lg "
+                style={{ backgroundColor: "#feebe8", outline: "" }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style={{ color: "#f13612" }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </td>
           </tr>
         ))
       ) : (

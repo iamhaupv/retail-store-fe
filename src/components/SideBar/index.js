@@ -24,7 +24,7 @@ export default function SideBar() {
     <>
       <div className="container__nav ">
         <div className="dashboard ">
-          <NavLink to={"/"}onClick={() => handleItemClick("Báo cáo")} className={`${selectedItem ==='Báo cáo' ? 'flex text-green-400':'flex'} `}>
+          <NavLink to={"/"}onClick={() => handleItemClick("dashBoard")} className={`${selectedItem ==='dashBoard' ? 'flex text-green-400':'flex'} `}>
             <div>
               <FontAwesomeIcon className="gauge__high" icon={faGaugeHigh} />
             </div>

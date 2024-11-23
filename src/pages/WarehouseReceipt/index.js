@@ -15,7 +15,7 @@ import apiFilterProductByBrand from "../../apis/apiFilterProductByBrand";
 export default function WarehouseReceipt() {
   const [listProduct, setListProduct] = useState([]);
   const navigate = useNavigate();
-  const [price, setPrice] = useState("");
+  // const [price, setPrice] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);
@@ -32,22 +32,22 @@ export default function WarehouseReceipt() {
   const [brands, setBrands] = useState([]);
   // const [productFilter, setProductFilter] = useState([]);
   // const [isBrand, setIsBrand] = useState("");
-  // const [value, setValue] = useState("");
+  const [value, setValue] = useState("");
 
   //#region format tiền tệ
-  // const formatCurrency = (value) => {
-  //   return new Intl.NumberFormat("vi-VN", {
-  //     style: "currency",
-  //     currency: "VND",
-  //   }).format(value);
-  // };
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
+  };
 
-  // const handleBlurCurrencyInput = (e) => {
-  //   const numericValue = parseFloat(value.replace(/,/g, ""));
-  //   if (!isNaN(numericValue)) {
-  //     setValue(numericValue);
-  //   }
-  // };
+  const handleBlurCurrencyInput = (e) => {
+    const numericValue = parseFloat(value.replace(/,/g, ""));
+    if (!isNaN(numericValue)) {
+      setValue(formatCurrency(numericValue));
+    }
+  };
   // const handleChangeCurrencyInput = (e) => {
   //   setValue(e);
   // };
@@ -134,6 +134,27 @@ export default function WarehouseReceipt() {
     }
   };
   // fetch product filter
+  // const fetchProductFilter = async () => {
+  //   const token = localStorage.getItem("accessToken");
+  //   if (!token) throw new Error("Token is invalid!");
+  //   try {
+  //     const response = await apiGetProductsByFilter(token, { name: isBrand });
+  //     // Kiểm tra xem sản phẩm có phải là mảng không
+  //     if (Array.isArray(response.products)) {
+  //       setProductFilter(response.products);
+  //     } else {
+  //       // Nếu không, đặt thành mảng rỗng
+  //       setProductFilter([]);
+  //       console.warn(response.products); // Ghi lại thông báo "No products found!" nếu cần
+  //     }
+  //   } catch (error) {
+  //     setProductFilter([]); // Đặt lại thành mảng rỗng nếu có lỗi
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchProductFilter();
+  // }, [isBrand]);
   const fetchBrands = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -249,15 +270,21 @@ export default function WarehouseReceipt() {
     setIsModalOpen(false);
   };
 
-  const handleChangeInput = (index, name, value) => {
+  const handleChangeInput = (product, index, name, value) => {
     if (name === "importPrice") {
-      value = value.replace(/[^\d.]/g, "");
+      value = value.replace(/[^\d]/g, "");
 
       // Ensure the value is not less than 0
       if (parseFloat(value) < 0) {
         value = "0";
       }
-      // handleChangeCurrencyInput(value);
+      let price = formatCurrency(value);
+      let inputEle = document.getElementById("id-" + product._id);
+      if (inputEle) {
+        inputEle.value = price;
+      }
+
+      // handleChangeCurrencyInput();
     }
     if (name === "quantity") {
       value = value.replace(/[^\d.]/g, "");
@@ -358,10 +385,10 @@ export default function WarehouseReceipt() {
         };
         const response = await apiCreateWarehouseReceipt(token, payload);
         if (response.success) {
-          Swal.fire("Thêm thành công!", "Thêm thành công!", "success");
+          Swal.fire("Success", "Thêm thành công!", "success");
           navigate("/inventory");
         } else {
-          Swal.fire("Lỗi", "Thêm không thành công!", "error");
+          Swal.fire("Error", "Thêm không thành công!", "error");
         }
       }
     } catch (error) {
@@ -373,36 +400,32 @@ export default function WarehouseReceipt() {
     const year = date.getFullYear().toString().slice(-2); // Lấy 2 chữ số cuối của năm
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
-  
+
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("Token không hợp lệ!");
-  
+
     const lastReceiptResponse = await apiLastIdWarehouseReceipt(token);
     const lastId = lastReceiptResponse.lastId;
-  
+
     let nextNumber = 1; // Mặc định là 1
     if (lastId) {
       const lastYear = lastId.slice(0, 2); // Hai chữ số đầu tiên của năm
       const lastMonth = lastId.slice(2, 4); // Hai chữ số tháng
       const lastDay = lastId.slice(4, 6); // Hai chữ số ngày
       const lastReceiptNumber = parseInt(lastId.slice(6), 10); // Số thứ tự
-  
+
       // Kiểm tra xem ngày trong ID có phải là hôm nay không
       if (lastYear === year && lastMonth === month && lastDay === day) {
         nextNumber = lastReceiptNumber + 1; // Tăng số cuối lên 1
       }
     }
-  
+
     const paddedNumber = String(nextNumber).padStart(3, "0"); // Đảm bảo số thứ tự có 3 chữ số
     const code = `${year}${month}${day}${paddedNumber}`; // Tạo mã với năm 2 chữ số
     setCode(code); // Đặt mã được tạo vào state
-  
+
     return code; // Trả về mã đã tạo
   };
-  
-  
-  
-  
   // const handleBrand = async (e) => {
   //   setBrands(e.target);
   // };
@@ -491,6 +514,7 @@ export default function WarehouseReceipt() {
                                 value={product.quantity}
                                 onChange={(e) =>
                                   handleChangeInput(
+                                    product,
                                     index,
                                     "quantity",
                                     e.target.value
@@ -522,11 +546,12 @@ export default function WarehouseReceipt() {
                             </td>
                             <td>
                               <input
+                                id={"id-" + product._id}
                                 name="importPrice"
-                                // value={value}
-                                // onBlur={handleBlurCurrencyInput}
+                                onBlur={handleBlurCurrencyInput}
                                 onChange={(e) =>
                                   handleChangeInput(
+                                    product,
                                     index,
                                     "importPrice",
                                     e.target.value
@@ -544,6 +569,7 @@ export default function WarehouseReceipt() {
                                 type="date"
                                 onChange={(e) =>
                                   handleChangeInput(
+                                    product,
                                     index,
                                     "expires",
                                     e.target.value

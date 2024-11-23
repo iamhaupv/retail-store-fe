@@ -425,24 +425,28 @@ export default function Inventory() {
       {isModalOpen && (
         <div className="fixed w-screen z-40 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="modal-box w-full max-w-6xl h-full overflow-y-hidden  ">
-            <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm</h3>
-            <div className="flex items-center mb-4 w-full">
+            <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm trong kho</h3>
+            <div className="flex items-center  w-full">
               {/* Search Input  */}
               {/* <Autocomplete suggestion={listCategory} onchange={handleChangeCategory} placeholder={"Chọn thương hiệu"} /> */}
               {/* Product */}
+              <div className="ml-4 mt-4 w-2/12 ">
               <ChangeInput
                 suggestion={listCategory} // List of categories passed as suggestions
                 onchange={handleChangeCateogry} // Handling change event
                 placeholder="Nhập loại" // Placeholder for input field
                 value={category} // Binding value to category state
               />
+              </div>
+              <div className="ml-4 mt-4 w-2/12 ">
               <ChangeInput
                 suggestion={listBrand} // List of categories passed as suggestions
                 onchange={handleChangeBrand} // Handling change event
                 placeholder="Nhập nhà cung cấp" // Placeholder for input field
                 value={brand} // Binding value to category state
               />
-              <label className="input input-bordered flex items-center gap-2">
+              </div>
+              <label className="ml-2 mt-2 input input-sm input-bordered flex items-center gap-2">
                 <input
                   type="text"
                   className="grow"
@@ -472,12 +476,14 @@ export default function Inventory() {
                     {/* <div className='w-7'> */}
                     <th></th>
                     {/* </div> */}
-                    <th>Mã sản phẩm</th>
+                    <th>Mã vạch</th>
                     <th>Mã phiếu</th>
                     <th>Sản phẩm</th>
-                    <th>Nhà cung cấp</th>
+                    {/* <th>Nhà cung cấp</th> */}
+                    <th>Hạn sử dụng</th>
                     <th>Số lượng tổng</th>
-                    <th>Số lượng</th>
+                    <th>Số lượng trưng bày </th>
+                    <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -502,9 +508,8 @@ export default function Inventory() {
                               }
                             />
                           </td>
-                          <h1>{product._id}</h1>
-                          <td>123456</td>
-                          <td>{product.idPNK}</td>
+                          <td>{product._id}</td>
+                          <td className="whitespace-nowrap">{product.idPNK}</td>
                           <td>
                             <div className="flex items-center gap-3">
                               <div className="avatar">
@@ -523,7 +528,8 @@ export default function Inventory() {
                               </div>
                             </div>
                           </td>
-                          <td>{product.brand}</td>
+                          {/* <td>{product.brand}</td> */}
+                          <td></td>
                           <td>
                             <span className="badge badge-ghost badge-sm">
                               {product.quantityDynamic || 0}
@@ -533,7 +539,7 @@ export default function Inventory() {
                             <td>
                               <input
                                 type="number"
-                                className="input input-bordered w-full max-w-xs ml-2"
+                                className="input input-bordered w-24 h-10 ml-2"
                                 value={
                                   selectedProducts[
                                     `${product._id}-${product.warehouseReceipt}`
@@ -605,9 +611,9 @@ export default function Inventory() {
                               </div>
                             </div>
                           </div>
-                        </td>
+                        {/* </td>
                         <td>{product.brand}</td>
-                        <td>
+                        <td> */}
                           <span className="badge badge-ghost badge-sm">
                             {product.quantity}
                           </span>

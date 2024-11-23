@@ -41,17 +41,13 @@ export default function InputValue({
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-xs rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+    <div className="relative border-black mx-auto w-full max-w-xs rounded-lg transition-all">
       <Combobox value={selected} onChange={handleSelect}>
         <div className="relative flex items-center">
           <ComboboxInput
             className={clsx(
               "w-full max-w-xs py-3 pr-10 pl-3 text-sm",
-              "text-gray-800 bg-white placeholder-gray-500",
-              "rounded-lg shadow-md border border-gray-300",
-              "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-              "transition-all duration-300 ease-in-out transform",
-              "hover:shadow-lg hover:scale-105"
+              "text-gray-800 bg-white placeholder-gray-500"
             )}
             onChange={(event) => {
               const inputValue = event.target.value;
@@ -62,7 +58,7 @@ export default function InputValue({
             value={query}
           />
           <ComboboxButton
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-800 transition duration-200"
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 "
             onClick={() => {
               setQuery("");
               setSelected(null);
@@ -87,9 +83,11 @@ export default function InputValue({
         </div>
 
         <ComboboxOptions
+          anchor="bottom"
+          transition
           className={clsx(
             "absolute w-full max-w-xs mt-1",
-            "bg-white rounded-lg shadow-md border border-gray-300",
+            "bg-white rounded-lg  border border-gray-300",
             "overflow-y-auto max-h-48 ring-1 ring-gray-200",
             "transition-opacity duration-300 ease-in-out",
             "z-50"
@@ -106,11 +104,12 @@ export default function InputValue({
                   "group flex cursor-pointer items-center gap-2",
                   "py-2 px-3 rounded-lg",
                   "text-gray-700 hover:text-gray-900",
-                  "hover:bg-blue-100 hover:shadow-sm",
                   "transition duration-200 ease-in-out transform hover:scale-105"
                 )}
               >
-                <div className="text-sm font-medium">{object.name || "Unnamed"}</div>
+                <div className="text-sm font-medium">
+                  {object.name || "Unnamed"}
+                </div>
               </ComboboxOption>
             ))
           )}

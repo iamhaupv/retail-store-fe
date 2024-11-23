@@ -89,6 +89,7 @@ export default function Order() {
                 Thêm
               </button>
               </Link>
+              <Link to="/reciept">
               <button className="btn btn-success text-white ml-2 w-32">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -106,6 +107,7 @@ export default function Order() {
                 </svg>
                 In
               </button>
+              </Link>
             </div>
           </div>
           <div className=" mt-2 mr-3 flex justify-between">
