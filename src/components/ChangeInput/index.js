@@ -49,16 +49,16 @@ export default function ChangeInput({
   };
 
   return (
-    <div className="mx-auto h-full w-full relative"> {/* relative để tạo không gian cho absolute */}
+    <div className="mx-auto h-full w-full"> {/* relative để tạo không gian cho absolute */}
       <Combobox
         value={selected}
         onChange={handleSelect} // Xử lý khi chọn mục từ danh sách
       >
-        <div className="w-fit items-center justify-center rounded-lg border-2 border-gray-100" > {/* Đảm bảo các thành phần con có position relative */}
+        <div className="relative" > {/* Đảm bảo các thành phần con có position relative */}
           <ComboboxInput
             className={clsx(
-              "w-72 rounded-lg border-none py-1.5 pr-8 pl-3 text-sm text-black",
-              "focus: border-none"
+               "w-full rounded-lg border py-1.5 pr-8 pl-3 text-sm/6 text-black",
+              "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black"
             )}
             onChange={(event) => {
               const inputValue = event.target.value;
@@ -69,7 +69,7 @@ export default function ChangeInput({
             value={query} // Đảm bảo giá trị của input là query
           />
           <ComboboxButton
-            className=" mr-2"
+            className="group absolute inset-y-0 right-0 px-2.5"
             onClick={() => setQuery("")}
           >
             <svg
@@ -91,10 +91,8 @@ export default function ChangeInput({
 
         <ComboboxOptions
           className={clsx(
-            "w-full max-w-xs rounded-xl  bg-white p-1",
-            "transition duration-100 ease-in",
-            "overflow-y-auto max-h-48", // Giới hạn chiều cao và thanh cuộn
-            "absolute left-0 top-full z-10" // Đảm bảo ComboboxOptions không bị đè lên
+           "w-[var(--input-width)] rounded-xl border bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
+            "transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
           )}
         >
           {filteredSuggestion.length === 0 ? (
@@ -104,8 +102,22 @@ export default function ChangeInput({
               <ComboboxOption
                 key={object._id}
                 value={object}
-                className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none"
+                className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
               >
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="invisible size-4 group-data-[selected]:visible"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m4.5 12.75 6 6 9-13.5"
+                />
+              </svg>
                 <div className="text-sm">{object.name || "Unnamed"}</div>{" "}
                 {/* Hiển thị "Unnamed" nếu name rỗng */}
               </ComboboxOption>

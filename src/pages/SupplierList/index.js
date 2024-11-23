@@ -89,7 +89,7 @@ export default function SupplierList() {
         >
           {/* search Input */}
           <div className="w-full flex">
-            <div className="ml-4 mt-4 w-4/12 ">
+            <div className="ml-4 mt-4 w-2/12 ">
               <ChangeInput
                 onchange={handleChangeBrand}
                 value={brandByName}
@@ -97,7 +97,7 @@ export default function SupplierList() {
                 placeholder={"Nhập tên nhà cung cấp"}
               />
             </div>
-            <div className="ml-4 mt-4 w-4/12">
+            <div className="ml-4 mt-4 w-2/12">
               <InputPhone
                 onchange={handleChangeBrandPhone}
                 value={brandPhone}
@@ -105,7 +105,7 @@ export default function SupplierList() {
                 placeholder={"Nhập số điện thoại"}
               />
             </div>
-            <div className="ml-4 mt-4 w-4/12">
+            <div className="ml-4 mt-4 w-2/12">
               <InputSupplyName
                 onchange={handleChangeBrandSupplyName}
                 value={brandSupplyName}

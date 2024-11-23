@@ -167,7 +167,8 @@ export default function Autocomplete({ suggestion, onchange, placeholder }) {
             }}
             placeholder={placeholder}
           />
-          <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
+          <ComboboxButton 
+          className="group absolute inset-y-0 right-0 px-2.5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

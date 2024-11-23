@@ -27,6 +27,7 @@ export default function EmployeeSchedule() {
     "Thứ bảy",
     "Chủ nhật",
   ];
+  const shift = ["7:30 - 12:30", "12:30 - 17:30","17:30 - 22:30"];
   return (
     <>
       <div
@@ -175,7 +176,13 @@ export default function EmployeeSchedule() {
             ></label>
             <ul className="menu bg-white text-base-content min-h-full w-2/6 p-4">
               <h1 className="font-bold text-xl">Đăng ký ca làm</h1>
-              <input type="date" className="input border-2  rounded-md"/>
+              <div className="flex justify-start items-center mt-3">
+                <h1>Ngày làm:</h1>
+                <input
+                  type="date"
+                  className=" ml-3 input border-2  rounded-md"
+                />
+              </div>
               <div className="flex justify-start items-center mt-3">
                 <h1>Nhân viên:</h1>
                 <select className="select select-bordered w-full ml-2 max-w-xs">
@@ -189,7 +196,7 @@ export default function EmployeeSchedule() {
               </div>
               <div className="flex justify-start items-center mt-2">
                 <h1>Ca làm:</h1>
-                <select className="select select-bordered w-full ml-2 max-w-xs">
+                <select className="select select-bordered w-full ml-7 max-w-xs">
                   <option disabled selected>
                     Chọn ca làm
                   </option>

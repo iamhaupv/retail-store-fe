@@ -114,15 +114,17 @@ export default function StockIn() {
             />
           </svg>
         </label> */}
+        <div className="w-56">
         <InputPNK
           placeholder={`Nhập mã phiếu`}
           onchange={handleChange}
           suggestion={listReceipts()}
           value={idPNK}
         />
+        </div>
         {/* Calender */}
 
-        <div className="flex items-center">
+        <div className="flex items-center ml-2">
           <p className="w-20">Ngày lập:</p>
           <div className="w-72">
             <Datepicker

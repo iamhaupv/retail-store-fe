@@ -64,7 +64,7 @@ export default function ListEmployee() {
           }}
         >
           {/* search Input */}
-          <div className="ml-4 mt-4 w-4/12">
+          <div className="ml-2 mt-4 w-4/12">
             <InputValue
               onchange={handleChangeName}
               suggestion={ListEmployees()}
