@@ -94,8 +94,10 @@ export default function InputSupplyName({
         </div>
 
         <ComboboxOptions
+          anchor="bottom"
+          transition
           className={clsx(
-             "w-[var(--input-width)] rounded-xl border bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
+            "w-[var(--input-width)] z-40 rounded-xl border bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
             "transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
           )}
         >
@@ -109,21 +111,21 @@ export default function InputSupplyName({
                 key={object._id}
                 value={object}
                 className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
-                >
-                  <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="invisible size-4 group-data-[selected]:visible"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m4.5 12.75 6 6 9-13.5"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="invisible size-4 group-data-[selected]:visible"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m4.5 12.75 6 6 9-13.5"
+                  />
+                </svg>
                 <div className="text-sm">{object.supplyName || "Unnamed"}</div>
                 {/* Hiển thị "Unnamed" nếu phone rỗng */}
               </ComboboxOption>

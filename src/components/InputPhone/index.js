@@ -94,8 +94,10 @@ export default function InputPhone({
         </div>
 
         <ComboboxOptions
+        anchor="bottom"
+        transition
           className={clsx(
-            "w-[var(--input-width)] rounded-xl border bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
+            "w-[var(--input-width)] z-40 rounded-xl border bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
             "transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
           )}
         >

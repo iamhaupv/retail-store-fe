@@ -47,7 +47,7 @@ export default function InputValue({
           <ComboboxInput
             className={clsx(
               "w-full max-w-xs py-3 pr-10 pl-3 text-sm",
-              "text-gray-800 bg-white placeholder-gray-500",
+              "text-gray-800 bg-white placeholder-gray-500"
             )}
             onChange={(event) => {
               const inputValue = event.target.value;
@@ -83,6 +83,8 @@ export default function InputValue({
         </div>
 
         <ComboboxOptions
+          anchor="bottom"
+          transition
           className={clsx(
             "absolute w-full max-w-xs mt-1",
             "bg-white rounded-lg  border border-gray-300",
@@ -105,7 +107,9 @@ export default function InputValue({
                   "transition duration-200 ease-in-out transform hover:scale-105"
                 )}
               >
-                <div className="text-sm font-medium">{object.name || "Unnamed"}</div>
+                <div className="text-sm font-medium">
+                  {object.name || "Unnamed"}
+                </div>
               </ComboboxOption>
             ))
           )}
