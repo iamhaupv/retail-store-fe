@@ -1,15 +1,40 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import NavSideBar from "../../components/SideBar";
-import Content from "../../components/Content";
 import OrderTableList from "../../components/OrderTableList";
 import Datepicker from "react-tailwindcss-datepicker";
 import StatOrderDetail from "../../components/statOrderDetail";
 import OrderTableDetail from "../../components/OrderTableDetail";
 import { Link } from "react-router-dom";
 import apiGetListEmployee from "../../apis/apiGetListEmployee";
+import apiGetAllOrder from "../../apis/apiGetAllOrder";
 
 export default function Order() {
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState([])
+  const handleOrderClick = (order) => {
+    setSelectedOrder(order);
+  };
+  function formatDate(date) {
+    if (!(date instanceof Date)) {
+      date = new Date(date); 
+    }
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+  const fetchOrders = async() => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid!")
+      const response = await apiGetAllOrder(token)
+      setOrders(Array.isArray(response.orders) ? response.orders : [])
+    } catch (error) {
+      console.log("fetch orders is error " + error);
+    }
+  }
+  useEffect(() => {
+    fetchOrders()
+  }, [])
   const [employees, setEmployees] = useState([])
   const fetchEmployees = async() => {
     try {
@@ -34,14 +59,9 @@ export default function Order() {
   const toggleClicked = () => {
     setIsClicked((prev) => !prev);
   };
+  
   return (
     <>
-      {/* <Header title={"Danh sách đơn hàng"}/>
-        <div>
-            <NavSideBar />
-            <Content/>
-        </div> */}
-
       <div
         className="w-11/12 h-auto justify-center flex "
         style={{ backgroundColor: "#F5F5F5" }}
@@ -228,6 +248,8 @@ export default function Order() {
                     <tr></tr>
                   </thead>
                   <tbody>
+                    <StatOrderDetail orders={orders} onOrderClick={handleOrderClick}  />
+                    {/* <StatOrderDetail />
                     <StatOrderDetail />
                     <StatOrderDetail />
                     <StatOrderDetail />
@@ -240,9 +262,7 @@ export default function Order() {
                     <StatOrderDetail />
                     <StatOrderDetail />
                     <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
+                    <StatOrderDetail /> */}
                   </tbody>
                   {/* foot */}
                   <tfoot>
@@ -277,7 +297,7 @@ export default function Order() {
                         />
                       </svg>
                       <h2 className="font-medium text-sm">Ngày tạo:</h2>
-                      <h2 className=" font-sans text-xs ml-1">21/10/2024</h2>
+                      <h2 className=" font-sans text-xs ml-1">{selectedOrder && formatDate(selectedOrder.createdAt)}</h2>
                     </div>
                   </div>
                   <div className="flex w-fit h-8 justify-center items-center ml-2">
@@ -302,7 +322,7 @@ export default function Order() {
                   <div className="flex ml-2 items-center">
                     <h2 className="font-medium text-sm">Thu ngân:</h2>
                     <h2 className=" font-sans text-xs ml-1">
-                      Nguyễn Thanh Khoa
+                      {selectedOrder && selectedOrder.user.lastname + " " + selectedOrder.user.firstname}
                     </h2>
                   </div>
                   <div className="flex ml-2 items-center">
@@ -325,6 +345,8 @@ export default function Order() {
                         </tr>
                       </thead>
                       <tbody>
+                        {selectedOrder && <OrderTableDetail order={selectedOrder}  />}
+                        {/* <OrderTableDetail />
                         <OrderTableDetail />
                         <OrderTableDetail />
                         <OrderTableDetail />
@@ -334,9 +356,7 @@ export default function Order() {
                         <OrderTableDetail />
                         <OrderTableDetail />
                         <OrderTableDetail />
-                        <OrderTableDetail />
-                        <OrderTableDetail />
-                        <OrderTableDetail />
+                        <OrderTableDetail /> */}
                       </tbody>
                       {/* foot */}
                       <tfoot>
@@ -347,21 +367,21 @@ export default function Order() {
                   <div className="flex w-full h-auto">
                    <div className="w-9/12"></div> 
                   <div className="w-3/12 h-auto justify-end items-end mt-4">
-                    <div className="flex justify-between items-center">
+                    {/* <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Thuế VAT:</h2>
                       <h2 className=" font-sans text-sm mr-2">30.000 VNĐ</h2>
-                    </div>
+                    </div> */}
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Tiền nhận:</h2>
-                      <h2 className=" font-sans text-sm mr-2">350.000 VNĐ</h2>
+                      <h2 className=" font-sans text-sm mr-2">{selectedOrder && selectedOrder.receiveAmount}</h2>
                     </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Tiền thừa:</h2>
-                      <h2 className=" font-sans text-sm mr-2 ">20.000 VNĐ</h2>
+                      <h2 className=" font-sans text-sm mr-2 ">{selectedOrder && selectedOrder.change}</h2>
                     </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Tổng tiền:</h2>
-                      <h2 className=" font-sans text-lg mr-2" style={{color:"#f13612"}}>330.000 VNĐ</h2>
+                      <h2 className=" font-sans text-lg mr-2" style={{color:"#f13612"}}>{selectedOrder && selectedOrder.totalAmount}</h2>
                     </div>
                   </div>
                   </div>

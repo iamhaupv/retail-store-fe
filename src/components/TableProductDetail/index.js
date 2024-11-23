@@ -6,6 +6,7 @@ import apiIsDisplay from "../../apis/apiIsDisplay";
 import { Link } from "react-router-dom";
 
 export default function TableProductDetail() {
+  
   const [products, setProducts] = useState([]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -40,7 +41,6 @@ export default function TableProductDetail() {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid");
       await apiIsDisplay(token, pid, { isDisplay });
-      fetchPrducts();
     } catch (error) {
       throw new Error(error);
     }
@@ -49,8 +49,6 @@ export default function TableProductDetail() {
     setSelectedProduct(product);
     document.getElementById("modal_Quick_View").showModal();
   };
-  console.log(products);
-  //#endregion
   return (
     <>
       {products.map((product) => (

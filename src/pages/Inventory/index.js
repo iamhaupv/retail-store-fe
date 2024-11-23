@@ -526,7 +526,7 @@ export default function Inventory() {
                           <td>{product.brand}</td>
                           <td>
                             <span className="badge badge-ghost badge-sm">
-                              {product.quantity}
+                              {product.quantityDynamic || 0}
                             </span>
                           </td>
                           <td>
@@ -597,7 +597,9 @@ export default function Inventory() {
                               </div>
                             </div>
                             <div>
-                              <div className="font-bold text-ellipsis">{product.title}</div>
+                              <div className="font-bold text-ellipsis">
+                                {product.title}
+                              </div>
                               <div className="badge badge-ghost badge-sm whitespace-nowrap">
                                 {product.category}
                               </div>

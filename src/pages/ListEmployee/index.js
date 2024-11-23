@@ -74,8 +74,8 @@ export default function ListEmployee() {
           </div>
           {/* Nofication and Button Add */}
 
-          <div className="flex justify-between mt-6 items-center">
-            <h4 className="font-bold text-xl w-32 ml-4">30 Nhân viên</h4>
+          <div className="flex justify-between mt-6 items-center">   
+            <h4 className="font-bold text-xl w-32 ml-4">{employeeName === "" ? employees.length : employeesFilter.length} Nhân viên</h4>
             <Link to="/employee">
               <button className="btn btn-success text-white w-36 mr-4">
                 <svg

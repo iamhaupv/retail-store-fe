@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import TableProductDetail from "../TableProductDetail";
 import apiGetListBrand from "../../apis/apiGetListBrand";
 import Autocomplete from "../AutoComplete";
 import { Link } from "react-router-dom";
 import TableProductByName from "../TableProductByName";
 import apiFilterProductMultiCondition from "../../apis/apiFilterProductMultiCondition";
 import apiGetListCategory from "../../apis/apiGetListCategory";
+import apiGetAllProduct from "../../apis/apiGetAllProducts";
+import apiGetAllProductsPagination from "../../apis/apiGetAllProductsPagination";
 
 export default function ListProductTable() {
+  const [products, setProducts] = useState([]);
   const [listProduct, setListProduct] = useState([]);
   const [brands, setBrands] = useState([]);
   const [status, setStatus] = useState("");
@@ -15,6 +17,20 @@ export default function ListProductTable() {
   const [brand, setBrand] = useState("");
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
+  const [productsPagination, setProductsPagination] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 5;
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -112,6 +128,70 @@ export default function ListProductTable() {
   const handleChangeTitle = async (e) => {
     setTitle(e.target.value);
   };
+  const fetchProducts = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetAllProduct(token);
+      setProducts(Array.isArray(response.products) ? response.products : []);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const fetchProductsPagination = async (currentPage) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetAllProductsPagination(token, {
+        page: currentPage,
+        limit,
+      });
+      setProductsPagination(
+        Array.isArray(response.products) ? response.products : []
+      );
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  useEffect(() => {
+    fetchProductsPagination(currentPage);
+  }, [currentPage]);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  const totalPages = Math.ceil(products.length / limit);
+  const getVisiblePages = (currentPage, totalPages) => {
+    const visiblePages = [];
+
+    // Nếu currentPage <= 3, hiển thị 1-5
+    if (currentPage <= 3) {
+      for (let i = 1; i <= Math.min(5, totalPages); i++) {
+        visiblePages.push(i);
+      }
+    }
+    // Nếu currentPage >= totalPages - 2, hiển thị 5 trang cuối
+    else if (currentPage >= totalPages - 2) {
+      for (let i = totalPages - 4; i <= totalPages; i++) {
+        if (i > 0) visiblePages.push(i);
+      }
+    }
+    // Ngược lại, hiển thị 5 trang xung quanh currentPage
+    else {
+      for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+        visiblePages.push(i);
+      }
+    }
+
+    return visiblePages.filter((page) => page > 0 && page <= totalPages); // Lọc các trang hợp lệ
+  };
+
+  // Trong phần render cho pagination:
+  const visiblePages = getVisiblePages(currentPage, totalPages);
+
   return (
     <>
       <div className="">
@@ -172,7 +252,12 @@ export default function ListProductTable() {
         {/* Nofication and Button Add */}
 
         <div className="flex justify-between mt-6">
-          <h4 className="font-bold text-xl w-32 ml-4">30 sản phẩm</h4>
+          <h4 className="font-bold text-xl w-32 ml-4">
+            {category === "" && title === "" && status === "" && brand === ""
+              ? products.length
+              : listProduct.length}{" "}
+            sản phẩm
+          </h4>
           <Link to="/product">
             <button className="btn btn-success text-white w-36">
               <svg
@@ -225,7 +310,7 @@ export default function ListProductTable() {
               title === "" &&
               status === "" &&
               brand === "" ? (
-                <TableProductDetail />
+                <TableProductByName listProduct={productsPagination} />
               ) : listProduct.length > 0 ? (
                 <TableProductByName listProduct={listProduct} />
               ) : (
@@ -240,10 +325,16 @@ export default function ListProductTable() {
           </table>
         </div>
         {/* pagination */}
-        <div className="w-full justify-end pt-3 pr-2">
-            <ul className="flex items-center justify-end gap-2 ">
+        {(products.length > 0 || listProduct.length > 0) && (
+          <div className="w-full justify-end pt-3 pr-2">
+            <ul className="flex items-center justify-end gap-2">
+              {/* Nút trước */}
               <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
+                {currentPage >= 4 && <button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1"
+                >
                   <span>
                     <svg
                       width="20"
@@ -258,51 +349,51 @@ export default function ListProductTable() {
                       />
                     </svg>
                   </span>
-                </button>
+                </button>}
               </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  1
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-primary bg-green-500 px-2 text-base font-medium text-white">
-                  2
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  3
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  4
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  5
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  <svg
-                    width="20"
-                    height="21"
-                    viewBox="0 0 20 21"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+
+              {/* Các số trang */}
+              {visiblePages.map((page) => (
+                <li key={page}>
+                  <button
+                    className={`flex h-10 min-w-10 items-center justify-center rounded-lg border ${
+                      currentPage === page
+                        ? "border-primary bg-green-500 text-white"
+                        : "border-stroke bg-white text-dark"
+                    } px-2 text-base font-medium hover:bg-gray-1`}
+                    onClick={() => handlePageChange(page)}
                   >
-                    <path
-                      d="M18 10L11.5312 3.4375C11.25 3.15625 10.8125 3.15625 10.5312 3.4375C10.25 3.71875 10.25 4.15625 10.5312 4.4375L15.7812 9.78125H2.5C2.125 9.78125 1.8125 10.0937 1.8125 10.4688C1.8125 10.8438 2.125 11.1875 2.5 11.1875H15.8437L10.5312 16.5938C10.25 16.875 10.25 17.3125 10.5312 17.5938C10.6562 17.7188 10.8437 17.7812 11.0312 17.7812C11.2187 17.7812 11.4062 17.7188 11.5312 17.5625L18 11C18.2812 10.7187 18.2812 10.2812 18 10Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </button>
+                    {page}
+                  </button>
+                </li>
+              ))}
+
+              {/* Nút tiếp theo */}
+              <li>
+                {totalPages >= 5 && (currentPage < totalPages - 2  && (<button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1"
+                >
+                  <span>
+                    <svg
+                      width="20"
+                      height="21"
+                      viewBox="0 0 20 21"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 10L11.5312 3.4375C11.25 3.15625 10.8125 3.15625 10.5312 3.4375C10.25 3.71875 10.25 4.15625 10.5312 4.4375L15.7812 9.78125H2.5C2.125 9.78125 1.8125 10.0937 1.8125 10.4688C1.8125 10.8438 2.125 11.1875 2.5 11.1875H15.8437L10.5312 16.5938C10.25 16.875 10.25 17.3125 10.5312 17.5938C10.6562 17.7188 10.8437 17.7812 11.0312 17.7812C11.2187 17.7812 11.4062 17.7188 11.5312 17.5625L18 11C18.2812 10.7187 18.2812 10.2812 18 10Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>)) } 
               </li>
             </ul>
-        </div>
+          </div>
+        )}
         {/* end Paginination */}
       </div>
     </>

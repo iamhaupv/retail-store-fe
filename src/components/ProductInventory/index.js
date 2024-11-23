@@ -49,20 +49,22 @@ export default function ProductInventory({ products }) {
                       <img src={product.images[0]} alt={product.title} />
                     ) : (
                       <img src="/path/to/default/image.jpg" alt="Default" />
-                    )}
+                    )} <span>{product.title}</span>
                   </div>
                 </div>
+                {product.title}
               </div>
+              
             </td>
             <td>
                 <span>{checkExpirationStatus(product.expires)}</span>
               </td>
               <td>
-                {formatDate(product.createdAt)}
+                {formatDate(product.expires)}
               </td>
-              <td>{formatDate(product.expires)}</td>
+              <td> {product.quantity}   </td>
               <td>
-                {product.quantity}
+                {product.sumQuantity}
               </td>
 
           </tr>

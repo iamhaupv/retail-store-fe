@@ -1,9 +1,9 @@
 import axios from "axios";
-const apiGetAllProduct = async (token) => {
+const apiGetAllProductsPagination = async (token, payload) => {
   try {
     const url = process.env.REACT_APP_API_URL;
-    const response = await axios.get(
-      `${url}product/products`,
+    const response = await axios.post(
+      `${url}product/product-pagination`, payload,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -15,4 +15,4 @@ const apiGetAllProduct = async (token) => {
     console.log("api get all product is error " + error);
   }
 };
-export default apiGetAllProduct;
+export default apiGetAllProductsPagination;

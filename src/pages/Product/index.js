@@ -4,7 +4,6 @@ import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
 import { useNavigate } from "react-router-dom";
-import InputValue from "../../components/InputValue";
 import AutoCompleteInput from "../../components/AutocompleteInput";
 export default function Product() {
   const [selectedBrand, setSelectedBrand] = useState({ _id: "", name: "" });
@@ -17,6 +16,10 @@ export default function Product() {
   const [error, setError] = useState({});
   const [payload, setPayload] = useState({});
   const [value, setValue] = useState("");
+  const generateRandomNumber = () => {
+    const randomNumber = Math.floor(Math.random() * 900) + 100;
+    return randomNumber
+  };
   const handleInputChangeBrand = (selectedBrand) => {
     if (selectedBrand) {
       setSelectedBrand({ _id: selectedBrand._id, name: selectedBrand.name });
@@ -197,18 +200,16 @@ export default function Product() {
         }
         const response = await apiCreateProduct(token, formData);
         if (response.success) {
-          Swal.fire("Success", "Thêm thành công!", "success");
+          Swal.fire("Thành công!", "Thêm thành công!", "success");
           navigate("/product-list");
         } else {
-          Swal.fire("Error", "Thêm không thành công!", "error");
+          Swal.fire("Lỗi!", "Thêm không thành công!", "error");
         }
       }
     } catch (error) {
-      Swal.fire("Error", "Thêm không thành công", "error");
+      Swal.fire("Lỗi!", "Thêm không thành công", "error");
     }
   };
-  console.log(selectedBrand, selectedCategory);
-
   return (
     <>
       <div
@@ -245,6 +246,7 @@ export default function Product() {
                   placeholder="Mã sản phẩm"
                   className="input input-bordered w-5/12 h-10 ml-4"
                   disabled
+                  value={generateRandomNumber()}
                 />
               </div>
               {error && <h5 className="ml-4 text-red-500">{error.title}</h5>}

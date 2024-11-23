@@ -79,9 +79,9 @@ export default function InventoryProduct({onChangeModal}) {
               <th>Mã phiếu</th>
               <th>Sản phẩm</th>
               <th>Tình trạng</th>
-              <th>Ngày Nhập</th>
               <th>Ngày hết hạn</th>
               <th>Số lượng</th>
+              <th>Số lượng tổng</th>
               <th>Thao tác</th>
             </tr>
           </thead>

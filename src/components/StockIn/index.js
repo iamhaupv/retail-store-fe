@@ -93,7 +93,17 @@ export default function StockIn() {
   useEffect(() => {
     handleFilterIdPNK();
   }, [idPNK]);
-  console.log(receipts);
+  
+  const receiptCount = idPNK === "" && value.startDate === null && value.endDate === null
+  ? receipts.length
+  : idPNK !== "" && value.startDate === null && value.endDate === null
+  ? idPNKs.length
+  : value.startDate !== null && value.endDate !== null && idPNK === ""
+  ? recepitsByDate.length
+  : idPNK !== "" && value.startDate !== null && value.endDate !== null
+  ? idPNKs.length
+  : 0;
+
   
   return (
     <div className="">
@@ -134,6 +144,7 @@ export default function StockIn() {
       </div>
       <div className="flex justify-between items-center mt-10">
         <h3 className=" font-bold text-lg rounded-sm">Phiếu nhập kho</h3>
+        <h3 className=" font-bold text-lg rounded-sm">{receiptCount} Phiếu nhập kho</h3>
         <Link to="/WarehouseReceipt">
           <button className="btn btn-success text-white w-52">
             <svg
