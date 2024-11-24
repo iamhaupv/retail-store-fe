@@ -134,7 +134,7 @@ export default function EntryForm() {
                 </h1>
               </div>
               <div className="justify-items-end">
-                <h1 className="flex">
+                <h1 className="flex whitespace-nowrap">
                   Điện thoại:<h1 className="font-bold ml-1">{receipt.products[0]?.product.brand.phone || "N/A"}</h1>
                 </h1>
               </div>

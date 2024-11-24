@@ -303,7 +303,6 @@ export default function ListProductTable() {
                 <th>Tình trạng</th>
                 <th>Số lượng</th>
                 <th>Giá bán</th>
-                <th>Giá nhập</th>
                 <th>Thao tác</th>
               </tr>
             </thead>

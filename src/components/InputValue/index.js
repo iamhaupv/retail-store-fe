@@ -41,13 +41,13 @@ export default function InputValue({
   };
 
   return (
-    <div className="relative border-black mx-auto w-full max-w-xs rounded-lg transition-all">
+    <div className="mx-auto h-full w-full">
       <Combobox value={selected} onChange={handleSelect}>
-        <div className="relative flex items-center">
+        <div className="relative">
           <ComboboxInput
             className={clsx(
-              "w-full max-w-xs py-3 pr-10 pl-3 text-sm",
-              "text-gray-800 bg-white placeholder-gray-500"
+              "w-full rounded-lg border py-1.5 pr-8 pl-3 text-sm/6 text-black",
+              "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-black"
             )}
             onChange={(event) => {
               const inputValue = event.target.value;
@@ -58,7 +58,7 @@ export default function InputValue({
             value={query}
           />
           <ComboboxButton
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 "
+            className="group absolute inset-y-0 right-0 px-2.5"
             onClick={() => {
               setQuery("");
               setSelected(null);
@@ -86,11 +86,8 @@ export default function InputValue({
           anchor="bottom"
           transition
           className={clsx(
-            "absolute w-full max-w-xs mt-1",
-            "bg-white rounded-lg  border border-gray-300",
-            "overflow-y-auto max-h-48 ring-1 ring-gray-200",
-            "transition-opacity duration-300 ease-in-out",
-            "z-50"
+            "w-[var(--input-width)] z-40 rounded-xl border bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
+            "transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
           )}
         >
           {filteredSuggestion.length === 0 ? (
@@ -100,14 +97,23 @@ export default function InputValue({
               <ComboboxOption
                 key={object._id}
                 value={object}
-                className={clsx(
-                  "group flex cursor-pointer items-center gap-2",
-                  "py-2 px-3 rounded-lg",
-                  "text-gray-700 hover:text-gray-900",
-                  "transition duration-200 ease-in-out transform hover:scale-105"
-                )}
+                className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
               >
-                <div className="text-sm font-medium">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="invisible size-4 group-data-[selected]:visible"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m4.5 12.75 6 6 9-13.5"
+                  />
+                </svg>
+                <div className="text-sm/6">
                   {object.name || "Unnamed"}
                 </div>
               </ComboboxOption>

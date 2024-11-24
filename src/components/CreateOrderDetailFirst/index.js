@@ -171,7 +171,7 @@ export default function CreateOrderDetailFirst() {
     fetchUser();
   }, []);
   const calculateTotalAmount = () => {
-    return orderDetails.reduce((sum, detail) => sum + detail.total, 0);
+    return orderDetails.reduce((sum, detail) => (sum + detail.total).toLocaleString(), 0);
   };
   const calculateChange = () => {
     return Math.max(0, receivedAmount - calculateTotalAmount());
@@ -428,9 +428,9 @@ export default function CreateOrderDetailFirst() {
                         />
                       </div>
                     </td>
-                    <td>{detail.price || "0"}</td>
+                    <td>{detail.price.toLocaleString() || "0"} đ</td>
                     {/* Hiển thị giá hoặc "0" nếu không có */}
-                    <td>{detail.total || 0}</td>
+                    <td>{detail.total.toLocaleString() || "0"} đ</td>
                     <td>
                       <button
                         id="btn__delete"

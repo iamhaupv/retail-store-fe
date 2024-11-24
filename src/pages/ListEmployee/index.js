@@ -64,7 +64,7 @@ export default function ListEmployee() {
           }}
         >
           {/* search Input */}
-          <div className="ml-2 mt-4 w-4/12">
+          <div className="ml-2 mt-4 w-2/12">
             <InputValue
               onchange={handleChangeName}
               suggestion={ListEmployees()}
@@ -124,12 +124,12 @@ export default function ListEmployee() {
                   employees.length > 0 ? (
                     <EmployeeTableDetail employees={employees} />
                   ) : (
-                    <div>Không tìm thấy</div>
+                    <div className="w-full h-full justify-center items-center">Không tìm thấy</div>
                   )
                 ) : employeesFilter.length > 0 ? (
                   <EmployeeTableDetail employees={employeesFilter} />
                 ) : (
-                  <div>Không tìm thấy</div>
+                  <div className="w-full h-full justify-center items-center">Không tìm thấy</div>
                 )}
               </tbody>
               <tfoot>

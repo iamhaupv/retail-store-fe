@@ -103,7 +103,7 @@ export default function InputPhone({
         >
           {filteredSuggestion.length === 0 ? (
             <div className="py-2 px-3 text-gray-500">
-              No matching phone numbers found.
+              Không tìm thấy số điện thoại này.
             </div> // Thông báo khi không có kết quả
           ) : (
             filteredSuggestion.map((object) => (

@@ -6,11 +6,13 @@ import Header from "../../components/Header";
 import ContentRegisterLogin from "../../components/ContentRegisterLogin";
 import SignIn from "../../pages/SignIn";
 import HeaderRegisterLogin from "../../components/HeaderRegisterLogin";
+import LoginApi from "../../apis/LoginApi";
 
 const LayoutDefault = () => {
   const location = useLocation();
   let headerContent;
 
+  
   switch (location.pathname) {
     case "/":
       headerContent = <Header title={"Home"} />;
@@ -78,7 +80,9 @@ const LayoutDefault = () => {
         <div className="container__layout  ">
           <header className="">{headerContent}</header>
           <main className="flex h-screen">
-            <SideBar />
+            <SideBar role={localStorage.getItem(
+              'role'
+            )} />
             <Outlet />
           </main>
         </div>
