@@ -59,7 +59,11 @@ export default function Order() {
   const toggleClicked = () => {
     setIsClicked((prev) => !prev);
   };
-  
+  const totalVAT = selectedOrder && selectedOrder.products 
+  ? selectedOrder.products.reduce((total, p) => {
+      return total + (p.product.VAT || 0) * p.product.price;
+    }, 0) 
+  : 0; 
   return (
     <>
       <div
@@ -89,7 +93,7 @@ export default function Order() {
                 Thêm
               </button>
               </Link>
-              <Link to="/reciept">
+              <Link to="/reciept" state={{selectedOrder}}>
               <button className="btn btn-success text-white ml-2 w-32">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -369,10 +373,10 @@ export default function Order() {
                   <div className="flex w-full h-auto">
                    <div className="w-9/12"></div> 
                   <div className="w-3/12 h-auto justify-end items-end mt-4">
-                    {/* <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Thuế VAT:</h2>
-                      <h2 className=" font-sans text-sm mr-2">30.000 VNĐ</h2>
-                    </div> */}
+                      <h2 className=" font-sans text-sm mr-2">{totalVAT} VNĐ</h2>
+                    </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Tiền nhận:</h2>
                       <h2 className=" font-sans text-sm mr-2">{selectedOrder && selectedOrder.receiveAmount}</h2>

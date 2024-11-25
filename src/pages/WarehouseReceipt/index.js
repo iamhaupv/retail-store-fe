@@ -11,6 +11,7 @@ import apiFilterProductMultiCondition from "../../apis/apiFilterProductMultiCond
 import Autocomplete from "../../components/AutoComplete";
 import apiFilterCategoryByBrand from "../../apis/apiFilterCategoryByBrand";
 import apiFilterProductByBrand from "../../apis/apiFilterProductByBrand";
+import Barcode from "../../components/Barcode";
 
 export default function WarehouseReceipt() {
   const [listProduct, setListProduct] = useState([]);
@@ -666,7 +667,7 @@ export default function WarehouseReceipt() {
                 <Autocomplete
                   suggestion={listBrand}
                   onchange={handleChangeBrand} // This should call your API or update state
-                  placeholder="Chọn thương hiệu"
+                  placeholder="Chọn nhà cung cấp"
                   value={brand} // Pass the current brand state
                 />
               </div>
@@ -729,7 +730,8 @@ export default function WarehouseReceipt() {
                         </th>
                         <td>
                           <div>
-                            <div className="font-bold">ASM001</div>
+                            {/* <div className="font-bold">ASM001</div> */}
+                            <Barcode value={product._id}/>
                           </div>
                         </td>
                         <td>

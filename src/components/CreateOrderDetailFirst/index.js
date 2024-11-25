@@ -7,6 +7,7 @@ import apiGetAllUnit from "../../apis/apiGetAllUnit";
 import apiFilterAllProductInShelf from "../../apis/apiFilterAllProductInShelf";
 import ChangeInput from "../ChangeInput";
 import apiCreateOrder from "../../apis/apiCreateOrder";
+import apiFilterProductSumQuantity from "../../apis/apiFilterProductSumQuantity";
 
 export default function CreateOrderDetailFirst() {
   const [products, setProducts] = useState([]);
@@ -19,7 +20,12 @@ export default function CreateOrderDetailFirst() {
   const [receivedAmount, setReceivedAmount] = useState("");
 
   const handleReceivedAmountChange = (e) => {
-    setReceivedAmount(Number(e.target.value));
+    const value = e.target.value;
+    if (value === "" || /^[1-9]\d*$/.test(value)) {
+      setReceivedAmount(Number(e.target.value));
+    } else {
+      alert("Số tiền nhận không được nhỏ hơn 1");
+    }
   };
   const handleChangeConvertQuantity = async () => {
     try {
@@ -50,14 +56,18 @@ export default function CreateOrderDetailFirst() {
   };
   const handleChangeQuantity = (index, newQuantity) => {
     const updatedOrderDetails = [...orderDetails];
+    const VAT = updatedOrderDetails[index].VAT;
+    const price = updatedOrderDetails[index].price;
     updatedOrderDetails[index] = {
       ...updatedOrderDetails[index],
       quantity: newQuantity,
+      amountVAT: newQuantity * price * VAT,
       total:
         newQuantity *
         updatedOrderDetails[index].price *
         updatedOrderDetails[index].convertQuantity,
     };
+
     setOrderDetails(updatedOrderDetails);
   };
   useEffect(() => {
@@ -82,6 +92,7 @@ export default function CreateOrderDetailFirst() {
       if (!token) throw new Error("Token is invalid!");
 
       const response = await apiFilterAllProductInShelf(token);
+      // const response = await apiFilterProductSumQuantity(token)
       setProducts(Array.isArray(response.products) ? response.products : []);
     } catch (error) {
       console.log("fetch products by name error: ", error);
@@ -123,6 +134,7 @@ export default function CreateOrderDetailFirst() {
       productName: selectedProductName,
       productId: response.product ? response.product._id : "", // Lưu id sản phẩm
       price: response.product.price || 0,
+      VAT: response.product.VAT || 0,
       total:
         updatedOrderDetails[index].quantity *
         (response.product.price || 0) *
@@ -153,7 +165,7 @@ export default function CreateOrderDetailFirst() {
   const addNewRow = () => {
     const newRow = {
       id: orderDetails.length + 1,
-      productCode: "",
+      amountVAT: 0,
       productName: "",
       quantity: "",
       unit: "",
@@ -170,21 +182,25 @@ export default function CreateOrderDetailFirst() {
   useEffect(() => {
     fetchUser();
   }, []);
+
   const calculateTotalAmount = () => {
-    return orderDetails.reduce((sum, detail) => sum + detail.total, 0);
+    return orderDetails.reduce(
+      (sum, detail) => sum + detail.total + totalVAT,
+      0
+    );
   };
   const calculateChange = () => {
     return Math.max(0, receivedAmount - calculateTotalAmount());
   };
   // const handleSubmit = async () => {
   //   try {
-  //     // Kiểm tra nếu orderDetails là rỗng hoặc không có sản phẩm
+  //     // Check if orderDetails is empty
   //     if (orderDetails.length === 0) {
   //       alert("Vui lòng thêm ít nhất một sản phẩm.");
   //       return;
   //     }
 
-  //     // Kiểm tra xem có dữ liệu thiếu trong từng dòng không
+  //     // Check for missing data in each row
   //     for (let i = 0; i < orderDetails.length; i++) {
   //       const detail = orderDetails[i];
   //       if (
@@ -197,34 +213,43 @@ export default function CreateOrderDetailFirst() {
   //         return;
   //       }
   //     }
-  //     // lấy convertQuantity của unit theo từng mã tương ứng
-  //     // Tính tổng tiền của hóa đơn
+
+  //     // Calculate total amount and change
   //     const totalAmount = calculateTotalAmount();
   //     const change = calculateChange();
-
-  //     // Tạo đối tượng dữ liệu để gửi
+  //     // Create order data object to send
+  //     let amountVAT = 0;
   //     const orderData = {
-  //       products: orderDetails.map((detail) => ({
-  //         product: detail.productId,
-  //         quantity: Number(detail.quantity),
-  //         unit: detail.unitId, // chổ này lấy kèm theo id nè
-  //         price: detail.price,
-  //         total: detail.total,
-  //       })),
+  //       products: orderDetails.map((detail) => {
+  //         const quantityWithConversion =
+  //           Number(detail.quantity) * detail.convertQuantity;
+  //         const productVAT = detail.price * detail.VAT; // Tính VAT cho sản phẩm này
+  //         amountVAT += productVAT * Number(detail.quantity);
+  //         return {
+  //           product: detail.productId,
+  //           quantity: quantityWithConversion, // Use converted quantity
+  //           unit: detail.unitId, // Unit ID
+  //           price: detail.price,
+  //           total: detail.total, // Total is already calculated in your row
+  //         };
+  //       }),
   //       totalAmount: totalAmount,
   //       receiveAmount: receivedAmount,
   //       change: change,
   //       user: user._id,
+  //       amountVAT: amountVAT,
   //     };
+  //     console.log(orderDetails);
+
   //     const token = localStorage.getItem("accessToken");
   //     if (!token) throw new Error("Token không hợp lệ!");
 
-  //     // Giả sử API tạo đơn hàng là apiCreateOrder
+  //     // Create the order using the API
   //     const response = await apiCreateOrder(token, orderData);
 
   //     if (response.success) {
   //       alert("Đơn hàng đã được tạo thành công.");
-  //       // Thực hiện các thao tác khác sau khi submit thành công
+  //       // Additional actions on successful submit can be placed here
   //     } else {
   //       alert("Đã có lỗi khi tạo đơn hàng.");
   //     }
@@ -234,7 +259,6 @@ export default function CreateOrderDetailFirst() {
   //   }
   // };
 
-
   const handleSubmit = async () => {
     try {
       // Check if orderDetails is empty
@@ -242,24 +266,32 @@ export default function CreateOrderDetailFirst() {
         alert("Vui lòng thêm ít nhất một sản phẩm.");
         return;
       }
-  
+
       // Check for missing data in each row
       for (let i = 0; i < orderDetails.length; i++) {
         const detail = orderDetails[i];
-        if (!detail.productName || !detail.quantity || !detail.unit || !detail.price) {
+        if (
+          !detail.productName ||
+          !detail.quantity ||
+          !detail.unit ||
+          !detail.price
+        ) {
           alert(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
           return;
         }
       }
-  
+
       // Calculate total amount and change
       const totalAmount = calculateTotalAmount();
       const change = calculateChange();
-  
-      // Create order data object to send
+      let amountVAT = 0; // Khởi tạo amountVAT ở đây
+
       const orderData = {
         products: orderDetails.map((detail) => {
-          const quantityWithConversion = Number(detail.quantity) * detail.convertQuantity; // Apply conversion
+          const quantityWithConversion =
+            Number(detail.quantity) * detail.convertQuantity;
+          const productVAT = detail.price * detail.VAT; // Tính VAT cho sản phẩm này
+          amountVAT += productVAT * Number(detail.quantity); // Cộng dồn VAT
           return {
             product: detail.productId,
             quantity: quantityWithConversion, // Use converted quantity
@@ -272,14 +304,17 @@ export default function CreateOrderDetailFirst() {
         receiveAmount: receivedAmount,
         change: change,
         user: user._id,
+        amountVAT: amountVAT, // Đảm bảo amountVAT được đưa vào đây
       };
-  
+
+      console.log(orderData); // Kiểm tra orderData trước khi gửi
+
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token không hợp lệ!");
-  
+
       // Create the order using the API
       const response = await apiCreateOrder(token, orderData);
-  
+
       if (response.success) {
         alert("Đơn hàng đã được tạo thành công.");
         // Additional actions on successful submit can be placed here
@@ -291,8 +326,22 @@ export default function CreateOrderDetailFirst() {
       alert("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
     }
   };
-  
-  
+  const calculateVAT = (quantity, price, VAT) => {
+    return quantity * price * VAT;
+  };
+  const calculateTotalVAT = (orderDetails) => {
+    let amountVAT = 0;
+    orderDetails.forEach((detail) => {
+      const productVAT = calculateVAT(
+        detail.quantity,
+        detail.price,
+        detail.VAT
+      );
+      amountVAT += productVAT;
+    });
+    return amountVAT;
+  };
+  const totalVAT = calculateTotalVAT(orderDetails);
   return (
     <>
       <div className="card bg-white h-full rounded-none w-full overflow-y-hidden ">
@@ -406,9 +455,15 @@ export default function CreateOrderDetailFirst() {
                       <input
                         type="number"
                         value={detail.quantity}
-                        onChange={(e) =>
-                          handleChangeQuantity(index, e.target.value)
-                        }
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (/^\d+$/.test(value) && parseInt(value) >= 1) {
+                            handleChangeQuantity(index, value);  // Chỉ gọi handleChange nếu là số nguyên dương lớn hơn 1
+                          } else if (value === "") {
+                            handleChangeQuantity(index, value);  // Cho phép xóa trường
+                          }
+                        }}
+                        min={1}
                         className="input w-32 h-8"
                         placeholder="1"
                       />
@@ -463,7 +518,6 @@ export default function CreateOrderDetailFirst() {
           <div className="flex w-full h-auto">
             <div className="w-9/12"></div>
             <div className="w-3/12 h-auto justify-end items-end mt-4">
-              
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Tiền nhận:</h2>
                 <h2 className=" font-sans text-sm mr-2">
@@ -473,12 +527,13 @@ export default function CreateOrderDetailFirst() {
                     onChange={handleReceivedAmountChange}
                     className="input input-bordered input-sm"
                     placeholder="Nhập số tiền nhận"
+                    min={1}
                   />
                 </h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Thuế VAT:</h2>
-                <h2 className=" font-sans text-sm mr-2">30.000 VNĐ</h2>
+                <h2 className=" font-sans text-sm mr-2">{totalVAT} VNĐ</h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Tiền thừa:</h2>

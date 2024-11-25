@@ -178,7 +178,6 @@ export default function Inventory() {
         const [product, warehouseReceipt] = key.split("-");
         return { product, quantity, warehouseReceipt }; // Trả về id sản phẩm và mã phiếu
       });
-    console.log(productsToAdd); // Xử lý thêm sản phẩm vào kho
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");

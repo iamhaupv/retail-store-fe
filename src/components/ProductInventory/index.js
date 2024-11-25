@@ -1,6 +1,6 @@
 import { useBarcode } from "@createnextapp/react-barcode";
 import React from "react";
-
+import Barcode from "../../components/Barcode"
 export default function ProductInventory({ products }) {
   function formatDate(date) {
     if (!(date instanceof Date)) {
@@ -34,7 +34,8 @@ export default function ProductInventory({ products }) {
           <tr key={product._id}>
             <td>
               <div>
-                <div className="font-bold">{product.code || "ASM001"}</div>
+                {/* <div className="font-bold">{product.code || "ASM001"}</div> */}
+                <Barcode value={product._id}/>
               </div>
             </td>
             <td>

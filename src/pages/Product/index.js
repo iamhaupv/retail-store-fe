@@ -200,7 +200,7 @@ export default function Product() {
         }
         const response = await apiCreateProduct(token, formData);
         if (response.success) {
-          Swal.fire("Thành công!", "Thêm thành công!", "success");
+          Swal.fire("Thành công!", "Thêm sản phẩm mới thành công!", "success");
           navigate("/product-list");
         } else {
           Swal.fire("Lỗi!", "Thêm không thành công!", "error");
