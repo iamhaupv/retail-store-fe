@@ -229,32 +229,7 @@ export default function Order() {
               </div>
             </div>
           </div>
-          {isClicked ? (
-            <div className="w-full h-dvh">
-              <div className="card bg-white  rounded-lg ml-4 mr-4 mt-2 grid overflow-y-auto animate__animated animate__fadeInRight"
-              style={{
-                height: "calc(100vh - 200px)",
-              }}>
-                <table className="table table-pin-rows ">
-                  {/* head */}
-                  <thead>
-                    <tr>
-                      <th>Hóa đơn</th>
-                      <th>Tổng tiền</th>
-                      <th>Người lập</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <OrderTableList />
-                  </tbody>
-                  {/* foot */}
-                  <tfoot>
-                    <tr></tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          ) : (
+         
             <div className="flex w-full h-dvh animate__animated animate__fadeInRight">
               <div className="card bg-white w-3/12  rounded-none ml-4 mr-2 mt-2 grid overflow-y-auto "
               style={{
@@ -402,7 +377,6 @@ export default function Order() {
                 </div>
               </div>
             </div>
-          )}
         </div>
       </div>
     </>
