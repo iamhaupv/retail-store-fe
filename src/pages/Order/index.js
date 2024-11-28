@@ -6,27 +6,30 @@ import OrderTableDetail from "../../components/OrderTableDetail";
 import { Link } from "react-router-dom";
 import apiGetListEmployee from "../../apis/apiGetListEmployee";
 import apiGetAllOrder from "../../apis/apiGetAllOrder";
-import apiFilterOrderByEmployee from "../../apis/apiFilterOrderByEmployee";
+import apiFilterOrderByCondition from "../../apis/apiFilterOrderByCondition";
 
 export default function Order() {
-  const [listOrderByEmployee, setListOrderByEmployee] = useState([])
+  const [value, setValue] = useState({
+    startDate: null,
+    endDate: null,
+  });
+  const [listOrderByCondition, setListOrderByCondition] = useState([])
   const [employee, setEmployee] = useState("")
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orders, setOrders] = useState([])
-  const fetchOrderByEmployee = async()=> {
+  const fetchOrderByCondition = async()=> {
     try {
       const token = localStorage.getItem("accessToken")
       if(!token) throw new Error("Token is invalid!")
-      const response = await apiFilterOrderByEmployee(token, {name: employee})
-      setListOrderByEmployee(Array.isArray(response.orders) ? response.orders : [])
+      const response = await apiFilterOrderByCondition(token, {name: employee, startDate: value.startDate, endDate: value.endDate})
+      setListOrderByCondition(Array.isArray(response.orders) ? response.orders : [])
     } catch (error) {
       console.log("fetch order by employee is error", error);
     }
   }
   useEffect(() => {
-    fetchOrderByEmployee()
-  }, [employee])
-  console.log(listOrderByEmployee);
+    fetchOrderByCondition()
+  }, [value, employee])
   const handleOrderClick = (order) => {
     setSelectedOrder(order);
   };
@@ -67,10 +70,7 @@ export default function Order() {
   useEffect(()=> {
     fetchEmployees()
   }, [])
-  const [value, setValue] = useState({
-    startDate: null,
-    endDate: null,
-  });
+  
 
   const [isClicked, setIsClicked] = useState(true);
   const toggleClicked = () => {
@@ -131,7 +131,7 @@ export default function Order() {
           </div>
           <div className=" mt-2 mr-3 flex justify-between">
             <select value={employee} onChange={handleChangeEmployee}  className="select select-bordered ml-4 w-44 h-10  max-w-xs">
-              <option value={""} disabled selected>
+              <option value={""} selected>
                 Người tạo
               </option>
               {employees.length > 0 ? employees.map((employee) => (
@@ -269,12 +269,11 @@ export default function Order() {
                     <tr></tr>
                   </thead>
                   <tbody>
-                    {/* <StatOrderDetail orders={orders} onOrderClick={handleOrderClick}  /> */}
                     {
-                      employee === "" ? (
+                      employee === "" && value.startDate === null && value.endDate === null  ? (
                         <StatOrderDetail orders={orders} onOrderClick={handleOrderClick}  />
-                      ) : listOrderByEmployee.length > 0 ? (
-                        <StatOrderDetail orders={listOrderByEmployee} onOrderClick={handleOrderClick}  />
+                      ) : listOrderByCondition.length > 0 ? (
+                        <StatOrderDetail orders={listOrderByCondition} onOrderClick={handleOrderClick}  />
                       ) :
                        (<div>Không có hóa đơn nào cả</div>)
                     }
@@ -337,7 +336,7 @@ export default function Order() {
                   <div className="flex ml-2 items-center">
                     <h2 className="font-medium text-sm">Thu ngân:</h2>
                     <h2 className=" font-sans text-xs ml-1">
-                      {selectedOrder && selectedOrder.user.lastname + " " + selectedOrder.user.firstname}
+                      {selectedOrder && selectedOrder.user.name}
                     </h2>
                   </div>
                   <div className="flex ml-2 items-center">

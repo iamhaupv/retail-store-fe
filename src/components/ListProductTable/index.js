@@ -8,7 +8,7 @@ import apiGetListCategory from "../../apis/apiGetListCategory";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
 import apiGetAllProductsPagination from "../../apis/apiGetAllProductsPagination";
 
-export default function ListProductTable() {
+export default function ListProductTable({ role }) {
   const [products, setProducts] = useState([]);
   const [listProduct, setListProduct] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -289,6 +289,7 @@ export default function ListProductTable() {
               : listProduct.length}
             sản phẩm
           </h4>
+          {role === 'admin' && (
           <Link to="/product">
             <button className="btn btn-success text-white w-36">
               <svg
@@ -308,6 +309,7 @@ export default function ListProductTable() {
               Thêm mới
             </button>
           </Link>
+          )}
         </div>
         {/* table Product */}
 
