@@ -56,7 +56,7 @@ export default function SideBar({ role }) {
     {  label: "Nhân viên", icon: faClipboardUser },
     { to: "/employeeSchedule",  label: "Lịch làm việc", key: "Lịch làm việc" },
     // { to: "/employeelist", label: "Danh sách nhân viên", key: "Danh sách nhân viên" },
-    { to: "/supply-list",key:"Nhà cung cấp", label: "Nhà cung cấp", icon: faWarehouse },
+    //{ to: "/supply-list",key:"Nhà cung cấp", label: "Nhà cung cấp", icon: faWarehouse },
     // { to: "/supply", label: "[+] Thêm nhà cung cấp", key: "Thêm nhà cung cấp" },
     //{ to: "/supply-list", label: "Danh sách nhà cung cấp", key: "Danh sách nhà cung cấp" },
     //{ to: "/inventory", label: "Quản lý kho", icon: faStore, key: "Quản lý kho" },
