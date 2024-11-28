@@ -7,7 +7,7 @@ import apiFilterBrandByMultiCondition from "../../apis/apiFilterBrandByMultiCond
 import InputPhone from "../../components/InputPhone";
 import InputSupplyName from "../../components/InputSupplyName";
 
-export default function SupplierList() {
+export default function SupplierList({role}) {
   const [brands, setBrands] = useState([]);
   const [brandSupplyName, setBrandSupplyName] = useState("");
   const [brandPhone, setBrandPhone] = useState("");
@@ -118,25 +118,27 @@ export default function SupplierList() {
 
           <div className="flex justify-between mt-6 items-center">
             <h4 className="font-bold text-xl w-32 ml-4"></h4>
-            <Link to="/supply">
-              <button className="btn btn-success text-white w-36 mr-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-                Thêm mới
-              </button>
-            </Link>
+            {role === "admin" && (
+              <Link to="/supply">
+                <button className="btn btn-success text-white w-36 mr-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                  Thêm mới
+                </button>
+              </Link>
+            )}
           </div>
           {/* table Product */}
 
@@ -174,8 +176,8 @@ export default function SupplierList() {
               </tfoot>
             </table>
           </div>
-                  {/* pagination */}
-        <div className="w-full justify-end pt-3 pr-2">
+          {/* pagination */}
+          <div className="w-full justify-end pt-3 pr-2">
             <ul className="flex items-center justify-end gap-2 ">
               <li>
                 <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
@@ -237,8 +239,8 @@ export default function SupplierList() {
                 </button>
               </li>
             </ul>
-        </div>
-        {/* end Paginination */}
+          </div>
+          {/* end Paginination */}
         </div>
       </div>
     </>

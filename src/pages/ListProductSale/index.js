@@ -5,7 +5,7 @@ import TableProductDetail from "../../components/TableProductDetail";
 import apiGetListProduct from "../../apis/apiGetListProduct";
 import apiGetListBrands from "../../apis/apiGetListBrand";
 
-export default function ListProductSale() {
+export default function ListProductSale({role}) {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const fetch = async () => {
@@ -81,6 +81,7 @@ export default function ListProductSale() {
 
         <div className="flex justify-between mt-6">
           <h4 className="font-bold text-xl w-32 ml-4">30 sản phẩm</h4>
+          {role === 'admin' && (
           <Link to="/product">
             <button className="btn btn-success text-white w-36">
               <svg
@@ -100,6 +101,7 @@ export default function ListProductSale() {
               Thêm mới
             </button>
           </Link>
+          )}
         </div>
         {/* table Product */}
 

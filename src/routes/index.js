@@ -37,7 +37,7 @@ export const routes = [
       },
       {
         path: "/supply-list",
-        element: <SupplierList />,
+        element: <SupplierList  />,
       },
       {
         path: "product-list",
