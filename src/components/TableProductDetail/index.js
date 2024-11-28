@@ -87,11 +87,6 @@ export default function TableProductDetail() {
             </h1>
           </td>
           <td>
-          <h1 className="whitespace-nowrap">
-              {product.price.toLocaleString()} đ
-            </h1>
-          </td>
-          <td>
             <div className="flex w-fit">
               <button
                 className=" w-6 h-6 rounded-lg mr-2"

@@ -15,6 +15,7 @@ export default function ListProductTable() {
   const [status, setStatus] = useState("");
   const [title, setTitle] = useState("");
   const [brand, setBrand] = useState("");
+  const [id, setId] = useState("")
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
   const [productsPagination, setProductsPagination] = useState([]);
@@ -53,8 +54,21 @@ export default function ListProductTable() {
       name: matchedUnit.name,
     };
   });
+  const listId = Array.from(
+    new Set(products.map((unit) => unit.id))
+  ).map((id) => {
+    const matchedUnit = products.find((unit) => unit.id === id);
+    return {
+      _id: matchedUnit._id,
+      name: matchedUnit.id,
+    };
+  });
+  
   const fetchProductMultiCondition = async () => {
     try {
+      if (!title && !status && !brand && !category && !id) {
+        return;
+      }
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid");
       const response = await apiFilterProductMultiCondition(token, {
@@ -62,6 +76,7 @@ export default function ListProductTable() {
         status,
         brandName: brand,
         categoryName: category,
+        id: id
       });
       setListProduct(Array.isArray(response.products) ? response.products : []);
     } catch (error) {
@@ -70,7 +85,7 @@ export default function ListProductTable() {
   };
   useEffect(() => {
     fetchProductMultiCondition();
-  }, [status, brand, title, category]);
+  }, [status, brand, title, category, id]);
 
   const handleChangeBrand = (selectedBrandName) => {
     if (selectedBrandName) {
@@ -128,6 +143,13 @@ export default function ListProductTable() {
   const handleChangeTitle = async (e) => {
     setTitle(e.target.value);
   };
+  const handleChangeId = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setId(selectedBrandName); 
+    } else {
+      setId("");
+    }
+  }
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -203,7 +225,7 @@ export default function ListProductTable() {
             <input
               type="text"
               className=" w-32 h-3"
-              placeholder="Search"
+              placeholder="Nhập tên sản phẩm"
               onChange={handleChangeTitle}
             />
             <svg
@@ -219,7 +241,14 @@ export default function ListProductTable() {
               />
             </svg>
           </label>
-
+          <div className="ml-4 w-72 h-10">
+            <Autocomplete
+              suggestion={listId}
+              onchange={handleChangeId} // This should call your API or update state
+              placeholder="Nhập mã sản phẩm"
+              value={id} // Pass the current brand state
+            />
+          </div>
           {/* status Option */}
           <select
             onChange={handleChangeStatus}
@@ -255,9 +284,9 @@ export default function ListProductTable() {
 
         <div className="flex justify-between mt-6">
           <h4 className="font-bold text-xl w-32 ml-4">
-            {category === "" && title === "" && status === "" && brand === ""
+            {category === "" && title === "" && status === "" && brand === "" && id === ""
               ? products.length
-              : listProduct.length}{" "}
+              : listProduct.length}
             sản phẩm
           </h4>
           <Link to="/product">
@@ -303,7 +332,7 @@ export default function ListProductTable() {
                 <th>Tình trạng</th>
                 <th>Số lượng</th>
                 <th>Giá bán</th>
-                <th>Số lượng Tổng</th>
+                <th>Số lượng đã bán</th>
                 <th>Thao tác</th>
               </tr>
             </thead>
@@ -311,7 +340,7 @@ export default function ListProductTable() {
               {category === "" &&
               title === "" &&
               status === "" &&
-              brand === "" ? (
+              brand === "" && id === "" ? (
                 <TableProductByName listProduct={productsPagination} />
               ) : listProduct.length > 0 ? (
                 <TableProductByName listProduct={listProduct} />

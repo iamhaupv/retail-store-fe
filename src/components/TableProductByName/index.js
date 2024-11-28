@@ -1,9 +1,6 @@
-import { useBarcode } from "@createnextapp/react-barcode";
 import React, { useState } from "react";
 import apiIsDisplay from "../../apis/apiIsDisplay";
 import { Link } from "react-router-dom";
-import Barcode from "../Barcode";
-
 export default function TableProductByName({ listProduct }) {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -36,8 +33,8 @@ export default function TableProductByName({ listProduct }) {
         <tr key={product._id} className="hover:bg-slate-100">
           <td>
             <div>
-              {/* <div className="font-bold">ASM001</div> */}
-              <Barcode value={product._id}/>
+              <div className="font-bold">{product.id}</div>
+              {/* <Barcode value={product._id}/> */}
             </div>
           </td>
           <td>
@@ -69,7 +66,7 @@ export default function TableProductByName({ listProduct }) {
           </td>
           <td>
             <h1 className="whitespace-nowrap">
-              {product.sumQuantity}
+              {product.sold}
             </h1>
           </td>
           <td>

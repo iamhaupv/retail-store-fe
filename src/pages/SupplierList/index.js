@@ -6,21 +6,25 @@ import apiGetListBrands from "../../apis/apiGetListBrand";
 import apiFilterBrandByMultiCondition from "../../apis/apiFilterBrandByMultiCondition";
 import InputPhone from "../../components/InputPhone";
 import InputSupplyName from "../../components/InputSupplyName";
+import Autocomplete from "../../components/AutoComplete";
 
 export default function SupplierList() {
   const [brands, setBrands] = useState([]);
+  const [id, setId] = useState("")
   const [brandSupplyName, setBrandSupplyName] = useState("");
   const [brandPhone, setBrandPhone] = useState("");
   const [brandByName, setBrandByName] = useState("");
   const [brandsByMultiCondition, setBrandsByMultiCondition] = useState([]);
   const fetchBrandsByMultiCondition = async () => {
     try {
+      if(id === "" && brandByName === "" && brandSupplyName === "" && brandPhone === "") return
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
       const response = await apiFilterBrandByMultiCondition(token, {
         name: brandByName,
         supplyName: brandSupplyName,
         phone: brandPhone,
+        id: id
       });
       setBrandsByMultiCondition(
         Array.isArray(response.brands) ? response.brands : []
@@ -31,7 +35,7 @@ export default function SupplierList() {
   };
   useEffect(() => {
     fetchBrandsByMultiCondition();
-  }, [brandByName, brandPhone, brandSupplyName]);
+  }, [brandByName, brandPhone, brandSupplyName, id]);
   const fetchBrands = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -54,6 +58,12 @@ export default function SupplierList() {
       phone: brand.phone,
     }));
   };
+  const listId = () => {
+    return brands.map((brand) => ({
+      _id: brand._id,
+      name: brand.id,
+    }));
+  };
   const listBrandSupplyName = () => {
     return brands.map((brand) => ({
       _id: brand._id,
@@ -70,6 +80,10 @@ export default function SupplierList() {
   const handleChangeBrandPhone = async (e) => {
     if (e) setBrandPhone(e);
     else setBrandPhone("");
+  };
+  const handleChangeId = async (e) => {
+    if (e) setId(e);
+    else setId("");
   };
   const handleChangeBrandSupplyName = async (e) => {
     if (e) setBrandSupplyName(e);
@@ -89,6 +103,14 @@ export default function SupplierList() {
         >
           {/* search Input */}
           <div className="w-full flex">
+          <div className="ml-4 mt-4 w-2/12">
+              <Autocomplete
+                onchange={handleChangeId}
+                value={id}
+                suggestion={listId()}
+                placeholder={"Nhập mã nhà cung cấp"}
+              />
+              </div>
             <div className="ml-4 mt-4 w-2/12 ">
               <ChangeInput
                 onchange={handleChangeBrand}
@@ -161,7 +183,7 @@ export default function SupplierList() {
               <tbody>
                 {brandByName === "" &&
                 brandPhone === "" &&
-                brandSupplyName === "" ? (
+                brandSupplyName === "" && id === "" ? (
                   <SupplyTableDetail brands={brands} />
                 ) : brandsByMultiCondition.length > 0 ? (
                   <SupplyTableDetail brands={brandsByMultiCondition} />

@@ -16,8 +16,8 @@ export default function StatOrderDetail({orders, onOrderClick }) {
         orders.map((order) => (
           <div key={order.id} onClick={() => onOrderClick(order)} className="card bg-white  rounded-none border-collapse grid hover:bg-slate-100">
         <div className="flex justify-between mr-1 ml-1 mt-1">
-          <div className="font-bold text-sm">AS000231</div>
-          <div className="font-bold text-sm">{order.totalAmount}</div>
+          <div className="font-bold text-sm">{order.id || 0}</div>
+          <div className="font-bold text-sm">{order.totalAmount.toLocaleString()} VNĐ</div>
         </div>
         <div className="mr-1 ml-1 mt-1">Cửa hàng 25 Hour</div>
         <div className="flex justify-between mr-1 ml-1 ">

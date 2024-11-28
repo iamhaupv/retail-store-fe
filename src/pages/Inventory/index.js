@@ -10,6 +10,7 @@ import apiGetListCategory from "../../apis/apiGetListCategory";
 import apiGetListBrands from "../../apis/apiGetListBrand";
 import logo_form from "../../Image/LogoForm.png";
 import apiFilterProductInShelfByMultiCondition from "../../apis/apiFilterProductInShelfByMultiCondition";
+import BarcodeCreate from "../../components/BarcodeCreate";
 export default function Inventory() {
   const [title, setTitle] = useState("");
   const [listProduct, setListProduct] = useState([]);
@@ -192,6 +193,24 @@ export default function Inventory() {
       console.error("Failed to add products:", error);
     }
   };
+  function formatDate(date) {
+    if (!(date instanceof Date)) {
+      date = new Date(date);
+    }
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+  function convertDateFormat(dateString) {
+    const [day, month, year] = dateString.split('/'); // Split the date string
+    const lastTwoDigitsOfYear = year.slice(-2); // Get the last two digits of the year
+    return `${lastTwoDigitsOfYear}${month}${day}`; // Format as YYMMDD
+  }
+  
+
   return (
     <>
       {/* Tab table */}
@@ -424,26 +443,28 @@ export default function Inventory() {
       {isModalOpen && (
         <div className="fixed w-screen z-40 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="modal-box w-full max-w-6xl h-full overflow-y-hidden  ">
-            <h3 className="font-bold text-lg mb-6">Danh sách sản phẩm trong kho</h3>
+            <h3 className="font-bold text-lg mb-6">
+              Danh sách sản phẩm trong kho
+            </h3>
             <div className="flex items-center  w-full">
               {/* Search Input  */}
               {/* <Autocomplete suggestion={listCategory} onchange={handleChangeCategory} placeholder={"Chọn thương hiệu"} /> */}
               {/* Product */}
               <div className="ml-4 mt-4 w-2/12 ">
-              <ChangeInput
-                suggestion={listCategory} // List of categories passed as suggestions
-                onchange={handleChangeCateogry} // Handling change event
-                placeholder="Nhập loại" // Placeholder for input field
-                value={category} // Binding value to category state
-              />
+                <ChangeInput
+                  suggestion={listCategory} // List of categories passed as suggestions
+                  onchange={handleChangeCateogry} // Handling change event
+                  placeholder="Nhập loại" // Placeholder for input field
+                  value={category} // Binding value to category state
+                />
               </div>
               <div className="ml-4 mt-4 w-2/12 ">
-              <ChangeInput
-                suggestion={listBrand} // List of categories passed as suggestions
-                onchange={handleChangeBrand} // Handling change event
-                placeholder="Nhập nhà cung cấp" // Placeholder for input field
-                value={brand} // Binding value to category state
-              />
+                <ChangeInput
+                  suggestion={listBrand} // List of categories passed as suggestions
+                  onchange={handleChangeBrand} // Handling change event
+                  placeholder="Nhập nhà cung cấp" // Placeholder for input field
+                  value={brand} // Binding value to category state
+                />
               </div>
               <label className="ml-2 mt-2 input input-sm input-bordered flex items-center gap-2">
                 <input
@@ -476,13 +497,12 @@ export default function Inventory() {
                     <th></th>
                     {/* </div> */}
                     <th>Mã vạch</th>
-                    <th>Mã phiếu</th>
-                    <th>Sản phẩm</th>
+                    <th className="w-10">Sản phẩm</th>
                     {/* <th>Nhà cung cấp</th> */}
                     <th>Hạn sử dụng</th>
                     <th>Số lượng tổng</th>
                     <th>Số lượng trưng bày </th>
-                    <th>Thao tác</th>
+                    {/* <th>Thao tác</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -507,8 +527,11 @@ export default function Inventory() {
                               }
                             />
                           </td>
-                          <td>{product._id}</td>
-                          <td className="whitespace-nowrap">{product.idPNK}</td>
+                          <td className="">
+                            {/* <svg ref={inputRef} /> */}
+                            {/* <BarcodeCreate productCode={product.id} wareHouseReceiptCode={product.idPNK} expiryDate={convertDateFormat((formatDate(product.expires)))} /> */}
+                            {/* <Barcode value={product.id} /> */}
+                          </td>
                           <td>
                             <div className="flex items-center gap-3">
                               <div className="avatar">
@@ -528,7 +551,10 @@ export default function Inventory() {
                             </div>
                           </td>
                           {/* <td>{product.brand}</td> */}
-                          <td></td>
+                          <td>
+
+                            {formatDate(product.expires)}
+                          </td>
                           <td>
                             <span className="badge badge-ghost badge-sm">
                               {product.quantityDynamic || 0}
@@ -610,7 +636,7 @@ export default function Inventory() {
                               </div>
                             </div>
                           </div>
-                        {/* </td>
+                          {/* </td>
                         <td>{product.brand}</td>
                         <td> */}
                           <span className="badge badge-ghost badge-sm">

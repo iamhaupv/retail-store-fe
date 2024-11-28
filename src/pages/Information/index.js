@@ -10,26 +10,23 @@ export default function Information() {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
   
-      // Chuẩn bị FormData để gửi lên API
       const formData = new FormData();
-      formData.append("id", user._id);  // Thêm _id của user
+      formData.append("id", user._id); 
       formData.append("firstname", user.firstname);
       formData.append("lastname", user.lastname);
       formData.append("email", user.email);
-      formData.append("mobile", user.mobile);
+      formData.append("phone", user.phone);
       formData.append("address", user.address);
       formData.append("birthday", user.birthday);
       formData.append("gender", user.gender);
   
-      // Nếu có ảnh mới, thêm ảnh vào FormData
       if (image) {
         formData.append("image", image);
       }
   
-      // Gọi API update
       const response = await apiUpdateInfor(token, formData);
       if (response.success) {
-        setUser(response.user); // Cập nhật lại state user
+        setUser(response.user); 
         alert("Thông tin đã được cập nhật!");
       } else {
         alert("Cập nhật thông tin thất bại!");
@@ -40,15 +37,14 @@ export default function Information() {
     }
   };
   
-
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Get the selected file
+    const file = e.target.files[0];
     if (file) {
-      setImage(file); // Store the file in the state for uploading
+      setImage(file); 
     }
   };
   const fetchCurrentUser = async () => {
@@ -60,8 +56,6 @@ export default function Information() {
   useEffect(() => {
     fetchCurrentUser();
   }, []);
-  console.log(user);
-
   return (
     <>
       <div
@@ -81,12 +75,12 @@ export default function Information() {
                 <div className="flex items-center mt-2">
                   <h1 className=" text-lg">Họ tên:</h1>
                   <h1 className="font-bold text-lg ml-3">
-                    {user.lastname} {user.firstname}
+                    {user.name}
                   </h1>
                 </div>
                 <div className="flex items-center mt-1">
                   <h1 className=" text-lg">Chức vụ:</h1>
-                  <h1 className=" text-lg ml-3">Quản lý</h1>
+                  <h1 className=" text-lg ml-3">{user.role === "admin" ? "Quản lý" : "Nhân viên"}</h1>
                 </div>
                 <div className="flex items-center mt-1">
                   <h1 className=" text-lg">Số điện thoại:</h1>
@@ -151,30 +145,9 @@ export default function Information() {
               />
               {image && image["inputMain"] ? (
                 <div className=" ml-10 mt-16 rounded-full">
-                  {/* <span className="indicator-item indicator-middle indicator-center"> */}
-                  {/* <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="size-6"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
-                        />
-                      </svg> */}
-                  {/* </span> */}
                   <img
                     src={image["inputMain"]}
-                    className="size-48 rounded-full "
+                    className="size-48 rounded-full " alt="Avatar"
                   />
                 </div>
               ) : (
@@ -211,7 +184,7 @@ export default function Information() {
                   type="text"
                   placeholder="Nguyễn Thanh Khoa"
                   class="input input-bordered w-72 h-5 ml-16"
-                  value={user.lastname}
+                  value={user.name}
                 />
               </div>
               <div className="flex items-center mt-1">
@@ -220,7 +193,7 @@ export default function Information() {
                 className="input input-bordered w-72 h-5 ml-16"
                   type="text"
                   name="mobile"
-                  value={user.mobile}
+                  value={user.phone}
                   onChange={handleChangeInput}
                 />
               </div>
@@ -259,7 +232,7 @@ export default function Information() {
                 <select
                 className="select select-bordered select-xs w-full max-w-xs"
                   name="gender"
-                  value={user.gender}
+                  value={user.gender || "Nam"}
                   onChange={handleChangeInput}
                 >
                   <option value="Nam">Nam</option>

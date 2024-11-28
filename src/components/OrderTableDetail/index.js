@@ -1,6 +1,4 @@
-import { useBarcode } from "@createnextapp/react-barcode";
 import React from "react";
-import Barcode from "../Barcode";
 
 export default function OrderTableDetail({ order }) {
 
@@ -12,7 +10,7 @@ export default function OrderTableDetail({ order }) {
           <tr key={index} className="hover:bg-slate-100">
             <td>
               <div>
-                <Barcode value={product._id}/>
+                {product.product.id}
               </div>
             </td>
             <td>
@@ -32,11 +30,11 @@ export default function OrderTableDetail({ order }) {
               <div className="font-bold">{product.quantity}</div>
             </td>
             <td>
-              <div className="font-bold">{product.product.price} VNĐ</div>
+              <div className="font-bold">{product.product.price.toLocaleString()} VNĐ</div>
             </td>
             <td>
               <div className="font-bold" style={{ color: "#f13612" }}>
-                {productTotalAmount} VNĐ
+                {productTotalAmount.toLocaleString()} VNĐ
               </div>
             </td>
           </tr>

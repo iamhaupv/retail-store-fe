@@ -8,8 +8,8 @@ export default function SupplyTableDetail({ brands }) {
         <tr className="z-20 hover:bg-slate-100">
           <th>
             <div>
-              {/* <div className="font-bold">ASM001</div> */}
-              <Barcode value={brand._id} />
+              <div className="font-bold">{brand.id}</div>
+              {/* <Barcode value={brand._id} /> */}
             </div>
           </th>
           <td>

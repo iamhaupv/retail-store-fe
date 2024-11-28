@@ -9,6 +9,8 @@ export default function StockInDetail({ receipts }) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
+  console.log(receipts);
+  
   return (
     <>
       {receipts.map((receipt) => (
@@ -16,7 +18,7 @@ export default function StockInDetail({ receipts }) {
           <td>{receipt.idPNK}</td>
           <td>{formatDate(receipt.createdAt)}</td>
           <td>
-            {receipt.user.lastname} {receipt.user.firstname}
+            {receipt.user.name}
           </td>
           <td className="flex justify-end mr-3">{receipt.products.length}</td>
           <td>

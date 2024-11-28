@@ -32,9 +32,6 @@ export default function Reciept() {
       pdf.save("document.pdf");
     });
   };
-  const totalVAT = selectedOrder.products.reduce((total, product)=> {
-    return total += product.price * product.VAT
-  }, 0)
   return (
     <>
       {selectedOrder && (
@@ -98,7 +95,7 @@ export default function Reciept() {
                   Ngày HD: {selectedOrder.createdAt}
                 </h1>
                 <h1 className=" flex justify-start w-full">
-                  Nhân viên: Phạm Văn Hậu
+                  Nhân viên: {selectedOrder.user.name}
                 </h1>
                 <hr className="border-dashed border-black" />
 
@@ -120,8 +117,8 @@ export default function Reciept() {
                         <th>{product.product.title}</th>
                         <td>{product.unit.name}</td>
                         <td>{product.quantity}</td>
-                        <td>{product.product.price} đ</td>
-                        <td>{product.product.price * product.quantity} đ</td>
+                        <td>{product.product.price.toLocaleString()} đ</td>
+                        <td>{(product.product.price * product.quantity).toLocaleString()} đ</td>
                       </tr>
                       ))
                     ) : (
@@ -131,16 +128,16 @@ export default function Reciept() {
                 </table>
                 <hr className="border-dashed border-black" />
                 <h1 className=" flex justify-end w-full">
-                  Thuế VAT: {} VND
+                  Thuế VAT: {selectedOrder.amountVAT.toLocaleString()} VND
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  Tiền nhận: {selectedOrder.receiveAmount} VND
+                  Tiền nhận: {selectedOrder.receiveAmount.toLocaleString()} VND
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  Tiền thừa: {selectedOrder.change} VND
+                  Tiền thừa: {selectedOrder.change.toLocaleString()} VND
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  Tổng tiền: {selectedOrder.totalAmount} VND
+                  Tổng tiền: {selectedOrder.totalAmount.toLocaleString()} VND
                 </h1>
                 <hr className="border-dashed border-black" />
                 <h1 className=" flex justify-center w-full">

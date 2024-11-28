@@ -1,23 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas-pro";
 import { Link, useLocation } from "react-router-dom";
 import logo_form from "../../Image/LogoForm.png";
-import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
-
 export default function EntryForm() {
-  const [user, setUser] = useState("");
-  const fetchUser = async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) throw new Error("Token is valid!");
-    const user = await apiGetCurrentUser(token);
-    setUser(user.rs);
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
   const location = useLocation();
   const { receipt } = location.state || {};
 
@@ -145,7 +131,7 @@ export default function EntryForm() {
                   <h1 className="font-bold">Công ty TNHH 24 HOUR</h1>
                   <h1>294/23/513 Phạm Văn Đồng Q.Bình Thạnh Tp.HCM</h1>
                   <h1 className="flex">
-                    Hotline:<h1 className="font-bold ml-1">{user.mobile}</h1>
+                    Hotline:<h1 className="font-bold ml-1">{receipt.user.mobile}</h1>
                   </h1>
                 </div>
               </div>
@@ -168,7 +154,7 @@ export default function EntryForm() {
                 <h1 className="flex">
                   Người giao:
                   <h1 className="font-bold ml-1">
-                    {user.lastname + " " + user.firstname}
+                    {receipt.user.name}
                   </h1>
                 </h1>
                 <h1 className="flex">
@@ -263,7 +249,7 @@ export default function EntryForm() {
                       const importPrice = product.importPrice || 0; // Lấy giá nhập
                       const totalProductPrice =
                         quantity * importPrice * product.unit.convertQuantity;
-
+                      const price = product.importPrice * product.unit.convertQuantity
                       return (
                         <tr key={product._id || index}>
                           <td
@@ -294,7 +280,7 @@ export default function EntryForm() {
                             className="border-2"
                             style={{ borderColor: "#cecece" }}
                           >
-                            {importPrice.toLocaleString() || "0"}
+                            { price.toLocaleString() || "0"} đ
                           </td>
                           <td
                             className="border-2"

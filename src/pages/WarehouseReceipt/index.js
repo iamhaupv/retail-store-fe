@@ -11,12 +11,10 @@ import apiFilterProductMultiCondition from "../../apis/apiFilterProductMultiCond
 import Autocomplete from "../../components/AutoComplete";
 import apiFilterCategoryByBrand from "../../apis/apiFilterCategoryByBrand";
 import apiFilterProductByBrand from "../../apis/apiFilterProductByBrand";
-import Barcode from "../../components/Barcode";
 
 export default function WarehouseReceipt() {
   const [listProduct, setListProduct] = useState([]);
   const navigate = useNavigate();
-  // const [price, setPrice] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);
@@ -31,9 +29,8 @@ export default function WarehouseReceipt() {
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
   const [brands, setBrands] = useState([]);
-  // const [productFilter, setProductFilter] = useState([]);
-  // const [isBrand, setIsBrand] = useState("");
   const [value, setValue] = useState("");
+  const [id, setId] = useState("")
 
   //#region format tiền tệ
   const formatCurrency = (value) => {
@@ -49,9 +46,6 @@ export default function WarehouseReceipt() {
       setValue(formatCurrency(numericValue));
     }
   };
-  // const handleChangeCurrencyInput = (e) => {
-  //   setValue(e);
-  // };
   const fetchProductByBrandName = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -125,6 +119,15 @@ export default function WarehouseReceipt() {
       name: matchedUnit.name,
     };
   });
+  const listId = Array.from(
+    new Set(productByBrandName.map((unit) => unit.id))
+  ).map((id) => {
+    const matchedUnit = productByBrandName.find((unit) => unit.id === id);
+    return {
+      _id: matchedUnit._id,
+      name: matchedUnit.id,
+    };
+  });
   const handleChangeCateogry = (selectedBrandName) => {
     if (selectedBrandName) {
       setCategory(selectedBrandName); // Cập nhật trạng thái thương hiệu
@@ -134,28 +137,15 @@ export default function WarehouseReceipt() {
       console.log("Brand selection cleared");
     }
   };
-  // fetch product filter
-  // const fetchProductFilter = async () => {
-  //   const token = localStorage.getItem("accessToken");
-  //   if (!token) throw new Error("Token is invalid!");
-  //   try {
-  //     const response = await apiGetProductsByFilter(token, { name: isBrand });
-  //     // Kiểm tra xem sản phẩm có phải là mảng không
-  //     if (Array.isArray(response.products)) {
-  //       setProductFilter(response.products);
-  //     } else {
-  //       // Nếu không, đặt thành mảng rỗng
-  //       setProductFilter([]);
-  //       console.warn(response.products); // Ghi lại thông báo "No products found!" nếu cần
-  //     }
-  //   } catch (error) {
-  //     setProductFilter([]); // Đặt lại thành mảng rỗng nếu có lỗi
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchProductFilter();
-  // }, [isBrand]);
+  const handleChangeId = (selectedBrandName) => {
+    if (selectedBrandName) {
+      setId(selectedBrandName); // Cập nhật trạng thái thương hiệu
+      console.log("Selected brand:", selectedBrandName);
+    } else {
+      setId(""); // Đặt lại giá trị thương hiệu về rỗng khi không có lựa chọn
+      console.log("Brand selection cleared");
+    }
+  };
   const fetchBrands = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -177,12 +167,14 @@ export default function WarehouseReceipt() {
   );
   const fetchProductMultiCondition = async () => {
     try {
+      if(brand === "" && category === "" && name === "" && id === "") return 
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid");
       const response = await apiFilterProductMultiCondition(token, {
         brandName: brand,
         categoryName: category,
         title: name,
+        id: id
       });
       setListProduct(Array.isArray(response.products) ? response.products : []);
     } catch (error) {
@@ -191,7 +183,7 @@ export default function WarehouseReceipt() {
   };
   useEffect(() => {
     fetchProductMultiCondition();
-  }, [brand, category, name]);
+  }, [brand, category, name, id]);
   const openModal = () => {
     setIsModalOpen(true);
     setListProduct([]);
@@ -213,7 +205,7 @@ export default function WarehouseReceipt() {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("Token is valid!");
     const user = await apiGetCurrentUser(token);
-    setUser(user.rs.lastname + " " + user.rs.firstname);
+    setUser(user.rs.name);
   };
   useEffect(() => {
     fetchUnits();
@@ -671,7 +663,16 @@ export default function WarehouseReceipt() {
                   value={brand} // Pass the current brand state
                 />
               </div>
-              {/* Product */}
+              {brand && (
+                <div className="w-52 ml-3 mr-3">
+                  <Autocomplete
+                    suggestion={listId}
+                    onchange={handleChangeId} // This should call your API or update state
+                    placeholder="Nhập mã sản phẩm"
+                    value={id} // Pass the current brand state
+                  />
+                </div>
+              )}
               {brand && (
                 <div className="w-52 ml-3 mr-3">
                   <Autocomplete
@@ -730,8 +731,7 @@ export default function WarehouseReceipt() {
                         </th>
                         <td>
                           <div>
-                            {/* <div className="font-bold">ASM001</div> */}
-                            <Barcode value={product._id}/>
+                            <div className="font-bold">{product.id}</div>
                           </div>
                         </td>
                         <td>

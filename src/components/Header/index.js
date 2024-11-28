@@ -5,12 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 export default function Header(props) {
   const [username, setUsername] = useState("");
   useEffect(() => {
-    const lastname = localStorage.getItem("lastname")
-    const firstname = localStorage.getItem("firstname")
-    setUsername(lastname + " " +  firstname);
+    const name = localStorage.getItem("name")
+    setUsername(name);
   }, []);
   const [image, setImage] = useState("")
-
   useEffect(()=> {
     const avatar = localStorage.getItem("image")
     setImage(avatar)
@@ -46,11 +44,11 @@ export default function Header(props) {
                 <summary>
                   <div className="flex w-36 items-center">
                     <div className="avatar">
-                      <div className="size-10 rounded-full">
+                      <div className="size-10 rounded-full mr-1">
                         <img src={`${image}`} alt="Avatar default" />
                       </div>
                     </div>
-                    <h1 className="font-medium ml-2">{username}</h1>
+                    <h1 className="font-medium whitespace-nowrap">{username}</h1>
                   </div>
                 </summary>
                 <ul className="bg-base-100 w-72 rounded-t-none p-2 z-40">
