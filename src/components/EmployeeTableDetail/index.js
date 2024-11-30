@@ -66,7 +66,7 @@ export default function EmployeeTableDetail({ employees, reloadEmployees  }) {
             </div>
           </td>
           <td>
-            <div className="font-bold text-ellipsis">{employee.email}</div>
+            <div className="font-bold text-ellipsis">{employee?.user?.email}</div>
           </td>
           <td>
             <div className="flex justify-center items-center">

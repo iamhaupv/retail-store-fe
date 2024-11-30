@@ -10,7 +10,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
 const data = [
   {
     name: "Page A",
@@ -57,6 +56,7 @@ const data = [
 ];
 
 export default function ReportDetail() {
+    const [sum, setSum] = useState([])
     const [value, setValue] = useState({
         startDate: null,
         endDate: null,

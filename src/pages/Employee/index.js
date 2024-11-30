@@ -4,6 +4,7 @@ import apiCreateEmployee from "../../apis/apiCreateEmployee";
 import apiRegister from "../../apis/apiRegister";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import apiEmployee from "../../apis/apiEmployee";
 export default function Employee() {
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
@@ -156,17 +157,14 @@ export default function Employee() {
         }
         const response = await apiCreateEmployee(token, formData);
         const employee = response.data._id;
-        const image = response.data.images[0];
         const acc = await apiRegister(token, {
           email,
           name,
           phone,
-          address,
-          gender,
-          birthday,
           employee,
-          image,
         });
+        const user = acc.data._id
+        await apiEmployee.apiUpdateEmployee(token, {pid: employee, user: user})
         if (response.success && acc.success) {
           toast.success("Thêm thành công!");
           setTimeout(() => {
