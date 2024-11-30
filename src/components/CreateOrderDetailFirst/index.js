@@ -4,22 +4,29 @@ import { Link } from "react-router-dom";
 import apiFilterConvertQuantityByUnitName from "../../apis/apiFilterConvertQuantityByUnitName";
 import apiFilterPriceByProductName from "../../apis/apiFilterPriceByProductName";
 import apiGetAllUnit from "../../apis/apiGetAllUnit";
-import apiFilterAllProductInShelf from "../../apis/apiFilterAllProductInShelf";
 import ChangeInput from "../ChangeInput";
 import apiCreateOrder from "../../apis/apiCreateOrder";
+import apiFilterProductSumQuantity from "../../apis/apiFilterProductSumQuantity";
+import apiFilterReceiptByProduct from "../../apis/apiFilterReceiptByProduct";
+import Autocomplete from "../AutoComplete";
 
 export default function CreateOrderDetailFirst() {
+  const [listReceiptId, setListReceiptId] = useState([]);
   const [products, setProducts] = useState([]);
-  const [price, setPrice] = useState(null);
   const [unit, setUnit] = useState("");
   const [productName, setProductName] = useState("");
   const [units, setUnits] = useState([]);
   const [convertQuantity, setConverQuantity] = useState("");
-  const [quantity, setQuantity] = useState("");
   const [receivedAmount, setReceivedAmount] = useState("");
+  const [receipts, setReceipts] = useState([]);
 
   const handleReceivedAmountChange = (e) => {
-    setReceivedAmount(Number(e.target.value));
+    const value = e.target.value;
+    if (value === "" || /^[1-9]\d*$/.test(value)) {
+      setReceivedAmount(Number(e.target.value));
+    } else {
+      alert("Số tiền nhận không được nhỏ hơn 1");
+    }
   };
   const handleChangeConvertQuantity = async () => {
     try {
@@ -36,33 +43,39 @@ export default function CreateOrderDetailFirst() {
   useEffect(() => {
     if (unit) handleChangeConvertQuantity();
   }, [unit]);
-  const handleFilterPriceByProductName = async () => {
+  const fetchReceiptByProduct = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("Token không hợp lệ!");
-      const response = await apiFilterPriceByProductName(token, {
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiFilterReceiptByProduct(token, {
         title: productName,
       });
-      setPrice(response.product.price || 0);
+      setReceipts(Array.isArray(response.receipts) ? response.receipts : []);
     } catch (error) {
-      console.error("Lỗi khi lấy giá sản phẩm: ", error);
+      console.log("fetch receipt by product is error " + error);
     }
   };
+  useEffect(() => {
+    if (productName) {
+      fetchReceiptByProduct();
+    }
+  }, [productName]);
   const handleChangeQuantity = (index, newQuantity) => {
     const updatedOrderDetails = [...orderDetails];
+    const VAT = updatedOrderDetails[index].VAT;
+    const price = updatedOrderDetails[index].price;
     updatedOrderDetails[index] = {
       ...updatedOrderDetails[index],
       quantity: newQuantity,
+      amountVAT: newQuantity * price * VAT,
       total:
         newQuantity *
         updatedOrderDetails[index].price *
-        updatedOrderDetails[index].convertQuantity,
+        updatedOrderDetails[index].convertQuantity || 0,
     };
+
     setOrderDetails(updatedOrderDetails);
   };
-  useEffect(() => {
-    if (productName) handleFilterPriceByProductName();
-  }, [productName]);
 
   const fetchUnits = async () => {
     try {
@@ -81,7 +94,8 @@ export default function CreateOrderDetailFirst() {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
 
-      const response = await apiFilterAllProductInShelf(token);
+      // const response = await apiFilterAllProductInShelf(token);
+      const response = await apiFilterProductSumQuantity(token);
       setProducts(Array.isArray(response.products) ? response.products : []);
     } catch (error) {
       console.log("fetch products by name error: ", error);
@@ -107,32 +121,78 @@ export default function CreateOrderDetailFirst() {
       total:
         updatedOrderDetails[index].quantity *
         updatedOrderDetails[index].price *
-        convertQuantity,
+        convertQuantity || 0,
     };
     setOrderDetails(updatedOrderDetails);
   };
-
   const handleChangeProductName = async (index, selectedProductName) => {
-    const token = localStorage.getItem("accessToken");
-    const response = await apiFilterPriceByProductName(token, {
-      title: selectedProductName,
-    });
-    const updatedOrderDetails = [...orderDetails];
-    updatedOrderDetails[index] = {
-      ...updatedOrderDetails[index],
-      productName: selectedProductName,
-      productId: response.product ? response.product._id : "", // Lưu id sản phẩm
-      price: response.product.price || 0,
-      total:
-        updatedOrderDetails[index].quantity *
-        (response.product.price || 0) *
-        updatedOrderDetails[index].convertQuantity,
-    };
-    setOrderDetails(updatedOrderDetails);
-  };
+    try {
+      const token = localStorage.getItem("accessToken");
 
+      // Lấy thông tin sản phẩm từ API
+      const response = await apiFilterPriceByProductName(token, {
+        title: selectedProductName,
+      });
+
+      // Lấy các phiếu từ API
+      const receipts = await apiFilterReceiptByProduct(token, {
+        title: selectedProductName,
+      });
+      setListReceiptId(receipts);
+
+      // Cập nhật dữ liệu cho đơn hàng
+      const updatedOrderDetails = [...orderDetails];
+      updatedOrderDetails[index] = {
+        ...updatedOrderDetails[index],
+        productName: selectedProductName,
+        productId: response.product ? response.product._id : "", // Lưu id sản phẩm
+        price: response.product.price || 0,
+        VAT: response.product.VAT || 0,
+        total:
+          updatedOrderDetails[index].quantity *
+          (response.product.price || 0) *
+          updatedOrderDetails[index].convertQuantity,
+        receipts: receipts, // Truyền phiếu vào orderDetails
+      };
+
+      setOrderDetails(updatedOrderDetails); // Cập nhật lại state orderDetails
+    } catch (error) {
+      console.log("Error in handleChangeProductName:", error);
+    }
+  };
+  useEffect(() => {
+    console.log("Full listReceiptId:", listReceiptId); // Log the entire object
+
+    const extractIdsFromReceipts = (listReceiptId) => {
+      // Check if listReceiptId exists and contains an array of receipts
+      if (listReceiptId && Array.isArray(listReceiptId.receipts)) {
+        // Loop through each receipt and extract _id and idPNK
+        return listReceiptId.receipts.map((receipt) => ({
+          _id: receipt._id, // Receipt _id
+          name: receipt.idPNK, // idPNK from the receipt
+        }));
+      }
+      return []; // Return an empty array if no data or not an array
+    };
+    console.log(
+      "Extracted IDs from Receipts:",
+      extractIdsFromReceipts(listReceiptId)
+    );
+  }, [listReceiptId]);
+  const extractIdsFromReceipts = (listReceiptId) => {
+    // Check if listReceiptId exists and contains an array of receipts
+    if (listReceiptId && Array.isArray(listReceiptId.receipts)) {
+      // Loop through each receipt and extract _id and idPNK
+      return listReceiptId.receipts.map((receipt) => ({
+        _id: receipt._id, // Receipt _id
+        name: receipt.idPNK, // idPNK from the receipt
+      }));
+    }
+    return []; // Return an empty array if no data or not an array
+  };
   const [user, setUser] = useState("");
   const [orderDetails, setOrderDetails] = useState([]);
+
   const fetchUser = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -143,17 +203,10 @@ export default function CreateOrderDetailFirst() {
       throw new Error("Fetch user is error " + error);
     }
   };
-  const handleDate = () => {
-    const today = new Date();
-    const day = today.getDate();
-    const month = today.getMonth() + 1;
-    const year = today.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
   const addNewRow = () => {
     const newRow = {
       id: orderDetails.length + 1,
-      productCode: "",
+      amountVAT: 0,
       productName: "",
       quantity: "",
       unit: "",
@@ -170,70 +223,16 @@ export default function CreateOrderDetailFirst() {
   useEffect(() => {
     fetchUser();
   }, []);
+
   const calculateTotalAmount = () => {
-    return orderDetails.reduce((sum, detail) => (sum + detail.total).toLocaleString(), 0);
+    return orderDetails.reduce(
+      (sum, detail) => sum + detail.total + totalVAT,
+      0
+    );
   };
   const calculateChange = () => {
     return Math.max(0, receivedAmount - calculateTotalAmount());
   };
-  // const handleSubmit = async () => {
-  //   try {
-  //     // Kiểm tra nếu orderDetails là rỗng hoặc không có sản phẩm
-  //     if (orderDetails.length === 0) {
-  //       alert("Vui lòng thêm ít nhất một sản phẩm.");
-  //       return;
-  //     }
-
-  //     // Kiểm tra xem có dữ liệu thiếu trong từng dòng không
-  //     for (let i = 0; i < orderDetails.length; i++) {
-  //       const detail = orderDetails[i];
-  //       if (
-  //         !detail.productName ||
-  //         !detail.quantity ||
-  //         !detail.unit ||
-  //         !detail.price
-  //       ) {
-  //         alert(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
-  //         return;
-  //       }
-  //     }
-  //     // lấy convertQuantity của unit theo từng mã tương ứng
-  //     // Tính tổng tiền của hóa đơn
-  //     const totalAmount = calculateTotalAmount();
-  //     const change = calculateChange();
-
-  //     // Tạo đối tượng dữ liệu để gửi
-  //     const orderData = {
-  //       products: orderDetails.map((detail) => ({
-  //         product: detail.productId,
-  //         quantity: Number(detail.quantity),
-  //         unit: detail.unitId, // chổ này lấy kèm theo id nè
-  //         price: detail.price,
-  //         total: detail.total,
-  //       })),
-  //       totalAmount: totalAmount,
-  //       receiveAmount: receivedAmount,
-  //       change: change,
-  //       user: user._id,
-  //     };
-  //     const token = localStorage.getItem("accessToken");
-  //     if (!token) throw new Error("Token không hợp lệ!");
-
-  //     // Giả sử API tạo đơn hàng là apiCreateOrder
-  //     const response = await apiCreateOrder(token, orderData);
-
-  //     if (response.success) {
-  //       alert("Đơn hàng đã được tạo thành công.");
-  //       // Thực hiện các thao tác khác sau khi submit thành công
-  //     } else {
-  //       alert("Đã có lỗi khi tạo đơn hàng.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Lỗi khi submit: ", error);
-  //     alert("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
-  //   }
-  // };
-
 
   const handleSubmit = async () => {
     try {
@@ -242,44 +241,60 @@ export default function CreateOrderDetailFirst() {
         alert("Vui lòng thêm ít nhất một sản phẩm.");
         return;
       }
-  
+
       // Check for missing data in each row
       for (let i = 0; i < orderDetails.length; i++) {
         const detail = orderDetails[i];
-        if (!detail.productName || !detail.quantity || !detail.unit || !detail.price) {
+        if (
+          !detail.productName ||
+          !detail.quantity ||
+          !detail.unit ||
+          !detail.price
+        ) {
           alert(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
           return;
         }
       }
-  
+
       // Calculate total amount and change
       const totalAmount = calculateTotalAmount();
       const change = calculateChange();
-  
-      // Create order data object to send
+      let amountVAT = 0; // Khởi tạo amountVAT ở đây
+      let receiptId = "";
       const orderData = {
         products: orderDetails.map((detail) => {
-          const quantityWithConversion = Number(detail.quantity) * detail.convertQuantity; // Apply conversion
+          const quantityWithConversion =
+            Number(detail.quantity) * detail.convertQuantity;
+          const productVAT = detail.price * detail.VAT; // Tính VAT cho sản phẩm này
+          amountVAT += productVAT * Number(detail.quantity); // Cộng dồn VAT
+          const receipt = extractIdsFromReceipts(listReceiptId).find(receipt => receipt.name === detail.receiptId);
+          receiptId = receipt ? receipt._id : "";
           return {
             product: detail.productId,
-            quantity: quantityWithConversion, // Use converted quantity
-            unit: detail.unitId, // Unit ID
+            quantity: quantityWithConversion, 
+            unit: detail.unitId, 
             price: detail.price,
-            total: detail.total, // Total is already calculated in your row
+            total: detail.total, 
+            receipt: receiptId
           };
         }),
         totalAmount: totalAmount,
         receiveAmount: receivedAmount,
         change: change,
         user: user._id,
+        amountVAT: amountVAT, 
+        warehouseReceipt: receiptId,
+        id: codeOrder()
       };
-  
+
+      console.log(orderData);
+
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token không hợp lệ!");
-  
+
       // Create the order using the API
       const response = await apiCreateOrder(token, orderData);
-  
+
       if (response.success) {
         alert("Đơn hàng đã được tạo thành công.");
         // Additional actions on successful submit can be placed here
@@ -291,7 +306,59 @@ export default function CreateOrderDetailFirst() {
       alert("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
     }
   };
-  
+  const calculateVAT = (quantity, price, VAT) => {
+    return quantity * price * VAT;
+  };
+  const calculateTotalVAT = (orderDetails) => {
+    let amountVAT = 0;
+    orderDetails.forEach((detail) => {
+      const productVAT = calculateVAT(
+        detail.quantity,
+        detail.price,
+        detail.VAT
+      );
+      amountVAT += productVAT;
+    });
+    return amountVAT;
+  };
+  const totalVAT = calculateTotalVAT(orderDetails);
+  function codeOrder() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // Tháng từ 0-11, nên phải cộng thêm 1 và đảm bảo 2 chữ số
+    const day = currentDate.getDate().toString().padStart(2, "0"); // Đảm bảo 2 chữ số cho ngày
+    const hours = currentDate.getHours().toString().padStart(2, "0");
+    const minutes = currentDate.getMinutes().toString().padStart(2, "0");
+    const seconds = currentDate.getSeconds().toString().padStart(2, "0");
+    const dateTime = `${year}${month}${day}${hours}${minutes}${seconds}`;
+    return dateTime;
+  }
+  const handleDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // Tháng từ 0-11, nên phải cộng thêm 1 và đảm bảo 2 chữ số
+    const day = currentDate.getDate().toString().padStart(2, "0"); // Đảm bảo 2 chữ số cho ngày
+    const hours = currentDate.getHours().toString().padStart(2, "0");
+    const minutes = currentDate.getMinutes().toString().padStart(2, "0");
+    const seconds = currentDate.getSeconds().toString().padStart(2, "0");
+    const dateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    return dateTime;
+  };
+  const handleChangeReceiptId = (index, selectedReceiptId) => {
+    try {
+      // Update the orderDetails for the selected index, only modifying receiptId
+      const updatedOrderDetails = [...orderDetails];
+      updatedOrderDetails[index] = {
+        ...updatedOrderDetails[index],
+        receiptId: selectedReceiptId, // Update the receiptId field
+      };
+
+      // Update the state for orderDetails
+      setOrderDetails(updatedOrderDetails);
+    } catch (error) {
+      console.log("Error in handleChangeReceiptId:", error);
+    }
+  };
   
   return (
     <>
@@ -306,6 +373,7 @@ export default function CreateOrderDetailFirst() {
                 placeholder="H0231234"
                 className="input w-60  h-7 text-black"
                 disabled
+                value={codeOrder()}
               />
             </div>
             <div className="flex w-fit h-auto justify-center items-center ml-2 mt-2">
@@ -326,12 +394,13 @@ export default function CreateOrderDetailFirst() {
                 placeholder="NV0231234"
                 className="input w-60  h-7 text-black"
                 disabled
+                value={user && user.employee.id}
               />
             </div>
             <div className="flex w-fit h-auto justify-center items-center ml-2 mt-2">
               <h1 className="font-medium w-24 text-sm ">Tên nhân viên:</h1>
               <input
-                value={user.lastname + " " + user.firstname}
+                value={user.name}
                 type="text"
                 className="input w-60  h-7 text-black"
                 disabled
@@ -370,8 +439,9 @@ export default function CreateOrderDetailFirst() {
               {/* head */}
               <thead>
                 <tr>
-                  <th>Mã hàng</th>
+                  {/* <th>Mã hàng</th> */}
                   <th>Tên hàng</th>
+                  <th>Mã phiếu</th>
                   <th>Số lượng</th>
                   <th>Đơn vị tính</th>
                   <th>Đơn giá</th>
@@ -382,7 +452,6 @@ export default function CreateOrderDetailFirst() {
               <tbody>
                 {orderDetails.map((detail, index) => (
                   <tr className="hover:bg-slate-100">
-                    <td>SP034213</td>
                     <td>
                       <div className="w-56">
                         <ChangeInput
@@ -403,12 +472,30 @@ export default function CreateOrderDetailFirst() {
                       </div>
                     </td>
                     <td>
+                      <div className="w-56">
+                        <Autocomplete
+                          suggestion={extractIdsFromReceipts(listReceiptId)}   
+                          onchange={(name) =>
+                            handleChangeReceiptId(index, name)
+                          }
+                          value={detail.receiptId}
+                          placeholder="Nhập mã phiếu"
+                        />
+                      </div>
+                    </td>
+                    <td>
                       <input
                         type="number"
                         value={detail.quantity}
-                        onChange={(e) =>
-                          handleChangeQuantity(index, e.target.value)
-                        }
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (/^\d+$/.test(value) && parseInt(value) >= 1) {
+                            handleChangeQuantity(index, value); // Chỉ gọi handleChange nếu là số nguyên dương lớn hơn 1
+                          } else if (value === "") {
+                            handleChangeQuantity(index, value); // Cho phép xóa trường
+                          }
+                        }}
+                        min={1}
                         className="input w-32 h-8"
                         placeholder="1"
                       />
@@ -429,8 +516,7 @@ export default function CreateOrderDetailFirst() {
                       </div>
                     </td>
                     <td>{detail.price.toLocaleString() || "0"} đ</td>
-                    {/* Hiển thị giá hoặc "0" nếu không có */}
-                    <td>{detail.total.toLocaleString() || "0"} đ</td>
+                    <td>{detail.total.toLocaleString() || 0} đ</td>
                     <td>
                       <button
                         id="btn__delete"
@@ -463,7 +549,6 @@ export default function CreateOrderDetailFirst() {
           <div className="flex w-full h-auto">
             <div className="w-9/12"></div>
             <div className="w-3/12 h-auto justify-end items-end mt-4">
-              
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Tiền nhận:</h2>
                 <h2 className=" font-sans text-sm mr-2">
@@ -473,17 +558,18 @@ export default function CreateOrderDetailFirst() {
                     onChange={handleReceivedAmountChange}
                     className="input input-bordered input-sm"
                     placeholder="Nhập số tiền nhận"
+                    min={1}
                   />
                 </h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Thuế VAT:</h2>
-                <h2 className=" font-sans text-sm mr-2">30.000 VNĐ</h2>
+                <h2 className=" font-sans text-sm mr-2">{totalVAT.toLocaleString()} VNĐ</h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Tiền thừa:</h2>
                 <h2 className=" font-sans text-sm mr-2 ">
-                  {calculateChange() || 0} VNĐ
+                  {calculateChange().toLocaleString() || 0} VNĐ
                 </h2>
               </div>
               <div className="flex justify-between items-center">
@@ -492,7 +578,7 @@ export default function CreateOrderDetailFirst() {
                   className=" font-sans text-lg mr-2"
                   style={{ color: "#f13612" }}
                 >
-                  {calculateTotalAmount() || 0} VNĐ
+                  {calculateTotalAmount().toLocaleString() || 0} VNĐ
                 </h2>
               </div>
             </div>

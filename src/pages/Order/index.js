@@ -6,10 +6,30 @@ import OrderTableDetail from "../../components/OrderTableDetail";
 import { Link } from "react-router-dom";
 import apiGetListEmployee from "../../apis/apiGetListEmployee";
 import apiGetAllOrder from "../../apis/apiGetAllOrder";
+import apiFilterOrderByCondition from "../../apis/apiFilterOrderByCondition";
 
 export default function Order() {
+  const [value, setValue] = useState({
+    startDate: null,
+    endDate: null,
+  });
+  const [listOrderByCondition, setListOrderByCondition] = useState([])
+  const [employee, setEmployee] = useState("")
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orders, setOrders] = useState([])
+  const fetchOrderByCondition = async()=> {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid!")
+      const response = await apiFilterOrderByCondition(token, {name: employee, startDate: value.startDate, endDate: value.endDate})
+      setListOrderByCondition(Array.isArray(response.orders) ? response.orders : [])
+    } catch (error) {
+      console.log("fetch order by employee is error", error);
+    }
+  }
+  useEffect(() => {
+    fetchOrderByCondition()
+  }, [value, employee])
   const handleOrderClick = (order) => {
     setSelectedOrder(order);
   };
@@ -50,16 +70,15 @@ export default function Order() {
   useEffect(()=> {
     fetchEmployees()
   }, [])
-  const [value, setValue] = useState({
-    startDate: null,
-    endDate: null,
-  });
+  
 
   const [isClicked, setIsClicked] = useState(true);
   const toggleClicked = () => {
     setIsClicked((prev) => !prev);
   };
-  
+  const handleChangeEmployee = (e) => {
+    setEmployee(e.target.value)
+  }
   return (
     <>
       <div
@@ -89,7 +108,7 @@ export default function Order() {
                 Thêm
               </button>
               </Link>
-              <Link to="/reciept">
+              <Link to="/reciept" state={{selectedOrder}}>
               <button className="btn btn-success text-white ml-2 w-32">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -111,12 +130,12 @@ export default function Order() {
             </div>
           </div>
           <div className=" mt-2 mr-3 flex justify-between">
-            <select className="select select-bordered ml-4 w-44 h-10  max-w-xs">
-              <option disabled selected>
+            <select value={employee} onChange={handleChangeEmployee}  className="select select-bordered ml-4 w-44 h-10  max-w-xs">
+              <option value={""} selected>
                 Người tạo
               </option>
               {employees.length > 0 ? employees.map((employee) => (
-                <option value={employee._id}>{employee.name}</option>
+                <option value={employee.name}>{employee.name}</option>
               )) : <div>Không có nhân viên nào</div>}
               
             </select>
@@ -210,32 +229,7 @@ export default function Order() {
               </div>
             </div>
           </div>
-          {isClicked ? (
-            <div className="w-full h-dvh">
-              <div className="card bg-white  rounded-lg ml-4 mr-4 mt-2 grid overflow-y-auto animate__animated animate__fadeInRight"
-              style={{
-                height: "calc(100vh - 200px)",
-              }}>
-                <table className="table table-pin-rows ">
-                  {/* head */}
-                  <thead>
-                    <tr>
-                      <th>Hóa đơn</th>
-                      <th>Tổng tiền</th>
-                      <th>Người lập</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <OrderTableList />
-                  </tbody>
-                  {/* foot */}
-                  <tfoot>
-                    <tr></tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          ) : (
+         
             <div className="flex w-full h-dvh animate__animated animate__fadeInRight">
               <div className="card bg-white w-3/12  rounded-none ml-4 mr-2 mt-2 grid overflow-y-auto "
               style={{
@@ -250,21 +244,14 @@ export default function Order() {
                     <tr></tr>
                   </thead>
                   <tbody>
-                    <StatOrderDetail orders={orders} onOrderClick={handleOrderClick}  />
-                    {/* <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail />
-                    <StatOrderDetail /> */}
+                    {
+                      employee === "" && value.startDate === null && value.endDate === null  ? (
+                        <StatOrderDetail orders={orders} onOrderClick={handleOrderClick}  />
+                      ) : listOrderByCondition.length > 0 ? (
+                        <StatOrderDetail orders={listOrderByCondition} onOrderClick={handleOrderClick}  />
+                      ) :
+                       (<div>Không có hóa đơn nào cả</div>)
+                    }
                   </tbody>
                   {/* foot */}
                   <tfoot>
@@ -281,7 +268,7 @@ export default function Order() {
                   <div className="flex w-fit h-8 mt-2 ml-2">
                     <div className="flex justify-center items-center">
                       <h2 className="font-medium text-sm">Mã hóa đơn:</h2>
-                      <h2 className=" font-sans text-xs ml-1">H3231091</h2>
+                      <h2 className=" font-sans text-xs ml-1">{selectedOrder && selectedOrder.id}</h2>
                     </div>
                     <div className="flex ml-3 justify-center items-center">
                       <svg
@@ -324,12 +311,12 @@ export default function Order() {
                   <div className="flex ml-2 items-center">
                     <h2 className="font-medium text-sm">Thu ngân:</h2>
                     <h2 className=" font-sans text-xs ml-1">
-                      {selectedOrder && selectedOrder.user.lastname + " " + selectedOrder.user.firstname}
+                      {selectedOrder && selectedOrder.user.name}
                     </h2>
                   </div>
                   <div className="flex ml-2 items-center">
                     <h2 className="font-medium text-sm">Mã nhân viên:</h2>
-                    <h2 className=" font-sans text-xs ml-1">H7003241</h2>
+                    <h2 className=" font-sans text-xs ml-1">{selectedOrder && selectedOrder.user.employee.id}</h2>
                   </div>
                   <div className=" overflow-y-auto"
                   style={{
@@ -369,28 +356,27 @@ export default function Order() {
                   <div className="flex w-full h-auto">
                    <div className="w-9/12"></div> 
                   <div className="w-3/12 h-auto justify-end items-end mt-4">
-                    {/* <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Thuế VAT:</h2>
-                      <h2 className=" font-sans text-sm mr-2">30.000 VNĐ</h2>
-                    </div> */}
+                      <h2 className=" font-sans text-sm mr-2">{selectedOrder && selectedOrder.amountVAT.toLocaleString()} VNĐ</h2>
+                    </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Tiền nhận:</h2>
-                      <h2 className=" font-sans text-sm mr-2">{selectedOrder && selectedOrder.receiveAmount}</h2>
+                      <h2 className=" font-sans text-sm mr-2">{selectedOrder && selectedOrder.receiveAmount.toLocaleString()}</h2>
                     </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Tiền thừa:</h2>
-                      <h2 className=" font-sans text-sm mr-2 ">{selectedOrder && selectedOrder.change}</h2>
+                      <h2 className=" font-sans text-sm mr-2 ">{selectedOrder && selectedOrder.change.toLocaleString()}</h2>
                     </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">Tổng tiền:</h2>
-                      <h2 className=" font-sans text-lg mr-2" style={{color:"#f13612"}}>{selectedOrder && selectedOrder.totalAmount}</h2>
+                      <h2 className=" font-sans text-lg mr-2" style={{color:"#f13612"}}>{selectedOrder && selectedOrder.totalAmount.toLocaleString()}</h2>
                     </div>
                   </div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
         </div>
       </div>
     </>

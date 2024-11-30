@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import apiCreateEmployee from "../../apis/apiCreateEmployee";
+import apiRegister from "../../apis/apiRegister";
+import { useNavigate } from "react-router-dom";
 export default function Employee() {
-  const [image, setImage] = useState([]);
+  const navigate = useNavigate();
+  const [images, setImages] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
   const [payload, setPayload] = useState({});
   const [error, setError] = useState({});
+  const generateRandomNumber = () => {
+    const randomNumber = Math.floor(Math.random() * 900) + 100;
+    return randomNumber;
+  };
+  const [productId, setProductId] = useState(generateRandomNumber);
   const handleBlur = async (e) => {
     const { name } = e.target;
     if (!payload[name]) {
@@ -14,15 +22,16 @@ export default function Employee() {
   };
   const handleClose = () => {
     setIsVisible(false);
-    setImage(null);
+    setImages(null);
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const nameRegex = /^[A-ZÀ-Ý][a-zà-ỹ]*(\s[A-ZÀ-Ý][a-zà-ỹ]*)*$/
-    const emailRegex = /^[a-zA-Z0-9][a-zA-Z0-9.]{6,30}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    const nameRegex = /^[A-ZÀ-Ý][a-zà-ỹ]*(\s[A-ZÀ-Ý][a-zà-ỹ]*)*$/;
+    const emailRegex =
+      /^[a-zA-Z0-9][a-zA-Z0-9.]{6,30}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const phoneRegex =
       /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
-    const addressRegex = /^.{1,100}$/
+    const addressRegex = /^.{1,100}$/;
     // const birthday =
     let errorMessage;
     // name
@@ -88,7 +97,7 @@ export default function Employee() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage((prevImages) => ({
+        setImages((prevImages) => ({
           ...prevImages,
           [id]: reader.result,
         }));
@@ -106,7 +115,7 @@ export default function Employee() {
         !address ||
         !gender ||
         !birthday ||
-        !image
+        !images
       ) {
         Swal.fire(
           "Thiếu thông tin!",
@@ -138,15 +147,20 @@ export default function Employee() {
         formData.append("address", address);
         formData.append("gender", gender);
         formData.append("birthday", birthday);
-        for (const key in image) {
-          if (image[key]) {
-            const file = await fetch(image[key]).then((res) => res.blob());
+        formData.append("id", productId)
+        for (const key in images) {
+          if (images[key]) {
+            const file = await fetch(images[key]).then((res) => res.blob());
             formData.append("images", file, `image-${key}.jpg`);
           }
         }
         const response = await apiCreateEmployee(token, formData);
-        if (response.success) {
+        const employee = response.data._id
+        const image = response.data.images[0]
+        const acc = await apiRegister(token, {email, name, phone, address, gender, birthday, employee, image})
+        if (response.success && acc.success) {
           Swal.fire("Success", "Thêm thành công!", "success");
+          navigate("/employeelist")
         } else {
           Swal.fire("Error", "Thêm không thành công!", "error");
         }
@@ -155,6 +169,76 @@ export default function Employee() {
       Swal.fire("Error", "Thêm không thành công", "error");
     }
   };
+
+  // const handleSubmit = async () => {
+  //   try {
+  //     const { name, email, phone, address, gender, birthday } = payload;
+  //     if (
+  //       !name ||
+  //       !email ||
+  //       !phone ||
+  //       !address ||
+  //       !gender ||
+  //       !birthday ||
+  //       !image
+  //     ) {
+  //       Swal.fire(
+  //         "Thiếu thông tin!",
+  //         "Vui lòng điền đầy đủ thông tin!",
+  //         "error"
+  //       );
+  //       return;
+  //     }
+
+  //     const result = await Swal.fire({
+  //       title: "Xác nhận",
+  //       text: "Bạn có chắc chắn muốn thêm nhân viên này không?",
+  //       icon: "warning",
+  //       showCancelButton: true,
+  //       confirmButtonText: "Có",
+  //       cancelButtonText: "Không",
+  //     });
+
+  //     if (result.isConfirmed) {
+  //       const token = localStorage.getItem("accessToken");
+  //       if (!token) {
+  //         throw new Error("Token is valid!");
+  //       }
+
+  //       // Gửi thông tin nhân viên lên API
+  //       const formData = new FormData();
+  //       formData.append("name", name);
+  //       formData.append("email", email);
+  //       formData.append("phone", phone);
+  //       formData.append("address", address);
+  //       formData.append("gender", gender);
+  //       formData.append("birthday", birthday);
+  //       formData.append("id", productId);
+
+  //       // Kiểm tra và thêm ảnh vào formData
+  //       for (const key in image) {
+  //         if (image[key]) {
+  //           const file = await fetch(image[key]).then((res) => res.blob());
+  //           formData.append("images", file, `image-${key}.jpg`);
+  //         }
+  //       }
+  //       console.log(formData.address); 
+  //       const response = await apiCreateEmployee(token, formData);
+  //       const employee = response.data._id
+  //       const acc = await apiRegister(token, {name, email, phone, birthday, gender, employee, address});
+  //       if (response.success && acc.success) {
+  //         Swal.fire("Success", "Thêm thành công!", "success");
+  //         navigate("/employeelist");
+  //       } else {
+  //         Swal.fire("Error", "Thêm không thành công!", "error");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error(error); // Ghi lại lỗi để dễ dàng debug
+  //     Swal.fire("Error", "Thêm không thành công", "error");
+  //   }
+  // };
+
   return (
     <>
       <div
@@ -191,9 +275,10 @@ export default function Employee() {
 
                 <input
                   type="text"
-                  placeholder="Max nhan vien"
+                  placeholder="Mã nhân viên"
                   className="input input-bordered w-5/12 h-10 ml-4"
                   disabled
+                  value={productId}
                 />
               </div>
               {error && <div className="text-red-500 ml-4">{error.name}</div>}
@@ -321,7 +406,7 @@ export default function Employee() {
               id="FileMain"
             />
 
-            {image && image["inputMain"] ? (
+            {images && images["inputMain"] ? (
               <div className="indicator ">
                 <button
                   className="indicator-item badge badge-secondary rounded-full bg-red-500"
@@ -343,7 +428,7 @@ export default function Employee() {
                   </svg>
                 </button>
                 <img
-                  src={image["inputMain"]}
+                  src={images["inputMain"]}
                   alt="Selected"
                   className="size-44 ml-4 mb-8"
                 />

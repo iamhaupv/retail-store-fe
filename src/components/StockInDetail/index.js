@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import apiIsDisplayWarehouseReceipt from "../../apis/apiIsDisplayWarehouseReceipt";
 export default function StockInDetail({ receipts }) {
   function formatDate(date) {
     if (!(date instanceof Date)) {
@@ -10,15 +9,8 @@ export default function StockInDetail({ receipts }) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
-  const handleChangeIsDisplay = async (pid, isDisplay) => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) throw new Error("Token is invalid");
-      await apiIsDisplayWarehouseReceipt(token, pid, { isDisplay });
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
+  console.log(receipts);
+  
   return (
     <>
       {receipts.map((receipt) => (
@@ -26,19 +18,17 @@ export default function StockInDetail({ receipts }) {
           <td>{receipt.idPNK}</td>
           <td>{formatDate(receipt.createdAt)}</td>
           <td>
-            {receipt.user.lastname} {receipt.user.firstname}
+            {receipt.user.name}
           </td>
           <td className="flex justify-end mr-3">{receipt.products.length}</td>
           <td>
             <h1 className="flex justify-end items-center">
             {receipt.products.reduce((total, product) => {
-              const importPrice = product.importPrice || 0; // Giá nhập vào
-              const quantity = product.quantity || 0; // Số lượng sản phẩm
-              const convertQuantity = product.unit
-                ? product.unit.convertQuantity
-                : 1; // Hệ số quy đổi
-              return total + importPrice * quantity * convertQuantity; // Cộng dồn tổng giá
-            }, 0).toLocaleString()}
+                const quantityDynamic = product.quantityDynamic || 0; // Số lượng thực tế
+                const importPrice = product.importPrice || 0; // Giá nhập
+                const productTotal = quantityDynamic * importPrice; // Tổng tiền cho mỗi sản phẩm
+                return total + productTotal; // Cộng dồn tổng tiền
+              }, 0).toLocaleString()}
             đ
             </h1>
           </td>
@@ -70,33 +60,6 @@ export default function StockInDetail({ receipts }) {
                 </svg>
               </button>
             </Link>
-            {/* <button
-              id="btn__delete"
-              className="w-6 h-6 rounded-sm "
-              style={{ backgroundColor: "#feebe8", outline: "" }}
-              // onClick={() =>
-              //   document.getElementById("Delete_StockIn").showModal()
-              // }
-              onClick={() => handleChangeIsDisplay(receipt._id, false)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                style={{ color: "#f13612" }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button> */}
-
-            {/* Alert Delete */}
           </td>
         </tr>
       ))}

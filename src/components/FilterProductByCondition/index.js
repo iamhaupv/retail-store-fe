@@ -1,5 +1,5 @@
 import React from "react";
-export default function ProductInventory({ products }) {
+export default function FilterProductByCondition({ products }) {
   
   function formatDate(date) {
     if (!(date instanceof Date)) {
@@ -29,11 +29,12 @@ export default function ProductInventory({ products }) {
     <>
       {Array.isArray(products) && products.length > 0 ? (
         products.map((product) => (
-          <tr key={product._id}>
+
+         product.products.map((item) => (
+            <tr key={product._id}>
             <td>
               <div>
-                <div className="font-bold">{product.id || "ASM001"}</div>
-                {/* <Barcode value={product._id}/> */}
+                <div className="font-bold">{item.product.id || "ASM001"}</div>
               </div>
             </td>
             <td>
@@ -43,23 +44,23 @@ export default function ProductInventory({ products }) {
               <div className="flex items-center gap-3">
                 <div className="avatar">
                   <div className="mask rounded h-12 w-12">
-                    {product.images && product.images.length > 0 ? (
-                      <img src={product.images[0]} alt={product.title} />
+                    {item.product.images && item.product.images.length > 0 ? (
+                      <img src={item.product.images[0]} alt={item.product.title} />
                     ) : (
                       <img src="/path/to/default/image.jpg" alt="Default" />
                     )}{" "}
-                    <span>{product.title}</span>
+                    <span>{item.product.title}</span>
                   </div>
                 </div>
-                {product.title}
+                {item.product.title}
               </div>
             </td>
             <td>
-              <span>{checkExpirationStatus(product.expires)}</span>
+              <span>{checkExpirationStatus(item.expires)}</span>
             </td>
-            <td>{formatDate(product.expires)}</td>
-            <td> {product.quantityDynamic} </td>
-            <td>{product.sumQuantity}</td>
+            <td>{formatDate(item.expires)}</td>
+            <td> {item.quantityDynamic} </td>
+            <td>{item.product.quantity}</td>
             <td>
               <button
                 id="btn__delete"
@@ -84,6 +85,7 @@ export default function ProductInventory({ products }) {
               </button>
             </td>
           </tr>
+         ))
         ))
       ) : (
         <tr>

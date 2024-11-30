@@ -83,7 +83,9 @@ const LayoutDefault = () => {
             <SideBar role={localStorage.getItem(
               'role'
             )} />
-            <Outlet />
+            <Outlet role={localStorage.getItem(
+              'role'
+            )} />
           </main>
         </div>
       )}

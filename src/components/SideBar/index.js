@@ -13,8 +13,6 @@ import {
   faGear,
   faChartColumn,
 } from "@fortawesome/free-solid-svg-icons";
-import { FileChartColumn } from 'lucide-react';
-
 import { faBuffer } from "@fortawesome/free-brands-svg-icons";
 import { Link, NavLink } from "react-router-dom";
 import { icon } from "@fortawesome/fontawesome-svg-core";
@@ -29,16 +27,16 @@ export default function SideBar({ role }) {
   // Các mục sidebar cho admin
   const adminItems = [
     { to: "/", label: "Dashboard", icon: faGaugeHigh, key: "dashBoard" },
-    {  label: "Sản phẩm",key: "Sản phẩm", icon: faBuffer },
-    { to: "/product", label: "[+] Thêm mới sản phẩm", key: "Thêm mới sản phẩm" },
-    { to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },
+    {to: "/product-list",  label: "Sản phẩm",key: "Sản phẩm", icon: faBuffer },
+    //{ to: "/product", label: "[+] Thêm mới sản phẩm", key: "Thêm mới sản phẩm" },
+    //{ to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },
     { to: "/category", label: "Quản lý đơn vị tính", key: "Quản lý đơn vị tính" },
-    {  label: "Nhân viên",key: "Nhân viên", icon: faClipboardUser },
+    { to: "/employeelist", label: "Nhân viên",key: "Nhân viên", icon: faClipboardUser },
     { to: "/employeeSchedule", label: "Lịch làm việc", key: "Lịch làm việc" },
-    { to: "/employeelist", label: "Danh sách nhân viên", key: "Danh sách nhân viên" },
-    {  label: "Nhà cung cấp",key: "Nhà cung cấp", icon: faWarehouse },
-    { to: "/supply", label: "[+] Thêm nhà cung cấp", key: "Thêm nhà cung cấp" },
-    { to: "/supply-list", label: "Danh sách nhà cung cấp", key: "Danh sách nhà cung cấp" },
+    //{ to: "/employeelist", label: "Danh sách nhân viên", key: "Danh sách nhân viên" },
+    {to: "/supply-list",  label: "Nhà cung cấp",key: "Nhà cung cấp", icon: faWarehouse },
+    //{ to: "/supply", label: "[+] Thêm nhà cung cấp", key: "Thêm nhà cung cấp" },
+    //{ to: "/supply-list", label: "Danh sách nhà cung cấp", key: "Danh sách nhà cung cấp" },
     { to: "/inventory", label: "Quản lý kho", icon: faStore, key: "Quản lý kho" },
     { to: "/order", label: "Đơn hàng", icon: faCartPlus, key: "Đơn hàng" },
     { to: "/report", label: "Báo cáo", key: "Báo cáo", icon: faChartColumn },
@@ -50,16 +48,16 @@ export default function SideBar({ role }) {
   // Các mục sidebar cho user
   const userItems = [
     { to: "/", label: "Dashboard", icon: faGaugeHigh, key: "dashBoard" },
-    {  label: "Sản phẩm", icon: faBuffer },
+    { to: "/product-list", key:"Danh sách sản phẩm", label: "Danh sách sản phẩm", icon: faBuffer },
     // { to: "/product", label: "[+] Thêm mới sản phẩm", key: "Thêm mới sản phẩm" },
-    { to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },
+    //{ to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },
     // { to: "/category", label: "Quản lý đơn vị tính", key: "Quản lý đơn vị tính" },
     {  label: "Nhân viên", icon: faClipboardUser },
-    { to: "/employeeSchedule", label: "Lịch làm việc", key: "Lịch làm việc" },
+    { to: "/employeeSchedule",  label: "Lịch làm việc", key: "Lịch làm việc" },
     // { to: "/employeelist", label: "Danh sách nhân viên", key: "Danh sách nhân viên" },
-    {  label: "Nhà cung cấp", icon: faWarehouse },
+    //{ to: "/supply-list",key:"Nhà cung cấp", label: "Nhà cung cấp", icon: faWarehouse },
     // { to: "/supply", label: "[+] Thêm nhà cung cấp", key: "Thêm nhà cung cấp" },
-    { to: "/supply-list", label: "Danh sách nhà cung cấp", key: "Danh sách nhà cung cấp" },
+    //{ to: "/supply-list", label: "Danh sách nhà cung cấp", key: "Danh sách nhà cung cấp" },
     //{ to: "/inventory", label: "Quản lý kho", icon: faStore, key: "Quản lý kho" },
     { to: "/order", label: "Đơn hàng", icon: faCartPlus, key: "Đơn hàng" },
     // { to: "/report", label: "Báo cáo", key: "Báo cáo", icon: faChartColumn },

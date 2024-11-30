@@ -2,27 +2,31 @@ import React, { useEffect, useState } from "react";
 import apiGetListBrand from "../../apis/apiGetListBrand";
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
-import apiCreateProduct from "../../apis/apiCreateProduct";
-import Autocomplete from "../../components/AutoComplete";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import apiUpdateProduct from "../../apis/apiUpdateProduct";
 
 export default function UpdateProduct() {
-    const navigate = useNavigate()
+  const location = useLocation();
+  const { product } = location.state || {};
+  const navigate = useNavigate();
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [image, setImage] = useState([]);
+  const [image, setImage] = useState(
+    product.images?.reduce((acc, url, index) => {
+      const key = index === 0 ? "inputMain" : `input${index}`;
+      acc[key] = url;
+      return acc;
+    }, {}) || {}
+  );
   const [isVisible, setIsVisible] = useState(true);
   const [error, setError] = useState({});
-  const [payload, setPayload] = useState({});
-  const suggestion = [
-    { id: 1, name: "Tom Cook" },
-    { id: 2, name: "Wade Cooper" },
-    { id: 3, name: "Tanya Fox" },
-    { id: 4, name: "Arlene Mccoy" },
-    { id: 5, name: "Devon Webb" },
-    { id: 6, name: "Nguyễn Thanh Khoa" },
-    { id: 7, name: "Nguyễn Đức Long" },
-  ];
+  const [payload, setPayload] = useState({
+    title: product?.title || "",
+    price: product?.price || "",
+    description: product?.description || "",
+    brand: product?.brand || "",
+    category: product?.category || "",
+  });
   const handleBlur = (e) => {
     const { name } = e.target;
     if (!payload[name]) {
@@ -33,7 +37,7 @@ export default function UpdateProduct() {
     const { name, value } = e.target;
     const titleRegex = /^[A-Za-zÀ-ỹ\s'-.\d]{2,}$/;
     const priceRegex = /^\d+(\.\d{1,2})?$/;
-    const descriptionRegex = /^([\s\S]{10,1000})$/
+    const descriptionRegex = /^([\s\S]{10,1000})$/;
     let errorMessage;
     // title
     if (name === "title") {
@@ -98,7 +102,7 @@ export default function UpdateProduct() {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
-      const response = await apiGetListBrand();
+      const response = await apiGetListBrand(token);
       setBrands(response.brands);
     } catch (error) {
       throw new Error(error);
@@ -106,7 +110,9 @@ export default function UpdateProduct() {
   };
   const fetchCategories = async () => {
     try {
-      const response = await apiGetListCategory();
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetListCategory(token);
       setCategories(response.data);
     } catch (error) {
       throw new Error(error);
@@ -120,8 +126,6 @@ export default function UpdateProduct() {
   const handleSubmit = async () => {
     try {
       const { title, price, description, brand, category } = payload;
-      console.log(payload);
-      
       if (!title || !price || !description || !brand || !image) {
         Swal.fire(
           "Thiếu thông tin!",
@@ -133,7 +137,7 @@ export default function UpdateProduct() {
 
       const result = await Swal.fire({
         title: "Xác nhận",
-        text: "Bạn có chắc chắn muốn thêm sản phẩm này không?",
+        text: "Bạn có chắc chắn muốn cập nhật sản phẩm này không?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Có",
@@ -143,33 +147,42 @@ export default function UpdateProduct() {
       if (result.isConfirmed) {
         const token = localStorage.getItem("accessToken");
         if (!token) {
-          throw new Error("Token is valid!");
+          throw new Error("Token is invalid!");
         }
-
         const formData = new FormData();
+        formData.append("pid", product._id);
         formData.append("title", title);
         formData.append("price", price);
         formData.append("description", description);
-        formData.append("brand", brand);
-        formData.append("category", category);
+        formData.append("brand", brand._id);
+        formData.append("category", category._id);
+
+        // Thêm ảnh vào formData
         for (const key in image) {
           if (image[key]) {
             const file = await fetch(image[key]).then((res) => res.blob());
             formData.append("images", file, `image-${key}.jpg`);
           }
         }
-        const response = await apiCreateProduct(token, formData);
+
+        // Gửi yêu cầu API để cập nhật sản phẩm
+        const response = await apiUpdateProduct(token, formData);
         if (response.success) {
-          Swal.fire("Success", "Thêm thành công!", "success");
-          navigate("/product-list")
+          Swal.fire("Thành công!", "Cập nhật thành công!", "success");
+          navigate("/product-list");
         } else {
-          Swal.fire("Error", "Thêm không thành công!", "error");
+          Swal.fire(
+            "Error",
+            response.error || "Cập nhật không thành công!",
+            "error"
+          );
         }
       }
     } catch (error) {
-      Swal.fire("Error", "Thêm không thành công", "error");
+      Swal.fire("Error", "Cập nhật không thành công", "error");
     }
   };
+
   return (
     <>
       <div
@@ -178,8 +191,6 @@ export default function UpdateProduct() {
       >
         <div className="w-8/12 mr-4 animate__animated animate__fadeInRight">
           <div className="w-full mr-4 rounded-sm">
-            {/* Thông tin sản phẩm */}
-
             <div className="card bg-white rounded-sm top-7 grid  ">
               <h4 className="font-bold text-xl w-full ml-4 mt-2">
                 Chỉnh sửa sản phẩm
@@ -188,10 +199,8 @@ export default function UpdateProduct() {
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Tên sản phẩm
                   <h5 className="ml-1 text-red-600">(*)</h5>
-                  
                 </h4>
                 <h4 className="font-sans text-base w-5/12 ml-4">Mã sản phẩm</h4>
-                
               </div>
               <div className="flex items-center pt-2">
                 <input
@@ -210,9 +219,7 @@ export default function UpdateProduct() {
                   disabled
                 />
               </div>
-              {error && (
-                    <h5 className="ml-4 text-red-500">{error.title}</h5>
-                  )}
+              {error && <h5 className="ml-4 text-red-500">{error.title}</h5>}
               <div className="flex items-center pt-3">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Đơn giá
@@ -230,9 +237,7 @@ export default function UpdateProduct() {
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
               </div>
-              {error && (
-                    <h5 className="ml-4 text-red-500">{error.price}</h5>
-                  )}
+              {error && <h5 className="ml-4 text-red-500">{error.price}</h5>}
               <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
                 Mô tả
                 <h5 className="ml-1 text-red-600">(*)</h5>
@@ -246,8 +251,8 @@ export default function UpdateProduct() {
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-3"
               />
               {error && (
-                  <h5 className="ml-4 text-red-500 mb-3">{error.description}</h5>
-                )}
+                <h5 className="ml-4 text-red-500 mb-3">{error.description}</h5>
+              )}
             </div>
           </div>
           {/* Hình ảnh sản phẩm */}
@@ -258,9 +263,6 @@ export default function UpdateProduct() {
                 <h5 className="ml-1 text-red-600">(*)</h5>
               </h4>
               <div className="flex pt-8 w-full pb-8">
-                {/* Ảnh SP đại diện */}
-                {/* Hình 1 */}
-                {/* <div className='w-4/12'> */}
                 <input
                   type="file"
                   accept="image/*"
@@ -269,7 +271,6 @@ export default function UpdateProduct() {
                   id="FileMain"
                   name="imgMain"
                 />
-
                 {image && image["inputMain"] ? (
                   <div className="indicator ">
                     <button
@@ -291,6 +292,7 @@ export default function UpdateProduct() {
                         />
                       </svg>
                     </button>
+
                     <img
                       src={image["inputMain"]}
                       alt="Selected"
@@ -834,7 +836,6 @@ export default function UpdateProduct() {
             <h4 className="flex font-sans text-base w-full h-10 ml-4 pt-2">
               Nhà cung cấp
               <h5 className="ml-1 text-red-600">(*)</h5>
-              
             </h4>
             {/* Select type  */}
             <select
@@ -844,18 +845,17 @@ export default function UpdateProduct() {
               value={payload.brand || ""}
               className="select select-bordered w-11/12 ml-4 pt-2 mb-3"
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Chọn nhà cung cấp
               </option>
-              {brands.map((product) => (
-                <option key={product._id} value={product._id}>
-                  {product.name}
+              {brands.map((brand) => (
+                <option key={brand._id} value={brand._id}>
+                  {brand.name}
                 </option>
               ))}
             </select>
-            {error && (
-                <h5 className="ml-4 text-red-500">{error.brand}</h5>
-              )}
+
+            {error && <h5 className="ml-4 text-red-500">{error.brand}</h5>}
             <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
               Loại sản phẩm
               <h5 className="ml-1 text-red-600">(*)</h5>
@@ -877,15 +877,10 @@ export default function UpdateProduct() {
                 </option>
               ))}
             </select>
-            <div className="w-11/12 h-11 ml-4 mb-8 ">
-              <Autocomplete suggestion={suggestion}/>
-            </div>
-            {error && (
-                <h5 className="ml-1 text-red-500">{error.categories}</h5>
-              )}
+            {error && <h5 className="ml-1 text-red-500">{error.categories}</h5>}
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }

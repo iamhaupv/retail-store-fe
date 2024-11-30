@@ -39,9 +39,9 @@ export default function StockIn() {
   }, []);
   const handleChange = (selectedBrandName) => {
     if (selectedBrandName) {
-      setIdPNK(selectedBrandName); // Cập nhật idPNK khi người dùng nhập hoặc chọn gợi ý
+      setIdPNK(selectedBrandName);
     } else {
-      setIdPNK(""); // Nếu không có giá trị, reset lại
+      setIdPNK("");
     }
   };
   const handleFilterReceiptByDate = async () => {

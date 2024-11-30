@@ -1,20 +1,9 @@
-import { useBarcode } from "@createnextapp/react-barcode";
 import React, { useState } from "react";
 import apiIsDisplay from "../../apis/apiIsDisplay";
 import { Link } from "react-router-dom";
-
-export default function TableProductByName({listProduct}) {
+export default function TableProductByName({ listProduct }) {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  // const { inputRef } = useBarcode({
-  //   value: "ASM001",
-  //   options: {
-  //     displayValue: false,
-  //     background: "#ffffff",
-  //     width: 1,
-  //     height: 25,
-  //   },
-  // });
   const handleChangeIsDisplay = async (pid, isDisplay) => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -24,19 +13,28 @@ export default function TableProductByName({listProduct}) {
       throw new Error(error);
     }
   };
+  const handleDeleteProduct = () => {
+    if (selectedProduct) {
+      handleChangeIsDisplay(selectedProduct._id, false);
+      setDeleteModalOpen(false);
+    }
+  };
   const handleOpenModal = (product) => {
     setSelectedProduct(product);
     document.getElementById("modal_Quick_View").showModal();
   };
-
+  const handleOpenModalDelete = (product) => {
+    setSelectedProduct(product);
+    setDeleteModalOpen(true);
+  };
   return (
     <>
       {listProduct.map((product) => (
         <tr key={product._id} className="hover:bg-slate-100">
           <td>
             <div>
-              <div className="font-bold">ASM001</div>
-              {/* <svg ref={inputRef} /> */}
+              <div className="font-bold">{product.id}</div>
+              {/* <Barcode value={product._id}/> */}
             </div>
           </td>
           <td>
@@ -67,6 +65,11 @@ export default function TableProductByName({listProduct}) {
             </h1>
           </td>
           <td>
+            <h1 className="whitespace-nowrap">
+              {product.sold}
+            </h1>
+          </td>
+          <td>
             <div className="flex w-fit">
               <button
                 className=" w-6 h-6 rounded-lg mr-2"
@@ -94,7 +97,7 @@ export default function TableProductByName({listProduct}) {
                   />
                 </svg>
               </button>
-              <Link to="/update-product">
+              <Link state={{ product: product }} to="/update-product">
                 <button
                   className=" w-6 h-6 rounded-lg mr-2"
                   style={{ backgroundColor: "#ebf3fe", outline: "" }}
@@ -117,8 +120,9 @@ export default function TableProductByName({listProduct}) {
                 </button>
               </Link>
               <button
-                onClick={() => handleChangeIsDisplay(product._id, false)}
-                id="btn__delete"
+                // onClick={() => handleChangeIsDisplay(product._id, false)}
+                // id="btn__delete"
+                onClick={() => handleOpenModalDelete(product)}  
                 className="w-6 h-6 rounded-lg "
                 style={{ backgroundColor: "#feebe8", outline: "" }}
               >
@@ -140,79 +144,29 @@ export default function TableProductByName({listProduct}) {
               </button>
             </div>
             {/* Alert Delete */}
-            <dialog id="Delete" className="modal" open={isDeleteModalOpen}>
-              <div className="modal-box w-3/12 ">
-                <h3 className="font-bold text-lg">
-                  Bạn muốn xóa sản phẩm này khỏi danh sách bán?
-                </h3>
-                <div className="flex items-center ">
-                  <label className="mr-2">
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <p className="py-4">Hàng chưa về</p>
-                </div>
-                <div className="flex items-center ">
-                  <label className="mr-2">
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                  <p className="py-4">Không còn kinh doanh</p>
-                </div>
-                {/* Text Area */}
-                <textarea
-                  placeholder="Bio"
-                  className="textarea textarea-bordered textarea-lg w-full max-w-xs"
-                ></textarea>
-
-                <div className="flex modal-action justify-between ">
-                  <button className="btn w-20 bg-orange-500"> Đồng ý</button>
-                  <form method="dialog ">
-                    <button
-                      onClick={() => setDeleteModalOpen(false)}
-                      className="btn w-20"
-                    >
-                      Hủy
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </dialog>
+            <div></div>
           </td>
         </tr>
       ))}
 
       <dialog id="Delete" className="modal" open={isDeleteModalOpen}>
-        <div className="modal-box w-3/12 ">
+        <div className="modal-box w-3/12">
           <h3 className="font-bold text-lg">
-            Bạn muốn xóa sản phẩm này khỏi danh sách bán?
+            Bạn có muốn xóa sản phẩm này không?
           </h3>
-          <div className="flex items-center ">
-            <label className="mr-2">
-              <input type="checkbox" className="checkbox" />
-            </label>
-            <p className="py-4">Hàng chưa về</p>
-          </div>
-          <div className="flex items-center ">
-            <label className="mr-2">
-              <input type="checkbox" className="checkbox" />
-            </label>
-            <p className="py-4">Không còn kinh doanh</p>
-          </div>
-          {/* Text Area */}
-          <textarea
-            placeholder="Bio"
-            className="textarea textarea-bordered textarea-lg w-full max-w-xs"
-          ></textarea>
-
-          <div className="flex modal-action justify-between ">
-            <button className="btn w-20 bg-orange-500"> Đồng ý</button>
-            <form method="dialog ">
-              <button
-                onClick={() => setDeleteModalOpen(false)}
-                className="btn w-20"
-              >
-                Hủy
-              </button>
-            </form>
+          <div className="flex modal-action justify-between">
+            <button
+              className="btn w-20 bg-red-500"
+              onClick={handleDeleteProduct}
+            >
+              Có
+            </button>
+            <button
+              className="btn w-20"
+              onClick={() => setDeleteModalOpen(false)} // Đóng modal khi chọn "Không"
+            >
+              Không
+            </button>
           </div>
         </div>
       </dialog>

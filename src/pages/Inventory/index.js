@@ -10,7 +10,6 @@ import apiGetListCategory from "../../apis/apiGetListCategory";
 import apiGetListBrands from "../../apis/apiGetListBrand";
 import logo_form from "../../Image/LogoForm.png";
 import apiFilterProductInShelfByMultiCondition from "../../apis/apiFilterProductInShelfByMultiCondition";
-import { useBarcode } from "@createnextapp/react-barcode";
 import BarcodeCreate from "../../components/BarcodeCreate";
 export default function Inventory() {
   const [title, setTitle] = useState("");
@@ -21,15 +20,6 @@ export default function Inventory() {
   const [category, setCategory] = useState("");
   const [brands, setBrands] = useState([]);
   const [brand, setBrand] = useState("");
-  // const { inputRef } = useBarcode({
-  //   value: "ASM001",
-  //   options: {
-  //     displayValue: false,
-  //     background: "#ffffff",
-  //     width: 1,
-  //     height: 25,
-  //   },
-  // });
   const fetchProductMultiCondition = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -189,7 +179,6 @@ export default function Inventory() {
         const [product, warehouseReceipt] = key.split("-");
         return { product, quantity, warehouseReceipt }; // Trả về id sản phẩm và mã phiếu
       });
-    console.log(productsToAdd); // Xử lý thêm sản phẩm vào kho
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
@@ -204,6 +193,24 @@ export default function Inventory() {
       console.error("Failed to add products:", error);
     }
   };
+  function formatDate(date) {
+    if (!(date instanceof Date)) {
+      date = new Date(date);
+    }
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+  function convertDateFormat(dateString) {
+    const [day, month, year] = dateString.split('/'); // Split the date string
+    const lastTwoDigitsOfYear = year.slice(-2); // Get the last two digits of the year
+    return `${lastTwoDigitsOfYear}${month}${day}`; // Format as YYMMDD
+  }
+  
+
   return (
     <>
       {/* Tab table */}
@@ -495,7 +502,7 @@ export default function Inventory() {
                     <th>Hạn sử dụng</th>
                     <th>Số lượng tổng</th>
                     <th>Số lượng trưng bày </th>
-                    <th>Thao tác</th>
+                    {/* <th>Thao tác</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -522,7 +529,8 @@ export default function Inventory() {
                           </td>
                           <td className="">
                             {/* <svg ref={inputRef} /> */}
-                            <BarcodeCreate productCode={134} wareHouseReceiptCode={product.idPNK} expiryDate={230124} />
+                            {/* <BarcodeCreate productCode={product.id} wareHouseReceiptCode={product.idPNK} expiryDate={convertDateFormat((formatDate(product.expires)))} /> */}
+                            {/* <Barcode value={product.id} /> */}
                           </td>
                           <td>
                             <div className="flex items-center gap-3">
@@ -543,7 +551,10 @@ export default function Inventory() {
                             </div>
                           </td>
                           {/* <td>{product.brand}</td> */}
-                          <td></td>
+                          <td>
+
+                            {formatDate(product.expires)}
+                          </td>
                           <td>
                             <span className="badge badge-ghost badge-sm">
                               {product.quantityDynamic || 0}

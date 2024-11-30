@@ -22,10 +22,7 @@ export default function FormLogin() {
       setPayload({ email: "", password: "" });
       navigate("/");
       localStorage.setItem("accessToken", rs.accessToken)
-      const username = rs.userData.username;
-      localStorage.setItem("username", username)
-      localStorage.setItem("firstname", rs.userData.firstname)
-      localStorage.setItem("lastname", rs.userData.lastname)
+      localStorage.setItem("name", rs.userData.name)
       localStorage.setItem("refreshToken", rs.userData.refreshToken)
       localStorage.setItem("email", rs.userData.email)
       localStorage.setItem("image", rs.userData.image)

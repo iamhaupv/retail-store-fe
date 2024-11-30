@@ -20,6 +20,7 @@ export default function Product() {
     const randomNumber = Math.floor(Math.random() * 900) + 100;
     return randomNumber
   };
+  const [productId, setProductId] = useState(generateRandomNumber);
   const handleInputChangeBrand = (selectedBrand) => {
     if (selectedBrand) {
       setSelectedBrand({ _id: selectedBrand._id, name: selectedBrand.name });
@@ -192,6 +193,7 @@ export default function Product() {
         formData.append("description", description);
         formData.append("brand", selectedBrand._id);
         formData.append("category", selectedCategory._id);
+        formData.append("id", productId)
         for (const key in image) {
           if (image[key]) {
             const file = await fetch(image[key]).then((res) => res.blob());
@@ -200,7 +202,7 @@ export default function Product() {
         }
         const response = await apiCreateProduct(token, formData);
         if (response.success) {
-          Swal.fire("Thành công!", "Thêm thành công!", "success");
+          Swal.fire("Thành công!", "Thêm sản phẩm mới thành công!", "success");
           navigate("/product-list");
         } else {
           Swal.fire("Lỗi!", "Thêm không thành công!", "error");
@@ -246,7 +248,7 @@ export default function Product() {
                   placeholder="Mã sản phẩm"
                   className="input input-bordered w-5/12 h-10 ml-4"
                   disabled
-                  value={generateRandomNumber()}
+                  value={productId}
                 />
               </div>
               {error && <h5 className="ml-4 text-red-500">{error.title}</h5>}

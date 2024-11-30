@@ -7,7 +7,7 @@ export default function EmployeeTableDetail({ employees }) {
         <tr key={employee._id} className="hover:bg-slate-100">
           <td>
             <div>
-              <div className="font-bold">ASM001</div>
+              <div className="font-bold">{employee.id}</div>
               {/* <svg ref={inputRef} /> */}
             </div>
           </td>

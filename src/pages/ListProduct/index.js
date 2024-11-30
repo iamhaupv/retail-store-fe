@@ -45,7 +45,9 @@ export default function ListProduct() {
                 borderTop: "2px solid #ededed",
               }}
             >
-              <ListProductTable />
+              <ListProductTable role={localStorage.getItem(
+              'role'
+            )} />
             </div>
 
             <input
@@ -64,7 +66,9 @@ export default function ListProduct() {
                 borderTop: "2px solid #ededed",
               }}
             >
-              <ListProductSale />
+              <ListProductSale role={localStorage.getItem(
+              'role'
+            )}  />
             </div>
 
             <input
@@ -83,7 +87,9 @@ export default function ListProduct() {
                 borderTop: "2px solid #ededed",
               }}
             >
-              <ListProductOutStock />
+              <ListProductOutStock role={localStorage.getItem(
+              'role'
+            )} />
             </div>
           </div>
         </div>
