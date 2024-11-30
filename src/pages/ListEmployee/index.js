@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import EmployeeTableDetail from "../../components/EmployeeTableDetail";
 import apiFindEmployeeByName from "../../apis/apiFindEmployeeByName";
-import InputValue from "../../components/InputValue";
+import ChangeInput from "../../components/ChangeInput";
 import apiGetListEmployee from "../../apis/apiGetListEmployee";
 
 export default function ListEmployee() {
@@ -51,6 +51,9 @@ export default function ListEmployee() {
       fetchFindEmployeeByName();
     }
   }, [employeeName]);
+  const reloadEmployees = () => {
+    fetchEmployees(); 
+  };
   return (
     <>
       <div
@@ -65,7 +68,7 @@ export default function ListEmployee() {
         >
           {/* search Input */}
           <div className="ml-2 mt-4 w-2/12">
-            <InputValue
+            <ChangeInput
               onchange={handleChangeName}
               suggestion={ListEmployees()}
               placeholder={"Nhập tên nhân viên"}
@@ -119,15 +122,14 @@ export default function ListEmployee() {
                 </tr>
               </thead>
               <tbody>
-                {/* <EmployeeTableDetail /> */}
                 {employeeName === "" ? (
                   employees.length > 0 ? (
-                    <EmployeeTableDetail employees={employees} />
+                    <EmployeeTableDetail employees={employees} reloadEmployees={reloadEmployees} />
                   ) : (
                     <div className="w-full h-full justify-center items-center">Không tìm thấy</div>
                   )
                 ) : employeesFilter.length > 0 ? (
-                  <EmployeeTableDetail employees={employeesFilter} />
+                  <EmployeeTableDetail employees={employeesFilter} reloadEmployees={reloadEmployees} />
                 ) : (
                   <div className="w-full h-full justify-center items-center">Không tìm thấy</div>
                 )}

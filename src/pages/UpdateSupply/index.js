@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import apiCreateBrand from "../../apis/apiCreateBrand";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-export default function Supply() {
-  const generateRandomNumber = () => {
-    const randomNumber = Math.floor(Math.random() * 900) + 100;
-    return randomNumber
-  };
-  const [productId, setProductId] = useState(generateRandomNumber);
+import apiUpdateBrand from "../../apis/apiUpdateBrand";
+export default function UpdateSupply() {
+  const location = useLocation()
+  const {brand} = location.state
   const navigate = useNavigate()
-  const [image, setImage] = useState({});
+  const [image, setImage] = useState(brand.images?.reduce((acc, url, index) => {
+    const key = index === 0 ? "inputMain" : `input${index}`;
+    acc[key] = url;
+    return acc;
+  }, {}) || {});
   const [isVisible, setIsVisible] = useState(true);
   const [error, setError] = useState(false);
   const handleClose = () => {
@@ -19,11 +20,12 @@ export default function Supply() {
   };
 
   const [payload, setPayload] = useState({
-    name: "",
-    supplyName: "",
-    address: "",
-    phone: "",
-    description: "",
+    name: brand.name,
+    supplyName: brand.supplyName,
+    address: brand.address,
+    phone: brand.phone,
+    description: brand.description,
+    id: brand.id
   });
   const handleBlur = (e) => {
     const { name } = e.target;
@@ -98,7 +100,7 @@ export default function Supply() {
     }
   };
   const handleSubmit = async () => {
-    const { name, supplyName, address, phone, description } = payload;
+    const { name, supplyName, address, phone, description, id } = payload;
     if (!name || !supplyName || !address || !phone || !description || !image) {
       Swal.fire("Thiếu thông tin!", "Vui lòng điền đầy đủ thông tin.", "error");
       return;
@@ -121,26 +123,29 @@ export default function Supply() {
         }
 
         const formData = new FormData();
+        formData.append("pid", brand._id);
         formData.append("name", name);
         formData.append("supplyName", supplyName);
         formData.append("description", description);
         formData.append("phone", phone);
         formData.append("address", address);
-        formData.append("id", productId)
+        formData.append("id", id)
         for (const key in image) {
           if (image[key]) {
             const file = await fetch(image[key]).then((res) => res.blob());
             formData.append("images", file, `image-${key}.jpg`);
           }
         }
-        const response = await apiCreateBrand(token, formData);
+        console.log();
+        
+        const response = await apiUpdateBrand(token, formData);
         if (response.success) {
-          toast.success("Thêm thành công!");
+          toast.success("Cập nhật thành công!");
           setTimeout(() => {
             navigate("/supply-list")
           }, 2000);
         } else {
-          toast.error("Thêm không thành công!");
+          toast.error("Cập nhật không thành công!");
         }
       } catch (error) {
         toast.error("Tên thương hiệu đã tồn tại!");
@@ -158,11 +163,9 @@ export default function Supply() {
       >
         <div className="w-8/12 mr-4 animate__animated animate__fadeInRight">
           <div className="w-full mr-4 rounded-sm">
-            {/* Thông tin sản phẩm */}
-
             <div className="card bg-white rounded-sm top-7 grid  ">
               <h4 className=" font-bold text-xl w-full ml-4 mt-2">
-                Thêm nhà cung cấp
+                Cập nhật nhà cung cấp
               </h4>
               <div className="flex items-center pt-8">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
@@ -195,7 +198,7 @@ export default function Supply() {
                   placeholder="Mã nhà cung cấp"
                   className="input input-bordered w-5/12 h-10 ml-8"
                   disabled
-                  value={productId}
+                  value={payload.id}
                 />
               </div>
               <div className="flex items-center pt-2">
@@ -274,15 +277,13 @@ export default function Supply() {
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-5"
               />
             </div>
-
-            {/* Button Thêm và Hủy */}
             <div className="flex mt-10 mb-5 ml-4">
               <button
                 onClick={handleSubmit}
                 class="btn w-28 text-white"
                 style={{ backgroundColor: "#f13612" }}
               >
-                Thêm
+                Lưu
               </button>
               <button
                 class="btn w-28 ml-4"

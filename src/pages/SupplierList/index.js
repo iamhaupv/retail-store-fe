@@ -101,7 +101,6 @@ export default function SupplierList({role}) {
             height: "calc(100vh - 85px)",
           }}
         >
-          {/* search Input */}
           <div className="w-full flex">
           <div className="ml-4 mt-4 w-2/12">
               <Autocomplete
@@ -136,12 +135,10 @@ export default function SupplierList({role}) {
               />
             </div>
           </div>
-          {/* Nofication and Button Add */}
-
           <div className="flex justify-between mt-6 items-center">
-            <h4 className="font-bold text-xl w-32 ml-4"></h4>
-            {role === "admin" && (
-              <Link to="/supply">
+            <h4 className="font-bold text-xl  ml-4">{id === "" && brandByName === "" && brandPhone === "" && brandSupplyName ===""
+            ? brands.length : brandsByMultiCondition.length}  Nhà cung cấp </h4>
+             <Link to="/supply">
                 <button className="btn btn-success text-white w-36 mr-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -160,10 +157,7 @@ export default function SupplierList({role}) {
                   Thêm mới
                 </button>
               </Link>
-            )}
           </div>
-          {/* table Product */}
-
           <div
             className="overflow-y-auto  mt-7"
             style={{
@@ -262,7 +256,6 @@ export default function SupplierList({role}) {
               </li>
             </ul>
           </div>
-          {/* end Paginination */}
         </div>
       </div>
     </>

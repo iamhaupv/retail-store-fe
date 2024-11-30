@@ -1,9 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Report2Product from "../Report2Product";
 import Report2Category from "../Report2Category";
 import { Link } from "react-router-dom";
+import apiOrder from "../../apis/apiOrder";
+import apiGetAllOrder from "../../apis/apiGetAllOrder";
+import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 
 export default function Report() {
+  const [receipt, setReceipt] = useState({})
+  const [sum, setSum] = useState({})
+  const [orders, setOrders] = useState([])
+  const token = localStorage.getItem("accessToken")
+  const fetchReceipts = async() => {
+    try {
+      const response = await apiWarehouseReceipt.apiSumTotalAmountReceipt(token)
+      setReceipt(response.sum || [])
+    } catch (error) {
+      console.log("fetch receipt is error " + error);
+    }
+  }
+  const fetchOrders = async() => {
+    try {
+      const response = await apiGetAllOrder(token)
+      setOrders(response.orders || [])
+    } catch (error) {
+      console.log("fetch orders is error " + error);
+    }
+  }
+  useEffect(() => {
+    fetchOrders()
+    fetchReceipts()
+  }, [])
+  const fetchSumTotalAmount = async() => {
+    try {
+      const response = await apiOrder.apiSumTotalAmount(token)
+      setSum(response.sum || {})
+    } catch (error) {
+      console.log("fetch sum total amount is error", error);
+    }
+  }
+  useEffect(()=> {
+    fetchSumTotalAmount()
+  }, [])
+  console.log(sum);
+  
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index) => {
@@ -48,7 +88,7 @@ export default function Report() {
                   <div className="w-3/4 justify-start">
                     <h1 className="text-lg mt-5 ml-4">Tổng doanh thu</h1>
                     <h1 className="font-bold text-xl mt-5 ml-4">
-                      100.000.000 đ
+                      {sum && sum.totalAmount} đ
                     </h1>
                   </div>
                 </div>
@@ -60,7 +100,7 @@ export default function Report() {
                     <h1 className="flex items-center font-bold text-xl mt-5 ml-4">
                       <div className="w-2 h-4 bg-red-600 mr-4"></div>
                       Tổng VAT</h1>
-                    <h1 className="text-lg mt-2 ml-10">10.000.000 đ</h1>
+                    <h1 className="text-lg mt-2 ml-10">{sum && sum.amountVAT} đ</h1>
                   </div>
                   <div className="w-auto justify-start ml-24">
                     <h1 className="flex items-center font-bold text-xl mt-5 ml-4">
@@ -75,13 +115,13 @@ export default function Report() {
                     <div className="w-2 h-4 bg-blue-500 mr-4"></div>
                       Tổng tiền nhập hàng
                     </h1>
-                    <h1 className="text-lg mt-2 ml-10">10.000.000 đ</h1>
+                    <h1 className="text-lg mt-2 ml-10">{receipt && receipt.totalAmount} đ</h1>
                   </div>
                   <div className="w-auto justify-start ml-4">
                     <h1 className="flex items-center font-bold text-xl mt-5 ml-4">
                     <div className="w-2 h-4 bg-yellow-600 mr-4"></div>
                       Đơn đã bán</h1>
-                    <h1 className="text-lg mt-2 ml-10">10.000.000 đ</h1>
+                    <h1 className="text-lg mt-2 ml-10">{orders.length}</h1>
                   </div>
                 </div>
               </div>

@@ -4,6 +4,7 @@ import apiGetListCategory from "../../apis/apiGetListCategory";
 import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router-dom";
 import apiUpdateProduct from "../../apis/apiUpdateProduct";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function UpdateProduct() {
   const location = useLocation();
@@ -24,9 +25,11 @@ export default function UpdateProduct() {
     title: product?.title || "",
     price: product?.price || "",
     description: product?.description || "",
-    brand: product?.brand || "",
-    category: product?.category || "",
+    brand: product?.brand._id || "",
+    category: product?.category._id || "",
+    id: product.id
   });
+  
   const handleBlur = (e) => {
     const { name } = e.target;
     if (!payload[name]) {
@@ -154,8 +157,8 @@ export default function UpdateProduct() {
         formData.append("title", title);
         formData.append("price", price);
         formData.append("description", description);
-        formData.append("brand", brand._id);
-        formData.append("category", category._id);
+        formData.append("brand", brand);
+        formData.append("category", category);
 
         // Thêm ảnh vào formData
         for (const key in image) {
@@ -164,27 +167,23 @@ export default function UpdateProduct() {
             formData.append("images", file, `image-${key}.jpg`);
           }
         }
-
-        // Gửi yêu cầu API để cập nhật sản phẩm
         const response = await apiUpdateProduct(token, formData);
         if (response.success) {
-          Swal.fire("Thành công!", "Cập nhật thành công!", "success");
-          navigate("/product-list");
+          toast.success("Cập nhật thành công!");
+          setTimeout(() => {
+            navigate('/product-list');
+          }, 2000);
         } else {
-          Swal.fire(
-            "Error",
-            response.error || "Cập nhật không thành công!",
-            "error"
-          );
+          toast.success("Cập nhật không thành công!");
         }
       }
     } catch (error) {
       Swal.fire("Error", "Cập nhật không thành công", "error");
     }
   };
-
   return (
     <>
+      <ToastContainer/>
       <div
         className="w-11/12 h-full justify-center flex overflow-y-auto "
         style={{ backgroundColor: "#F5F5F5" }}
@@ -217,6 +216,7 @@ export default function UpdateProduct() {
                   placeholder="Mã sản phẩm"
                   className="input input-bordered w-5/12 h-10 ml-4"
                   disabled
+                  value={payload.id}
                 />
               </div>
               {error && <h5 className="ml-4 text-red-500">{error.title}</h5>}
@@ -837,7 +837,6 @@ export default function UpdateProduct() {
               Nhà cung cấp
               <h5 className="ml-1 text-red-600">(*)</h5>
             </h4>
-            {/* Select type  */}
             <select
               name="brand"
               onChange={handleChangeInput}
@@ -854,7 +853,6 @@ export default function UpdateProduct() {
                 </option>
               ))}
             </select>
-
             {error && <h5 className="ml-4 text-red-500">{error.brand}</h5>}
             <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
               Loại sản phẩm
@@ -868,7 +866,7 @@ export default function UpdateProduct() {
               value={payload.category || ""}
               className="select select-bordered w-11/12 h-11 ml-4 mb-8"
             >
-              <option value="" disabled selected>
+              <option value="" disabled>
                 Loại sản phẩm
               </option>
               {categories.map((category) => (

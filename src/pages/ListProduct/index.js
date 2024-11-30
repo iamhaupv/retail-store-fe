@@ -11,7 +11,7 @@ export default function ListProduct() {
   };
 
   return (
-    <>
+    <> 
       <div
         className="w-11/12 h-full justify-items-center flex "
         style={{ backgroundColor: "#F5F5F5" }}
