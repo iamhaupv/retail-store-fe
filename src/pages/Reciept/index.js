@@ -37,7 +37,7 @@ export default function Reciept() {
       {selectedOrder && (
         <>
           <div className="w-full h-full min-h-screen justify-center flex bg-base-200 rounded-none overflow-y-auto">
-            <Link to="/createOrder">
+            <Link to="/order">
               <button className="fixed btn btn-circle bg-gray-200 left-60 top-20 ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

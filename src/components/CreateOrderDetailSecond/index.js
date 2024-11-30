@@ -370,7 +370,7 @@ export default function CreateOrderDetailFirst() {
               {/* head */}
               <thead>
                 <tr>
-                  <th>Mã hàng</th>
+                  <th>Tên sản phẩm</th>
                   <th>Tên hàng</th>
                   <th>Số lượng</th>
                   <th>Đơn vị tính</th>
