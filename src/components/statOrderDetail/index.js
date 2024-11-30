@@ -10,6 +10,7 @@ export default function StatOrderDetail({orders, onOrderClick }) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
+  
   return (
     <>
       {orders.length > 0 ? (
@@ -40,7 +41,8 @@ export default function StatOrderDetail({orders, onOrderClick }) {
           </div>
             <div className="avatar">
               <div className="size-6 rounded-full">
-                <img src={order.user.image} alt=""/>
+                {/* <img src={order.user.image} alt=""/> */}
+                <img src={order?.user?.employee?.images[0]} alt=""/>
               </div>
             </div>
         </div>

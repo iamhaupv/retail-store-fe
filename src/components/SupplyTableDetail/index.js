@@ -1,5 +1,6 @@
 import React from "react";
 import Barcode from "../Barcode";
+import { Link } from "react-router-dom";
 
 export default function SupplyTableDetail({ brands }) {
   return (
@@ -45,7 +46,8 @@ export default function SupplyTableDetail({ brands }) {
         </svg>
       </button> */}
 
-            <button
+           <Link to={"/update-supply"} state={{brand}}>
+           <button
               className=" w-6 h-6 rounded-sm mr-2"
               style={{ backgroundColor: "#ebf3fe", outline: "" }}
             >
@@ -65,6 +67,7 @@ export default function SupplyTableDetail({ brands }) {
                 />
               </svg>
             </button>
+           </Link>
 
             <button
               id="btn__delete"

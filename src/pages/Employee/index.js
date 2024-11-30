@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import apiCreateEmployee from "../../apis/apiCreateEmployee";
 import apiRegister from "../../apis/apiRegister";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 export default function Employee() {
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
@@ -26,9 +27,8 @@ export default function Employee() {
   };
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    const nameRegex = /^[A-ZÀ-Ý][a-zà-ỹ]*(\s[A-ZÀ-Ý][a-zà-ỹ]*)*$/;
-    const emailRegex =
-      /^[a-zA-Z0-9][a-zA-Z0-9.]{6,30}@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const nameRegex = /^[A-ZÀ-ÝĐ][a-zà-ỹđ]*(\s[A-ZÀ-ÝĐ][a-zà-ỹđ]*)*$/;
+    const emailRegex = /^[a-zA-Z0-9_]+([a-zA-Z0-9._+%-]*[a-zA-Z0-9])?@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     const phoneRegex =
       /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
     const addressRegex = /^.{1,100}$/;
@@ -56,7 +56,7 @@ export default function Employee() {
         errorMessage = "Không được để trống!";
       } else if (!phoneRegex.test(value)) {
         errorMessage =
-          "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại hợp lệ!";
+          "Số điện thoại không hợp lệ";
       }
     }
     // address
@@ -147,7 +147,7 @@ export default function Employee() {
         formData.append("address", address);
         formData.append("gender", gender);
         formData.append("birthday", birthday);
-        formData.append("id", productId)
+        formData.append("id", productId);
         for (const key in images) {
           if (images[key]) {
             const file = await fetch(images[key]).then((res) => res.blob());
@@ -155,92 +155,34 @@ export default function Employee() {
           }
         }
         const response = await apiCreateEmployee(token, formData);
-        const employee = response.data._id
-        const image = response.data.images[0]
-        const acc = await apiRegister(token, {email, name, phone, address, gender, birthday, employee, image})
+        const employee = response.data._id;
+        const image = response.data.images[0];
+        const acc = await apiRegister(token, {
+          email,
+          name,
+          phone,
+          address,
+          gender,
+          birthday,
+          employee,
+          image,
+        });
         if (response.success && acc.success) {
-          Swal.fire("Success", "Thêm thành công!", "success");
-          navigate("/employeelist")
+          toast.success("Thêm thành công!");
+          setTimeout(() => {
+            navigate("/employeelist");
+          }, 2000);
         } else {
-          Swal.fire("Error", "Thêm không thành công!", "error");
+          toast.error("Thêm không thành công!");
         }
       }
     } catch (error) {
-      Swal.fire("Error", "Thêm không thành công", "error");
+      toast.error("Thêm không thành công");
     }
   };
-
-  // const handleSubmit = async () => {
-  //   try {
-  //     const { name, email, phone, address, gender, birthday } = payload;
-  //     if (
-  //       !name ||
-  //       !email ||
-  //       !phone ||
-  //       !address ||
-  //       !gender ||
-  //       !birthday ||
-  //       !image
-  //     ) {
-  //       Swal.fire(
-  //         "Thiếu thông tin!",
-  //         "Vui lòng điền đầy đủ thông tin!",
-  //         "error"
-  //       );
-  //       return;
-  //     }
-
-  //     const result = await Swal.fire({
-  //       title: "Xác nhận",
-  //       text: "Bạn có chắc chắn muốn thêm nhân viên này không?",
-  //       icon: "warning",
-  //       showCancelButton: true,
-  //       confirmButtonText: "Có",
-  //       cancelButtonText: "Không",
-  //     });
-
-  //     if (result.isConfirmed) {
-  //       const token = localStorage.getItem("accessToken");
-  //       if (!token) {
-  //         throw new Error("Token is valid!");
-  //       }
-
-  //       // Gửi thông tin nhân viên lên API
-  //       const formData = new FormData();
-  //       formData.append("name", name);
-  //       formData.append("email", email);
-  //       formData.append("phone", phone);
-  //       formData.append("address", address);
-  //       formData.append("gender", gender);
-  //       formData.append("birthday", birthday);
-  //       formData.append("id", productId);
-
-  //       // Kiểm tra và thêm ảnh vào formData
-  //       for (const key in image) {
-  //         if (image[key]) {
-  //           const file = await fetch(image[key]).then((res) => res.blob());
-  //           formData.append("images", file, `image-${key}.jpg`);
-  //         }
-  //       }
-  //       console.log(formData.address); 
-  //       const response = await apiCreateEmployee(token, formData);
-  //       const employee = response.data._id
-  //       const acc = await apiRegister(token, {name, email, phone, birthday, gender, employee, address});
-  //       if (response.success && acc.success) {
-  //         Swal.fire("Success", "Thêm thành công!", "success");
-  //         navigate("/employeelist");
-  //       } else {
-  //         Swal.fire("Error", "Thêm không thành công!", "error");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error(error); // Ghi lại lỗi để dễ dàng debug
-  //     Swal.fire("Error", "Thêm không thành công", "error");
-  //   }
-  // };
-
   return (
     <>
+      <ToastContainer />
       <div
         className="w-11/12 h-screen justify-center flex"
         style={{ backgroundColor: "#F5F5F5" }}
@@ -254,34 +196,41 @@ export default function Employee() {
                 Thêm nhân viên
               </h4>
               <div className="flex items-center pt-8">
-                <h4 className="flex font-sans text-base w-6/12 ml-4">
+                <h4 className="flex font-sans text-base w-[440px] ml-4">
                   Tên nhân viên
                   <div className="text-red-500 ml-1">(*)</div>
                 </h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">
+                <h4 className="font-sans text-base w-[388px] ml-4">
                   Mã nhân viên
                 </h4>
               </div>
-              <div className="flex items-center pt-2">
-                <input
-                  name="name"
-                  onChange={handleChangeInput}
-                  value={payload.name}
-                  onBlur={handleBlur}
-                  type="text"
-                  placeholder="Tên nhân viên"
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Mã nhân viên"
-                  className="input input-bordered w-5/12 h-10 ml-4"
-                  disabled
-                  value={productId}
-                />
+              <div className="flex pt-2">
+                <div className="w-[440px]">
+                  <input
+                    name="name"
+                    onChange={handleChangeInput}
+                    value={payload.name}
+                    onBlur={handleBlur}
+                    type="text"
+                    placeholder="Tên nhân viên"
+                    className="input input-bordered w-[100%] h-10 ml-4"
+                  />
+                  {error && (
+                    <div className="text-red-500 ml-4 mt-2 text-sm h-4">
+                      {error.name}
+                    </div>
+                  )}
+                </div>
+                <div className="w-[388px] ml-4">
+                  <input
+                    type="text"
+                    placeholder="Mã nhân viên"
+                    className="input input-bordered w-[388px] h-10 ml-4"
+                    disabled
+                    value={productId}
+                  />
+                </div>
               </div>
-              {error && <div className="text-red-500 ml-4">{error.name}</div>}
               <div className="flex items-center pt-2">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Email
@@ -292,81 +241,115 @@ export default function Employee() {
                   <div className="text-red-500 ml-1">(*)</div>
                 </h4>
               </div>
-              <div className="flex items-center pt-2">
-                <input
-                  name="email"
-                  onChange={handleChangeInput}
-                  value={payload.email}
-                  type="text"
-                  placeholder="Email"
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                  onBlur={handleBlur}
-                />
-                <input
-                  name="phone"
-                  onChange={handleChangeInput}
-                  value={payload.phone}
-                  type="text"
-                  placeholder="Số điện thoại"
-                  onBlur={handleBlur}
-                  className="input input-bordered w-5/12 h-10 ml-4"
-                />
+              <div className="flex pt-2">
+                <div className="w-[440px]">
+                  <input
+                    name="email"
+                    onChange={handleChangeInput}
+                    value={payload.email}
+                    type="text"
+                    placeholder="Email"
+                    className="input input-bordered w-[100%] h-10 ml-4"
+                    onBlur={handleBlur}
+                  />
+                  {error && (
+                    <div className="text-red-500 h-4 text-sm ml-4 mt-2 ">
+                      {error.email}
+                    </div>
+                  )}
+                </div>
+                <div className="w-[388px] ml-4">
+                  <input
+                    name="phone"
+                    onChange={handleChangeInput}
+                    value={payload.phone}
+                    type="text"
+                    placeholder="Số điện thoại"
+                    onBlur={handleBlur}
+                    className="input input-bordered w-[100%] h-10 ml-4"
+                  />
+                  {error && (
+                    <div className="text-red-500 h-4 text-sm ml-4 mt-2">
+                      {error.phone}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="flex items-center pt-2">
-                {error && <div className="text-red-500 ">{error.email}</div>}
-                {error && <div className="text-red-500 ">{error.phone}</div>}
-              </div>
-              <div className="flex items-center pt-2">
-                <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
+                <h4 className="flex font-sans text-base w-[440px] ml-4">
                   Địa chỉ
                   <div className="text-red-500 ml-1">(*)</div>
                 </h4>
-                <h4 className="flex font-sans text-base w-5/12 ml-4">
+                <h4 className="flex font-sans text-base w-[388px] ml-4">
                   Ngày sinh
                   <div className="text-red-500 ml-1">(*)</div>
                 </h4>
               </div>
-              <div className="flex items-center pt-2">
-                <input
-                  name="address"
-                  value={payload.address}
-                  onChange={handleChangeInput}
-                  type="text"
-                  placeholder="Địa chỉ"
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                  onBlur={handleBlur}
-                />
-                {error && <div className="text-red-500">{error.address}</div>}
-                <input
-                  name="birthday"
-                  value={payload.birthday}
-                  onChange={handleChangeInput}
-                  type="date"
-                  placeholder="Ngày sinh"
-                  onBlur={handleBlur}
-                  className="input input-bordered w-5/12 h-10 ml-4"
-                />
-                {error && <div className="text-red-500">{error.birthday}</div>}
-              </div>
+              <div className="flex pt-2 h-[64px]">
+                <div className="w-[440px]">
+                  <input
+                    name="address"
+                    value={payload.address}
+                    onChange={handleChangeInput}
+                    type="text"
+                    placeholder="Địa chỉ"
+                    className="input input-bordered w-[100%] h-10 ml-4"
+                    onBlur={handleBlur}
+                  />
+                  <div className="h-4">
+                    {error && error.address && (
+                      <div className="text-red-500 h-4 text-sm mt-2 ml-4">
+                        {error.address}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="w-[388px] ml-4">
+                  <input
+                    name="birthday"
+                    value={payload.birthday}
+                    onChange={handleChangeInput}
+                    type="date"
+                    placeholder="Ngày sinh"
+                    onBlur={handleBlur}
+                    className="input input-bordered w-[100%] h-10 ml-4"
+                  />
 
-              <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2 mt-2">
-                Giới tính
-                <div className="text-red-500 ml-1">(*)</div>
-              </h4>
-              <select
-                value={payload.gender}
-                name="gender"
-                onChange={handleChangeInput}
-                onBlur={handleBlur}
-                className="select select-bordered w-full max-w-xs ml-4 mb-2"
-              >
-                <option value=" " disabled selected>
+                  {error && error.birthday && (
+                    <div className="text-red-500 text-sm h-4 mt-2 ml-4">
+                      {error.birthday}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex pt-2 mt-2">
+                <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Giới tính
-                </option>
-                <option value={"Nam"}>Nam</option>
-                <option value={"Nữ"}>Nữ</option>
-              </select>
-              {error && <div className="text-red-500">{error.gender}</div>}
+                  <div className="text-red-500 ml-1">(*)</div>
+                </h4>
+              </div>
+              <div className="w-[440px] mt-2">
+                <select
+                  value={payload.gender}
+                  name="gender"
+                  onChange={handleChangeInput}
+                  onBlur={handleBlur}
+                  className="select select-bordered w-full h-10 ml-4"
+                >
+                  <option value=" " disabled selected>
+                    Giới tính
+                  </option>
+                  <option value={"Nam"}>Nam</option>
+                  <option value={"Nữ"}>Nữ</option>
+                </select>
+                <div className="h-4 mt-2">
+                  {error && error.gender && (
+                    <div className="text-red-500 text-sm ml-4">
+                      {error.gender}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Button Thêm và Hủy */}

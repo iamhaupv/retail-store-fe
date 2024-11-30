@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./Header.css";
+import apiGetCurrentUser from "../../apis/apiGetCurrentUser"
 import logo_company from "../../Image/Logo-removebg-preview.png";
 import { Link, useNavigate } from "react-router-dom";
 export default function Header(props) {
-  const [username, setUsername] = useState("");
+  const [user, setUser] = useState("");
+  const fetchCurrentUser = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("Token is invalid!");
+    const currentUSer = await apiGetCurrentUser(token);
+    setUser(currentUSer.rs);
+  };
   useEffect(() => {
-    const name = localStorage.getItem("name")
-    setUsername(name);
-  }, []);
-  const [image, setImage] = useState("")
-  useEffect(()=> {
-    const avatar = localStorage.getItem("image")
-    setImage(avatar)
+    fetchCurrentUser();
   }, [])
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -22,6 +23,7 @@ export default function Header(props) {
       throw new Error(error);
     }
   };
+  console.log(user);
   
   return (
     <>
@@ -33,7 +35,6 @@ export default function Header(props) {
             alt="logo Store 24 Hour"
           />
           <a href="" class="flex ml-10 w-80 items-center">
-            
             <p className="ml-2 w-72">{props.title}</p>
           </a>
         </div>
@@ -45,10 +46,11 @@ export default function Header(props) {
                   <div className="flex w-36 items-center">
                     <div className="avatar">
                       <div className="size-10 rounded-full mr-1">
-                        <img src={`${image}`} alt="Avatar default" />
+                        {/* <img src={`${user.image}`} alt="Avatar default" /> */}
+                        <img src={`${user && user.employee.images[0]}`} alt="Avatar default" />
                       </div>
                     </div>
-                    <h1 className="font-medium whitespace-nowrap">{username}</h1>
+                    <h1 className="font-medium whitespace-nowrap">{user && user.employee.name}</h1>
                   </div>
                 </summary>
                 <ul className="bg-base-100 w-72 rounded-t-none p-2 z-40">
@@ -56,13 +58,15 @@ export default function Header(props) {
                     <div className="flex w-72 items-center">
                       <div className="avatar">
                         <div className="size-10 rounded-full">
-                          <img src={`${image}`} alt="Avatar default" />
+                          {/* <img src={`${user.image}`} alt="Avatar default" /> */}
+                          <img src={`${user && user.employee.images[0]}`} alt="Avatar default" />
                         </div>
                       </div>
                       <div className="w-full">
-                        <h1 className="font-medium ml-2">{username}</h1>
+                        {/* <h1 className="font-medium ml-2">{user.name}</h1> */}
+                        <h1 className="font-medium ml-2">{user && user.employee.name}</h1>
                         <div className="badge bg-blue-200 text-blue-300">
-                          {localStorage.getItem("role") === "admin" ? "Quản lý" : "Nhân viên"}
+                          {user.role === "admin" ? "Quản lý" : "Nhân viên"}
                         </div>
                       </div>
                     </div>

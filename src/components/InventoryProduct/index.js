@@ -137,6 +137,14 @@ export default function InventoryProduct({ onChangeModal }) {
     <div className="w-auto">
       <div>
         <div className="flex justify-center">
+        <div className="w-1/2">
+            <Autocomplete
+              suggestion={listIdPNK()}
+              onchange={handleChangeIdPNK}
+              value={idPNK}
+              placeholder={"Nhập mã sản phẩm"}
+            />
+          </div>
           <div className="w-1/2">
             <Autocomplete
               suggestion={listIdPNK()}
@@ -181,7 +189,6 @@ export default function InventoryProduct({ onChangeModal }) {
               <th>Tình trạng</th>
               <th>Ngày hết hạn</th>
               <th>Số lượng</th>
-              <th>Tổng số lượng</th>
               <th>Thao tác</th>
             </tr>
           </thead>
