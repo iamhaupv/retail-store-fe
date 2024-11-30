@@ -155,29 +155,8 @@ export default function Information() {
       </div>
 
       <dialog id="Update_Information" className="modal">
-        <div className="modal-box w-11/12 max-w-5xl">
+        <div className="modal-box w-10/12 max-w-4xl">
           <div className="flex w-full">
-            <div className="w-1/4">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleImageChange(e, "inputMain")}
-                className="hidden"
-                id="FileMain"
-              />
-              {image && image["inputMain"] ? (
-                <div className=" ml-10 mt-16 rounded-full">
-                  <img
-                    src={image["inputMain"]}
-                    className="size-48 rounded-full "
-                    alt="Avatar"
-                  />
-                </div>
-              ) : (
-                <div></div>
-              )}
-            </div>
-            <div className="w-3/4 mt-20 ml-4 ">
               <div className="w-1/4">
                 <input
                   type="file"
@@ -187,7 +166,7 @@ export default function Information() {
                   id="FileMain"
                 />
                 <label htmlFor="FileMain">
-                  <div className="indicator ml-10 mt-16 rounded-full">
+                  <div className="indicator ml-1 mt-20 rounded-full">
                     <img
                       src={
                         image
@@ -200,23 +179,24 @@ export default function Information() {
                   </div>
                 </label>
               </div>
+              <div className="w-3/4 mt-20 ml-5 ">
               <h1 className="font-bold text-xl">Thông tin cá nhân</h1>
-              <div className="flex items-center mt-2">
+              <div className="flex items-center justify-between mt-2">
                 <h1 className=" text-lg">Họ tên:</h1>
                 <input
                   type="text"
                   placeholder="Nguyễn Thanh Khoa"
-                  class="input input-bordered w-72 h-5 ml-16"
+                  class="input input-bordered w-96 h-5"
                   // value={user.name}
                   value={user?.employee?.name}
                   name="name"
                   onChange={handleChangeInput}
                 />
               </div>
-              <div className="flex items-center mt-1">
+              <div className="flex items-center justify-between mt-1">
                 <h1 className=" text-lg">Số điện thoại:</h1>
                 <input
-                  className="input input-bordered w-72 h-5 ml-16"
+                  className="input input-bordered w-96 h-5 ml-16"
                   type="text"
                   name="phone"
                   // value={user.phone}
@@ -224,20 +204,20 @@ export default function Information() {
                   onChange={handleChangeInput}
                 />
               </div>
-              <div className="flex items-center mt-1">
+              <div className="flex items-center justify-between mt-1">
                 <h1 className=" text-lg">Email:</h1>
                 <input
-                  className="input input-bordered w-72 h-5 ml-16"
+                className="input input-bordered w-96 h-5 ml-16"
                   type="email"
                   name="email"
                   value={user?.email}
                   onChange={handleChangeInputEmail}
                 />
               </div>
-              <div className="flex items-center mt-1">
+              <div className="flex items-center justify-between mt-1">
                 <h1 className=" text-lg">Địa chỉ:</h1>
                 <input
-                  className="input input-bordered w-72 h-5 ml-16"
+                  className="input input-bordered w-96 h-5 ml-16"
                   type="text"
                   name="address"
                   // value={user.address}
@@ -245,10 +225,10 @@ export default function Information() {
                   onChange={handleChangeInput}
                 />
               </div>
-              <div className="flex items-center mt-1">
+              <div className="flex items-center justify-between mt-1">
                 <h1 className=" text-lg">Ngày sinh:</h1>
                 <input
-                  className="input input-bordered w-72 h-5 ml-16"
+                className="input input-bordered w-96 h-5 ml-16"
                   type="text"
                   name="birthday"
                   // value={user.birthday}
@@ -256,10 +236,10 @@ export default function Information() {
                   onChange={handleChangeInput}
                 />
               </div>
-              <div className="flex items-center mt-1">
+              <div className="flex items-center justify-between mt-1">
                 <h1 className=" text-lg">Giới tính:</h1>
                 <select
-                  className="select select-bordered select-xs w-full max-w-xs"
+                className="select select-bordered select-xs w-96"
                   name="gender"
                   value={user?.employee?.gender || "Nam"}
                   // value={user?.gender || "Nam"}
