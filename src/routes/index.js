@@ -24,6 +24,8 @@ import Reciept from "../pages/Reciept";
 import Report from "../pages/Report";
 import ReportDetail from "../pages/ReportDetail";
 import UpdateSupply from "../pages/UpdateSupply";
+import PieChartProduct from "../pages/PieChartProduct";
+import PieChartCategory from "../pages/PieChartCategory";
 
 export const routes = [
   { path: "/signin", element: <SignIn /> },
@@ -99,6 +101,14 @@ export const routes = [
       {
         path: "/reportDetail",
         element: <ReportDetail />,
+      },
+      {
+        path: "/pieChartProduct",
+        element: <PieChartProduct />,
+      },
+      {
+        path: "/pieChartCategory",
+        element: <PieChartCategory />,
       },
       {
         path: "/createOrder",
