@@ -1,15 +1,15 @@
 
-export default function CategoryTableDetail({units}) {
-  
+export default function CategoryTableDetail({units, setIsUpdate}) {
   return (
     <>
       {units.map((unit)=> (<tr className="hover:bg-slate-100">
         <td key={unit._id}>{unit.name}</td>
         <td>{unit.convertQuantity}</td>
         <td>
-          <button
+         <button
             className=" w-6 h-6 rounded-lg mr-2"
             style={{ backgroundColor: "#ebf3fe", outline: "" }}
+            onClick={() => setIsUpdate({ status: true, unit })}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,6 @@ export default function CategoryTableDetail({units}) {
               />
             </svg>
           </button>
-
           <button
             id="btn__delete"
             className="w-6 h-6 rounded-lg "

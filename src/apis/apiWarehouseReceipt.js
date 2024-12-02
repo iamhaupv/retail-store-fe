@@ -11,8 +11,30 @@ const apiSumTotalAmountReceipt = async (token) => {
       console.log("api sum total warehouse receipt is error" + error);
     }
   };
+  const apiSearchById = async (token, payload) => {
+    try {
+      const response = await axios.post(`${url}warehouse/search-product-id`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.log("api sum total warehouse receipt is error" + error);
+    }
+  };
+  const apiSearchByName = async (token, payload) => {
+    try {
+      const response = await axios.post(`${url}warehouse/search-product-name`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.log("api sum total warehouse receipt is error" + error);
+    }
+  };
 const apiWarehouseReceipt = {
-    apiSumTotalAmountReceipt
+    apiSumTotalAmountReceipt,
+    apiSearchById,
+    apiSearchByName
 }
 
 export default apiWarehouseReceipt

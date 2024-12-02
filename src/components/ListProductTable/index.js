@@ -26,7 +26,7 @@ export default function ListProductTable({ role }) {
       setCurrentPage(currentPage + 1);
     }
   };
-
+  
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -278,7 +278,7 @@ export default function ListProductTable({ role }) {
         {/* Nofication and Button Add */}
 
         <div className="flex justify-between mt-6">
-          <h4 className="font-bold text-xl w-32 ml-4">
+          <h4 className="font-bold text-xl w-full ml-4">
             {category === "" && title === "" && status === "" && brand === "" && id === ""
               ? products.length
               : listProduct.length} Sản phẩm
@@ -332,7 +332,7 @@ export default function ListProductTable({ role }) {
               title === "" &&
               status === "" &&
               brand === "" && id === "" ? (
-                <TableProductByName listProduct={productsPagination} reloadProducts={reloadProducts} />
+                <TableProductByName listProduct={products} reloadProducts={reloadProducts} />
               ) : listProduct.length > 0 ? (
                 <TableProductByName listProduct={listProduct} reloadProducts={reloadProducts} />
               ) : (

@@ -11,8 +11,19 @@ const apiUpdateEmployee = async (token, pid) => {
       console.log("api update employee is error" + error);
     }
   };
+  const apiLastIdEmployee = async (token) => {
+    try {
+      const response = await axios.get(`${url}employee/last-id-number`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.log("api update employee is error" + error);
+    }
+  };
 const apiEmployee = {
-    apiUpdateEmployee
+    apiUpdateEmployee,
+    apiLastIdEmployee
 }
 
 

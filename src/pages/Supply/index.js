@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import apiCreateBrand from "../../apis/apiCreateBrand";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import apiBrand from "../../apis/apiBrand";
 export default function Supply() {
-  const generateRandomNumber = () => {
-    const randomNumber = Math.floor(Math.random() * 900) + 100;
-    return randomNumber
-  };
-  const [productId, setProductId] = useState(generateRandomNumber);
+  const [id, setId] = useState(0)
+  useEffect(()=> {
+    const fetchLastBrandId = async() => {
+      const token = localStorage.getItem("accessToken")
+    if(!token) throw new Error("Token is invalid!")
+    const response = await apiBrand.apiLastIdBrand(token)
+    setId(response.newId)
+    }
+    fetchLastBrandId()
+  }, [])
   const navigate = useNavigate()
   const [image, setImage] = useState({});
   const [isVisible, setIsVisible] = useState(true);
@@ -126,7 +132,7 @@ export default function Supply() {
         formData.append("description", description);
         formData.append("phone", phone);
         formData.append("address", address);
-        formData.append("id", productId)
+        formData.append("id", id)
         for (const key in image) {
           if (image[key]) {
             const file = await fetch(image[key]).then((res) => res.blob());
@@ -148,7 +154,9 @@ export default function Supply() {
       }
     }
   };
-
+  const navigateListBrand = () => {
+    navigate("/supply-list")
+  }
   return (
     <>
       <ToastContainer/>
@@ -195,7 +203,7 @@ export default function Supply() {
                   placeholder="Mã nhà cung cấp"
                   className="input input-bordered w-5/12 h-10 ml-8"
                   disabled
-                  value={productId}
+                  value={id}
                 />
               </div>
               <div className="flex items-center pt-2">
@@ -287,6 +295,7 @@ export default function Supply() {
               <button
                 class="btn w-28 ml-4"
                 style={{ backgroundColor: "#e0e0e0" }}
+                onClick={navigateListBrand}
               >
                 Hủy
               </button>

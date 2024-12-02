@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import apiCreateEmployee from "../../apis/apiCreateEmployee";
 import apiRegister from "../../apis/apiRegister";
@@ -6,6 +6,16 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import apiEmployee from "../../apis/apiEmployee";
 export default function Employee() {
+  const [id, setId] = useState(0)
+  useEffect(() => {
+    const fetchLastEmployee = async() => {
+      const token = localStorage.getItem("accessToken")
+    if(!token) throw new Error("Token is invalid!")
+    const response = await apiEmployee.apiLastIdEmployee(token)
+    setId(response.newId)
+    } 
+    fetchLastEmployee()
+  }, [])
   const navigate = useNavigate();
   const [images, setImages] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
@@ -148,7 +158,7 @@ export default function Employee() {
         formData.append("address", address);
         formData.append("gender", gender);
         formData.append("birthday", birthday);
-        formData.append("id", productId);
+        formData.append("id", id);
         for (const key in images) {
           if (images[key]) {
             const file = await fetch(images[key]).then((res) => res.blob());
@@ -178,6 +188,9 @@ export default function Employee() {
       toast.error("Thêm không thành công");
     }
   };
+  const navigateListEmployee = () => {
+    navigate("/employeelist")
+  }
   return (
     <>
       <ToastContainer />
@@ -225,7 +238,7 @@ export default function Employee() {
                     placeholder="Mã nhân viên"
                     className="input input-bordered w-[388px] h-10 ml-4"
                     disabled
-                    value={productId}
+                    value={id}
                   />
                 </div>
               </div>
@@ -362,6 +375,7 @@ export default function Employee() {
               <button
                 class="btn w-28 ml-4"
                 style={{ backgroundColor: "#e0e0e0" }}
+                onClick={navigateListEmployee}
               >
                 Hủy
               </button>

@@ -6,6 +6,7 @@ import apiCreateProduct from "../../apis/apiCreateProduct";
 import { useNavigate } from "react-router-dom";
 import AutoCompleteInput from "../../components/AutocompleteInput";
 import { toast, ToastContainer } from "react-toastify";
+import apiProduct from "../../apis/apiProduct";
 export default function Product() {
   const [selectedBrand, setSelectedBrand] = useState({ _id: "", name: "" });
   const [selectedCategory, setSelectedCategory] = useState({
@@ -20,6 +21,21 @@ export default function Product() {
   const [error, setError] = useState({});
   const [payload, setPayload] = useState({});
   const [value, setValue] = useState("");
+  const [id, setId] = useState(0)
+  
+  useEffect(()=>{
+    const fetchLastIdProductNumber = async() => {
+      try {
+        const token = localStorage.getItem("accessToken")
+        if(!token) throw new Error("Token is invalid!")
+        const response = await apiProduct.apiLastIdNumber(token)
+        setId(response.newId)
+      } catch (error) {
+        console.log("fetch last id product number is error", error);
+      }
+    }
+    fetchLastIdProductNumber()
+  }, [])
   const generateRandomNumber = () => {
     const randomNumber = Math.floor(Math.random() * 900) + 100;
     return randomNumber;
@@ -200,7 +216,7 @@ export default function Product() {
         formData.append("description", description);
         formData.append("brand", selectedBrand._id);
         formData.append("category", selectedCategory._id);
-        formData.append("id", productId);
+        formData.append("id", id);
         for (const key in image) {
           if (image[key]) {
             const file = await fetch(image[key]).then((res) => res.blob());
@@ -221,6 +237,9 @@ export default function Product() {
       toast.error("Thêm không thành công");
     }
   };
+  const navigateProductList = () => {
+    navigate("/product-list")
+  }
   return (
     <>
     <ToastContainer />
@@ -258,7 +277,7 @@ export default function Product() {
                   placeholder="Mã sản phẩm"
                   className="input input-bordered w-5/12 h-10 ml-4"
                   disabled
-                  value={productId}
+                  value={id}
                 />
               </div>
               {error && <h5 className="ml-4 text-red-500">{error.title}</h5>}
@@ -866,6 +885,7 @@ export default function Product() {
                 <button
                   class="btn w-28 ml-4"
                   style={{ backgroundColor: "#e0e0e0" }}
+                  onClick={navigateProductList}
                 >
                   Hủy
                 </button>

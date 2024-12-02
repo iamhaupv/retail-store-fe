@@ -10,7 +10,6 @@ import apiFilterReceiptByProduct from "../../apis/apiFilterReceiptByProduct";
 import Autocomplete from "../AutoComplete";
 
 export default function CreateOrderDetailFirst() {
-  const [totalAmount, setTotalAmount] = useState("")
   const [listReceiptId, setListReceiptId] = useState([]);
   const [products, setProducts] = useState([]);
   const [unit, setUnit] = useState("");
@@ -253,7 +252,6 @@ export default function CreateOrderDetailFirst() {
     });
     return totalAmount + totalVAT;
   };  
-  console.log(calculateTotalAmount(), "calculatetotalamount");
   function codeOrder() {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -327,7 +325,7 @@ export default function CreateOrderDetailFirst() {
 
       if (response.success) {
         alert("Đơn hàng đã được tạo thành công.");
-        // Additional actions on successful submit can be placed here
+        setOrderDetails([]);
       } else {
         alert("Đã có lỗi khi tạo đơn hàng.");
       }

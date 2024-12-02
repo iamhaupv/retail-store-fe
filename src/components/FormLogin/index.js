@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import LoginApi from "../../apis/LoginApi";
@@ -6,6 +6,7 @@ import "./FormLogin.css";
 import ForgotPasswordApi from "../../apis/ForgotPasswordApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function FormLogin() {
 
@@ -16,21 +17,52 @@ export default function FormLogin() {
     const { name, value } = e.target;
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
+  // const handleLogin = async () => {
+  //   try {
+  //     const rs = await LoginApi(payload);
+  //   if (rs.success) {
+  //     setPayload({ email: "", password: "" });
+  //     navigate("/");
+  //     localStorage.setItem("accessToken", rs.accessToken)
+  //     localStorage.setItem("name", rs.userData.name)
+  //     localStorage.setItem("refreshToken", rs.userData.refreshToken)
+  //     localStorage.setItem("email", rs.userData.email)
+  //     localStorage.setItem("image", rs.userData.image)
+  //     localStorage.setItem("role", rs.role)
+  //   } else {
+  //     Swal.fire("Oops!", rs.mes, "error");
+  //   }
+  //   } catch (error) {
+  //     console.log("handle login is error");
+  //   }
+  // };
+  
   const handleLogin = async () => {
-    const rs = await LoginApi(payload);
-    if (rs.success) {
-      setPayload({ email: "", password: "" });
-      navigate("/");
-      localStorage.setItem("accessToken", rs.accessToken)
-      localStorage.setItem("name", rs.userData.name)
-      localStorage.setItem("refreshToken", rs.userData.refreshToken)
-      localStorage.setItem("email", rs.userData.email)
-      localStorage.setItem("image", rs.userData.image)
-      localStorage.setItem("role", rs.role)
-    } else {
-      Swal.fire("Oops!", rs.mes, "error");
+    try {
+      const rs = await LoginApi(payload);
+      if (rs.success) {
+        // Reset payload and navigate if login is successful
+        setPayload({ email: "", password: "" });
+        navigate("/");
+        localStorage.setItem("accessToken", rs.accessToken);
+        localStorage.setItem("name", rs.userData.name);
+        localStorage.setItem("refreshToken", rs.userData.refreshToken);
+        localStorage.setItem("email", rs.userData.email);
+        localStorage.setItem("image", rs.userData.image);
+        localStorage.setItem("role", rs.role);
+      } else {
+        // Display an error message if login is unsuccessful
+        // Swal.fire("Oops!", rs.mes || "Đăng nhập thất bại. Vui lòng thử lại!", "error");
+        toast.error("Sai tên đăng nhập hoặc mật khẩu")
+      }
+    } catch (error) {
+      console.log("handle login error:", error);
+      // Swal.fire("Lỗi", "Sai tên đăng nhập hoặc mật khẩu", "error");
+      toast.error("Sai tên đăng nhập hoặc mật khẩu")
     }
   };
+  
+  
   const handleForgotPassword = async() => {
     try {
       const {email} = payload
@@ -44,8 +76,10 @@ export default function FormLogin() {
       throw new Error(error)
     }
   }
+  
   return (
     <>
+    <ToastContainer/>
       <div className="container__login flex justify-center font-roboto border rounded-[44px]">
         <div className="content__login flex justify-center items-center border rounded-[39px]">
           <div>

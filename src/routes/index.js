@@ -24,6 +24,7 @@ import Reciept from "../pages/Reciept";
 import Report from "../pages/Report";
 import ReportDetail from "../pages/ReportDetail";
 import UpdateSupply from "../pages/UpdateSupply";
+import UpdateUnit from "../pages/UpdateUnit";
 
 export const routes = [
   { path: "/signin", element: <SignIn /> },
@@ -83,6 +84,10 @@ export const routes = [
       {
         path: "/update-supply",
         element: <UpdateSupply />,
+      },
+      {
+        path: "/update-unit",
+        element: <UpdateUnit />,
       },
       {
         path: "/inventory",

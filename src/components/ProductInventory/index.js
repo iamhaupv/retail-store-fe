@@ -59,7 +59,7 @@ export default function ProductInventory({ products }) {
             </td>
             <td>{formatDate(product.expires)}</td>
             <td> {product.quantityDynamic} </td>
-            <td>
+            {/* <td>
               <button
                 id="btn__delete"
                 className="w-6 h-6 rounded-lg "
@@ -81,7 +81,7 @@ export default function ProductInventory({ products }) {
                   />
                 </svg>
               </button>
-            </td>
+            </td> */}
           </tr>
         ))
       ) : (
@@ -105,5 +105,7 @@ export default function ProductInventory({ products }) {
         </div>
       </dialog>
     </>
+    
+   
   );
 }

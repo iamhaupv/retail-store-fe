@@ -4,13 +4,43 @@ import apiGetAllProductByReceipt from "../../apis/apiGetAllProductByReceipt";
 import Autocomplete from "../AutoComplete";
 import apiGetFilteredWarehouseReceipts from "../../apis/apiGetFilteredWarehouseReceipts";
 import FilterProductByCondition from "../FilterProductByCondition";
+import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 export default function InventoryProduct({ onChangeModal }) {
+  const [id, setId] = useState("");
+  const [productsById, setProductsById] = useState([]);
+  const [productsByTitle, setProductsByTitle] = useState([]);
   const [products, setProducts] = useState([]);
   const [idPNK, setIdPNK] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [filterProduct, setFilterProduct] = useState([]);
+  // useEffect(() => {
+  //   const fetchSearchProductById = async () => {
+  //     try {
+  //       const token = localStorage.getItem("accessToken");
+  //       if (!token) throw new Error("Token is invalid");
+  //       const response = await apiWarehouseReceipt.apiSearchById(token, {
+  //         productId: id,
+  //       });
+  //       setProductsById(response.products);
+  //     } catch (error) {}
+  //   };
+  //   fetchSearchProductById();
+  // }, [id]);
+  useEffect(() => {
+    const fetchSearchProductByTile = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid");
+        const response = await apiWarehouseReceipt.apiSearchByName(token, {
+          productId: id, title: title
+        });
+        setProductsByTitle(Array.isArray(response?.products) ? response?.products : []);
+      } catch (error) {}
+    };
+    fetchSearchProductByTile();
+  }, [title, id]);
   const fetchProductByReceipt = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -24,7 +54,12 @@ export default function InventoryProduct({ onChangeModal }) {
   useEffect(() => {
     fetchProductByReceipt();
   }, []);
-
+  const handleChangeId = (e) => {
+    setId(e.target.value);
+  };
+  const handleChangeName = (e) => {
+    setTitle(e.target.value);
+  };
   const fetchProductByCondition = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -36,7 +71,7 @@ export default function InventoryProduct({ onChangeModal }) {
         category: category,
       });
       if (response && Array.isArray(response.receipts)) {
-        setFilterProduct([])
+        setFilterProduct([]);
         setFilterProduct(response.receipts);
       } else {
         setFilterProduct([]);
@@ -45,15 +80,15 @@ export default function InventoryProduct({ onChangeModal }) {
       console.log("fetch product by condition is error!" + error);
     }
   };
-  
+
   useEffect(() => {
     if (idPNK || title || brand || category) {
       fetchProductByCondition();
     } else {
-      setFilterProduct([]); 
+      setFilterProduct([]);
     }
-  }, [idPNK, title, brand, category]);
-  
+  }, [idPNK, brand, category]);
+
   const listIdPNK = () => {
     const uniqueIdPNK = [];
     products.forEach((product) => {
@@ -137,12 +172,12 @@ export default function InventoryProduct({ onChangeModal }) {
     <div className="w-auto">
       <div>
         <div className="flex justify-center">
-        <div className="w-1/2">
-            <Autocomplete
-              suggestion={listIdPNK()}
-              onchange={handleChangeIdPNK}
-              value={idPNK}
-              placeholder={"Nhập mã sản phẩm"}
+          <div className="w-1/2">
+            <input
+              onChange={handleChangeId}
+              value={id}
+              className="input input-bordered input-success w-full max-w-xs"
+              placeholder="Nhập mã sản phẩm"
             />
           </div>
           <div className="w-1/2">
@@ -154,11 +189,17 @@ export default function InventoryProduct({ onChangeModal }) {
             />
           </div>
           <div className="w-1/2 ml-4">
-            <Autocomplete
+            {/* <Autocomplete
               suggestion={listTitle()}
               onchange={handleChangeTitle}
               value={title}
               placeholder={"Nhập tên sản phẩm"}
+            /> */}
+            <input
+              onChange={handleChangeName}
+              value={title}
+              className="input input-bordered input-success w-full max-w-xs"
+              placeholder="Nhập tên sản phẩm"
             />
           </div>
           <div className="w-1/2 ml-4">
@@ -189,18 +230,20 @@ export default function InventoryProduct({ onChangeModal }) {
               <th>Tình trạng</th>
               <th>Ngày hết hạn</th>
               <th>Số lượng</th>
-              <th>Thao tác</th>
+              {/* <th>Thao tác</th> */}
             </tr>
           </thead>
-          <tbody>
-          {idPNK === "" && title === "" && brand === "" && category === "" ? (
+          <tbody>  
+  { (id === "" && idPNK === "" && title === "" && brand === "" && category === "") ? (
     <ProductInventory products={products} />
-  ) : filterProduct.length > 0 ? (
+  ) : (filterProduct && filterProduct?.length > 0) ? (
     <FilterProductByCondition products={filterProduct} />
+  ) : (productsByTitle && productsByTitle?.length > 0) ? (
+    <ProductInventory products={productsByTitle} />
   ) : (
     <div>Không có sản phẩm nào</div>
   )}
-          </tbody>
+</tbody>
           <tfoot>
             <tr></tr>
           </tfoot>

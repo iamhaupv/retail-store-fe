@@ -11,8 +11,19 @@ const apiSumTotalAmount = async (token) => {
       console.log("api last id warehouse receipt is error" + error);
     }
   };
+  const apiSumTotalAmountByDate = async (token, payload) => {
+    try {
+      const response = await axios.post(`${url}order/income-day`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.log("api last id warehouse receipt is error" + error);
+    }
+  };
 const apiOrder = {
-    apiSumTotalAmount
+    apiSumTotalAmount,
+    apiSumTotalAmountByDate
 }
 
 
