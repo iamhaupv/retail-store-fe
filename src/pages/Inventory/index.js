@@ -10,7 +10,6 @@ import apiGetListCategory from "../../apis/apiGetListCategory";
 import apiGetListBrands from "../../apis/apiGetListBrand";
 import logo_form from "../../Image/LogoForm.png";
 import apiFilterProductInShelfByMultiCondition from "../../apis/apiFilterProductInShelfByMultiCondition";
-import BarcodeCreate from "../../components/BarcodeCreate";
 export default function Inventory() {
   const [title, setTitle] = useState("");
   const [listProduct, setListProduct] = useState([]);
@@ -287,7 +286,7 @@ export default function Inventory() {
                       </h4>
                     </div>
                   </div>
-                  <div className="mt-2 mr-2">
+                  {/* <div className="mt-2 mr-2">
                     <button
                       class="btn w-36"
                       style={{ backgroundColor: "#e5edf8", color: "#2f80ed" }}
@@ -312,7 +311,7 @@ export default function Inventory() {
                       </svg>
                       Chỉnh sửa
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

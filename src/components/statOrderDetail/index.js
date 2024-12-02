@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function StatOrderDetail({orders, onOrderClick }) {
+export default function StatOrderDetail({orders,isActive ,onOrderClick }) {
   function formatDate(date) {
     if (!(date instanceof Date)) {
       date = new Date(date); 
@@ -10,11 +10,14 @@ export default function StatOrderDetail({orders, onOrderClick }) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
+  
   return (
     <>
       {orders.length > 0 ? (
         orders.map((order) => (
-          <div key={order.id} onClick={() => onOrderClick(order)} className="card bg-white  rounded-none border-collapse grid hover:bg-slate-100">
+          <div key={order.id} onClick={() => onOrderClick(order)} className={` card  rounded-none border-collapse grid forced-colors:hidden hover:bg-slate-100 ${
+        isActive ? 'bg-slate-100' : 'bg-white'}
+          `}>
         <div className="flex justify-between mr-1 ml-1 mt-1">
           <div className="font-bold text-sm">{order.id || 0}</div>
           <div className="font-bold text-sm">{order.totalAmount.toLocaleString()} VNĐ</div>
@@ -40,7 +43,8 @@ export default function StatOrderDetail({orders, onOrderClick }) {
           </div>
             <div className="avatar">
               <div className="size-6 rounded-full">
-                <img src={order.user.image} alt=""/>
+                {/* <img src={order.user.image} alt=""/> */}
+                <img src={order?.user?.employee?.images[0]} alt=""/>
               </div>
             </div>
         </div>

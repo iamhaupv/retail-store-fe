@@ -1,11 +1,11 @@
 import React from "react";
 
 export default function OrderTableDetail({ order }) {
-
+  console.log(order);
+  
   return (
     <>
       {order && order.products.map((product, index) => {
-        const productTotalAmount = product.quantity * product.product.price;
         return (
           <tr key={index} className="hover:bg-slate-100">
             <td>
@@ -30,11 +30,14 @@ export default function OrderTableDetail({ order }) {
               <div className="font-bold">{product.quantity}</div>
             </td>
             <td>
-              <div className="font-bold">{product.product.price.toLocaleString()} VNĐ</div>
+            <div className="font-bold">{product.unit.name}</div>
+            </td>
+            <td>
+              <div className="font-bold">{(product.product.price * product.unit.convertQuantity).toLocaleString()} đ</div>
             </td>
             <td>
               <div className="font-bold" style={{ color: "#f13612" }}>
-                {productTotalAmount.toLocaleString()} VNĐ
+                {(product.quantity * product.unit.convertQuantity * product.product.price).toLocaleString()} đ
               </div>
             </td>
           </tr>

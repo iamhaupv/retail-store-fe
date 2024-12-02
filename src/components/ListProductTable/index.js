@@ -131,15 +131,6 @@ export default function ListProductTable({ role }) {
   useEffect(() => {
     fetchBrands();
   }, []);
-  // const {inputRef} = useBarcode({
-  //   value:'ASM001',
-  //   options: {
-  //       displayValue: false,
-  //       background: '#ffffff',
-  //       width: 1,
-  //       height: 25,
-  //   }
-  //  })
   const handleChangeTitle = async (e) => {
     setTitle(e.target.value);
   };
@@ -213,7 +204,11 @@ export default function ListProductTable({ role }) {
 
   // Trong phần render cho pagination:
   const visiblePages = getVisiblePages(currentPage, totalPages);
-
+  const reloadProducts = () => {
+    fetchProductMultiCondition(); 
+    fetchProducts()
+    fetchProductsPagination()
+  };
   return (
     <>
       <div className="">
@@ -286,8 +281,7 @@ export default function ListProductTable({ role }) {
           <h4 className="font-bold text-xl w-32 ml-4">
             {category === "" && title === "" && status === "" && brand === "" && id === ""
               ? products.length
-              : listProduct.length}
-            sản phẩm
+              : listProduct.length} Sản phẩm
           </h4>
           {role === 'admin' && (
           <Link to="/product">
@@ -323,11 +317,6 @@ export default function ListProductTable({ role }) {
             {/* head */}
             <thead>
               <tr>
-                {/* <th>
-          <label>
-            <input type="checkbox" className="checkbox" />
-          </label>
-        </th> */}
                 <th>Mã sản phẩm</th>
                 <th>Sản phẩm</th>
                 <th>Nhà cung cấp</th>
@@ -343,9 +332,9 @@ export default function ListProductTable({ role }) {
               title === "" &&
               status === "" &&
               brand === "" && id === "" ? (
-                <TableProductByName listProduct={productsPagination} />
+                <TableProductByName listProduct={productsPagination} reloadProducts={reloadProducts} />
               ) : listProduct.length > 0 ? (
-                <TableProductByName listProduct={listProduct} />
+                <TableProductByName listProduct={listProduct} reloadProducts={reloadProducts} />
               ) : (
                 <td>
                   <div>Không có sản phẩm nào</div>

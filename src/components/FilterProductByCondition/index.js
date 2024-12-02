@@ -27,7 +27,7 @@ export default function FilterProductByCondition({ products }) {
   };
   return (
     <>
-      {Array.isArray(products) && products.length > 0 ? (
+      {products && products.length > 0 ? (
         products.map((product) => (
 
          product.products.map((item) => (

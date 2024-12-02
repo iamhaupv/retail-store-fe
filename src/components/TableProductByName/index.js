@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import apiIsDisplay from "../../apis/apiIsDisplay";
 import { Link } from "react-router-dom";
-export default function TableProductByName({ listProduct }) {
+import { toast, ToastContainer } from "react-toastify";
+export default function TableProductByName({ listProduct, reloadProducts }) {
+  const [products, setProducts] = useState(listProduct)
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const handleChangeIsDisplay = async (pid, isDisplay) => {
@@ -9,10 +11,15 @@ export default function TableProductByName({ listProduct }) {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid");
       await apiIsDisplay(token, pid, { isDisplay });
+      toast.success("Xóa sản phẩm thành công!");
+      reloadProducts();
     } catch (error) {
       throw new Error(error);
     }
   };
+  useEffect(() => {
+    setProducts(listProduct); 
+  }, [listProduct]);
   const handleDeleteProduct = () => {
     if (selectedProduct) {
       handleChangeIsDisplay(selectedProduct._id, false);
@@ -29,12 +36,12 @@ export default function TableProductByName({ listProduct }) {
   };
   return (
     <>
-      {listProduct.map((product) => (
+    <ToastContainer/>
+      {products.map((product) => (
         <tr key={product._id} className="hover:bg-slate-100">
           <td>
             <div>
               <div className="font-bold">{product.id}</div>
-              {/* <Barcode value={product._id}/> */}
             </div>
           </td>
           <td>
@@ -228,18 +235,6 @@ export default function TableProductByName({ listProduct }) {
               </h1>
 
               <div className="card-actions justify-start">
-                {/* <div>
-                <div className="flex justify-center">
-                  <div className="join mr-6">
-                    <button className="join-item btn">+</button>
-                    <button className="join-item btn">1</button>
-                    <button className="join-item btn">-</button>
-                  </div>
-                  <button className="btn btn-neutral btn-wide" hidden>
-                    Add to cart
-                  </button>
-                </div>
-              </div> */}
               </div>
             </div>
           </div>

@@ -205,7 +205,7 @@ export default function WarehouseReceipt() {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("Token is valid!");
     const user = await apiGetCurrentUser(token);
-    setUser(user.rs.name);
+    setUser(user.rs);
   };
   useEffect(() => {
     fetchUnits();
@@ -453,8 +453,10 @@ export default function WarehouseReceipt() {
               </h4>
               <input
                 type="text"
-                placeholder={`${user}`}
-                value={`${user}`}
+                // placeholder={`${user}`}
+                placeholder={`${user?.employee?.name}`}
+                // value={`${user}`}
+                value={`${user?.employee?.name}`}
                 className="input input-bordered w-11/12 h-10 ml-4 mb-4"
                 disabled
               />

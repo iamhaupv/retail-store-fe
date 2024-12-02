@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo_form from "../../Image/LogoForm.png";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 
@@ -32,12 +31,23 @@ export default function Reciept() {
       pdf.save("document.pdf");
     });
   };
+  function formatDate() {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // Tháng từ 0-11, nên phải cộng thêm 1 và đảm bảo 2 chữ số
+    const day = currentDate.getDate().toString().padStart(2, "0"); // Đảm bảo 2 chữ số cho ngày
+    const hours = currentDate.getHours().toString().padStart(2, "0");
+    const minutes = currentDate.getMinutes().toString().padStart(2, "0");
+    const seconds = currentDate.getSeconds().toString().padStart(2, "0");
+    const dateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    return dateTime;
+  }
   return (
     <>
       {selectedOrder && (
         <>
           <div className="w-full h-full min-h-screen justify-center flex bg-base-200 rounded-none overflow-y-auto">
-            <Link to="/createOrder">
+            <Link to="/order">
               <button className="fixed btn btn-circle bg-gray-200 left-60 top-20 ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -84,18 +94,18 @@ export default function Reciept() {
                 </h1>
 
                 <h1 className=" flex justify-center w-full">
-                  222/67/73 Phan Văn Trị Q.Bình Thạnh Tp.HCM
+                222/67/73 Phan Văn Trị Q.Bình Thạnh Tp.HCM
                 </h1>
                 <hr className="border border-black" />
                 <h1 className="font-bold text-xl flex justify-center w-full">
                   Phiếu thanh toán
                 </h1>
-                <h1 className=" flex justify-start w-full">Số HD: 241432515</h1>
+                <h1 className=" flex justify-start w-full">Số HD: {selectedOrder.id}</h1>
                 <h1 className=" flex justify-start w-full">
-                  Ngày HD: {selectedOrder.createdAt}
+                  Ngày HD: {formatDate(selectedOrder.createdAt)}
                 </h1>
                 <h1 className=" flex justify-start w-full">
-                  Nhân viên: {selectedOrder.user.name}
+                  Nhân viên: {selectedOrder?.user?.employee?.name}
                 </h1>
                 <hr className="border-dashed border-black" />
 
@@ -117,8 +127,8 @@ export default function Reciept() {
                         <th>{product.product.title}</th>
                         <td>{product.unit.name}</td>
                         <td>{product.quantity}</td>
-                        <td>{product.product.price.toLocaleString()} đ</td>
-                        <td>{(product.product.price * product.quantity).toLocaleString()} đ</td>
+                        <td>{(product.product.price * product.unit.convertQuantity).toLocaleString()} đ</td>
+                        <td>{(product.product.price * product.quantity * product.unit.convertQuantity).toLocaleString()} đ</td>
                       </tr>
                       ))
                     ) : (
@@ -147,7 +157,7 @@ export default function Reciept() {
                   CAM ON QUY KHACH VA HEN GAP LAI LAN SAU
                 </h1>
                 <h1 className=" flex justify-center w-full">
-                  Hotline: 0374824356
+                  Hotline: 0374582351
                 </h1>
               </div>
             </div>

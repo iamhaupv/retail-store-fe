@@ -18,7 +18,8 @@ export default function StockInDetail({ receipts }) {
           <td>{receipt.idPNK}</td>
           <td>{formatDate(receipt.createdAt)}</td>
           <td>
-            {receipt.user.name}
+            {/* {receipt.user.name} */}
+            {receipt?.user?.employee?.name}
           </td>
           <td className="flex justify-end mr-3">{receipt.products.length}</td>
           <td>

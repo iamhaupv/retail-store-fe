@@ -5,9 +5,13 @@ import Swal from "sweetalert2";
 import apiCreateProduct from "../../apis/apiCreateProduct";
 import { useNavigate } from "react-router-dom";
 import AutoCompleteInput from "../../components/AutocompleteInput";
+import { toast, ToastContainer } from "react-toastify";
 export default function Product() {
   const [selectedBrand, setSelectedBrand] = useState({ _id: "", name: "" });
-  const [selectedCategory, setSelectedCategory] = useState({ _id: "", name: "" });
+  const [selectedCategory, setSelectedCategory] = useState({
+    _id: "",
+    name: "",
+  });
   const navigate = useNavigate();
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -18,7 +22,7 @@ export default function Product() {
   const [value, setValue] = useState("");
   const generateRandomNumber = () => {
     const randomNumber = Math.floor(Math.random() * 900) + 100;
-    return randomNumber
+    return randomNumber;
   };
   const [productId, setProductId] = useState(generateRandomNumber);
   const handleInputChangeBrand = (selectedBrand) => {
@@ -30,7 +34,10 @@ export default function Product() {
   };
   const handleInputChangeCategory = (selectedCategory) => {
     if (selectedBrand) {
-      setSelectedCategory({ _id: selectedCategory._id, name: selectedCategory.name });
+      setSelectedCategory({
+        _id: selectedCategory._id,
+        name: selectedCategory.name,
+      });
     } else {
       setSelectedCategory({ _id: "", name: "" });
     }
@@ -193,7 +200,7 @@ export default function Product() {
         formData.append("description", description);
         formData.append("brand", selectedBrand._id);
         formData.append("category", selectedCategory._id);
-        formData.append("id", productId)
+        formData.append("id", productId);
         for (const key in image) {
           if (image[key]) {
             const file = await fetch(image[key]).then((res) => res.blob());
@@ -202,18 +209,21 @@ export default function Product() {
         }
         const response = await apiCreateProduct(token, formData);
         if (response.success) {
-          Swal.fire("Thành công!", "Thêm sản phẩm mới thành công!", "success");
-          navigate("/product-list");
+          toast.success("Thêm sản phẩm mới thành công!");
+          setTimeout(() => {
+            navigate('/product-list');
+          }, 2000);
         } else {
-          Swal.fire("Lỗi!", "Thêm không thành công!", "error");
+          toast.error("Thêm không thành công!");
         }
       }
     } catch (error) {
-      Swal.fire("Lỗi!", "Thêm không thành công", "error");
+      toast.error("Thêm không thành công");
     }
   };
   return (
     <>
+    <ToastContainer />
       <div
         className="w-11/12 h-full justify-center flex overflow-y-auto "
         style={{ backgroundColor: "#F5F5F5" }}
@@ -894,11 +904,11 @@ export default function Product() {
               ))}
             </select> */}
             <div className="ml-1 mr-1">
-            <AutoCompleteInput
-              data={listBrands()}
-              onChange={handleInputChangeBrand}
-              placeholder={"Nhập nhà cung cấp"}
-            />
+              <AutoCompleteInput
+                data={listBrands()}
+                onChange={handleInputChangeBrand}
+                placeholder={"Nhập nhà cung cấp"}
+              />
             </div>
             {error && <h5 className="ml-4 text-red-500">{error.brand}</h5>}
             <h4 className="flex font-sans text-base w-6/12 h-10 ml-4 pt-2">
@@ -923,11 +933,11 @@ export default function Product() {
               ))}
             </select> */}
             <div className="ml-1 mr-1 mb-3">
-            <AutoCompleteInput
-              data={listCategories()}
-              onChange={handleInputChangeCategory}
-              placeholder={"Nhập loại"}
-            />
+              <AutoCompleteInput
+                data={listCategories()}
+                onChange={handleInputChangeCategory}
+                placeholder={"Nhập loại"}
+              />
             </div>
             {error && <h5 className="ml-1 text-red-500">{error.categories}</h5>}
           </div>
