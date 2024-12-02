@@ -65,6 +65,15 @@ const LayoutDefault = () => {
     case "/order":
       headerContent = <Header title={"Danh sách đơn hàng"} />;
       break;
+      case "/reportDetail":
+        headerContent = <Header title={"Báo cáo doanh thu"} />;
+        break;
+        case "/pieChartProduct":
+          headerContent = <Header title={"Top 5 sản phẩm bán chạy"} />;
+          break;
+          case "/pieChartCategory":
+          headerContent = <Header title={"Top 5 loại sản phẩm bán chạy"} />;
+          break;
     default:
       headerContent = <Header title={"Home"} />;
   }

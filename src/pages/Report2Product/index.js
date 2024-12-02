@@ -1,18 +1,29 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Report2Product() {
   return (
     <>
       <div className="overflow-x-auto">
-        <h1 className="w-full flex items-center justify-start">
-          Hiển thị trong{" "}
-          <select class="select select-bordered w-32 select-sm ml-2 mr-2 mb-2">
-            <option selected>7 ngày</option>
-            <option>30 ngày</option>
-            <option>365 ngày</option>
-          </select>
-          (so sánh với lần báo cáo trước đó)
-        </h1>
+        <div className="w-full flex justify-between items-center">
+          <h1 className="w-full flex items-center justify-start">
+            Hiển thị trong{" "}
+            <select class="select select-bordered w-32 select-sm ml-2 mr-2 mb-2">
+              <option selected>7 ngày</option>
+              <option>30 ngày</option>
+              <option>365 ngày</option>
+            </select>
+            (so sánh với lần báo cáo trước đó)
+          </h1>
+          <Link to="/pieChartProduct">
+            <button
+              className="btn w-36 mt-5"
+              style={{ backgroundColor: "#e5edf8", color: "#2f80ed" }}
+            >
+              Xem biểu đồ
+            </button>
+          </Link>
+        </div>
         <table className="table table-zebra">
           {/* head */}
           <thead>

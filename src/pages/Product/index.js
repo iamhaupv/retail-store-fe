@@ -280,7 +280,9 @@ export default function Product() {
                   value={id}
                 />
               </div>
-              {error && <h5 className="ml-4 text-red-500">{error.title}</h5>}
+              {error ? ( <h5 className="ml-4 text-red-500">{error.title}</h5>):(
+                <div className="ml-4 "></div>
+              )}
               <div className="flex items-center pt-3">
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Đơn giá
@@ -298,7 +300,9 @@ export default function Product() {
                   className="input input-bordered w-6/12 h-10 ml-4"
                 />
               </div>
-              {error && <h5 className="ml-4 text-red-500">{error.price}</h5>}
+              {error ? ( <h5 className="ml-4 text-red-500">{error.price}</h5>):(
+                <div className="ml-4 "></div>
+              )}
               <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
                 Mô tả
                 <h5 className="ml-1 text-red-600">(*)</h5>
@@ -311,8 +315,8 @@ export default function Product() {
                 onBlur={handleBlur}
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-3"
               />
-              {error && (
-                <h5 className="ml-4 text-red-500 mb-3">{error.description}</h5>
+              {error ? ( <h5 className="ml-4 text-red-500">{error.description}</h5>):(
+                <div className="ml-4 "></div>
               )}
             </div>
           </div>

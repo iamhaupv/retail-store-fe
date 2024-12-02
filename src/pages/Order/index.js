@@ -72,7 +72,7 @@ export default function Order() {
     fetchEmployees()
   }, [])
   
-
+  const [activeCard, setActiveCard] = useState(null);
   const [isClicked, setIsClicked] = useState(true);
   const toggleClicked = () => {
     setIsClicked((prev) => !prev);
@@ -92,7 +92,7 @@ export default function Order() {
       >
         <div className="w-full animate__animated animate__fadeInRight ">
           <div className=" mt-3 mr-3 flex justify-between">
-            <h4 className="font-bold text-xl w-full ml-4">Tạo hóa đơn</h4>
+            <h4 className="font-bold text-xl w-full ml-4">Danh sách hóa đơn</h4>
             <div className="flex w-fit">
               <Link to="/createOrder">
               <button className="drawer-button btn btn-success text-white w-32">
@@ -166,7 +166,7 @@ export default function Order() {
                   />
                 </svg>
               </label>
-              <div className="dropdown dropdown-end">
+              {/* <div className="dropdown dropdown-end">
                 <div
                   tabIndex={0}
                   role="button"
@@ -231,7 +231,7 @@ export default function Order() {
                     </a>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
          
@@ -253,7 +253,7 @@ export default function Order() {
                       order === "" && employee === "" && value.startDate === null && value.endDate === null  ? (
                         <StatOrderDetail orders={orders} onOrderClick={handleOrderClick}  />
                       ) : listOrderByCondition.length > 0 ? (
-                        <StatOrderDetail orders={listOrderByCondition} onOrderClick={handleOrderClick}  />
+                        <StatOrderDetail isActive={activeCard === selectedOrder }  orders={listOrderByCondition} onOrderClick={handleOrderClick} />
                       ) :
                        (<div>Không có hóa đơn nào cả</div>)
                     }
@@ -265,7 +265,7 @@ export default function Order() {
                 </table>
               </div>
 
-              <div className="card bg-white w-9/12  rounded-none  mr-4 mt-2 grid "
+              <div className="card bg-white w-9/12  rounded-none  mr-4 mt-2 grid"
               style={{
                 height: "calc(100vh - 170px)",
               }}>

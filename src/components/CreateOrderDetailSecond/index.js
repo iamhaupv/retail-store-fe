@@ -414,7 +414,7 @@ export default function CreateOrderDetailSecond() {
               {/* head */}
               <thead>
                 <tr>
-                  {/* <th>Mã hàng</th> */}
+                  <th>Tên sản phẩm</th>
                   <th>Tên hàng</th>
                   <th>Mã phiếu</th>
                   <th>Số lượng</th>

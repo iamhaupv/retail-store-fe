@@ -134,7 +134,7 @@ export default function Report() {
             }}
           >
             <div className="w-full justify-items-start">
-              <h1 className="font-bold text-xl mt-5 ml-4">Doanh thu theo</h1>
+              <h1 className="font-bold text-xl mt-5 ml-4">Top 5 bán chạy theo</h1>
             </div>
             <div
             role="tablist"
