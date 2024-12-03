@@ -12,6 +12,8 @@ import {
   faWarehouse,
   faGear,
   faChartColumn,
+  faCalculator,
+  faCalendar,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBuffer } from "@fortawesome/free-brands-svg-icons";
 import { Link, NavLink } from "react-router-dom";
@@ -26,13 +28,13 @@ export default function SideBar({ role }) {
   
   // Các mục sidebar cho admin
   const adminItems = [
-    { to: "/", label: "Dashboard", icon: faGaugeHigh, key: "dashBoard" },
+    { to: "/", label: "Tổng quan", icon: faGaugeHigh, key: "Tổng quan" },
     {to: "/product-list",  label: "Sản phẩm",key: "Sản phẩm", icon: faBuffer },
     //{ to: "/product", label: "[+] Thêm mới sản phẩm", key: "Thêm mới sản phẩm" },
     //{ to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },
-    { to: "/category", label: "Quản lý đơn vị tính", key: "Quản lý đơn vị tính" },
+    { to: "/category", label: "Quản lý đơn vị tính", key: "Quản lý đơn vị tính", icon:faCalculator },
     { to: "/employeelist", label: "Nhân viên",key: "Nhân viên", icon: faClipboardUser },
-    { to: "/employeeSchedule", label: "Lịch làm việc", key: "Lịch làm việc" },
+    { to: "/employeeSchedule", label: "Lịch làm việc", key: "Lịch làm việc", icon:faCalendar },
     //{ to: "/employeelist", label: "Danh sách nhân viên", key: "Danh sách nhân viên" },
     {to: "/supply-list",  label: "Nhà cung cấp",key: "Nhà cung cấp", icon: faWarehouse },
     //{ to: "/supply", label: "[+] Thêm nhà cung cấp", key: "Thêm nhà cung cấp" },
@@ -53,7 +55,7 @@ export default function SideBar({ role }) {
     //{ to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },
     // { to: "/category", label: "Quản lý đơn vị tính", key: "Quản lý đơn vị tính" },
     {  label: "Nhân viên", icon: faClipboardUser },
-    { to: "/employeeSchedule",  label: "Lịch làm việc", key: "Lịch làm việc" },
+    { to: "/employeeSchedule",  label: "Lịch làm việc", key: "Lịch làm việc",icon: faCalendar },
     // { to: "/employeelist", label: "Danh sách nhân viên", key: "Danh sách nhân viên" },
     //{ to: "/supply-list",key:"Nhà cung cấp", label: "Nhà cung cấp", icon: faWarehouse },
     // { to: "/supply", label: "[+] Thêm nhà cung cấp", key: "Thêm nhà cung cấp" },

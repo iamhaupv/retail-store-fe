@@ -177,11 +177,11 @@ export default function InventoryProduct({ onChangeModal }) {
             <input
               onChange={handleChangeId}
               value={id}
-              className="input input-bordered input-success w-full max-w-xs"
+              className="input input-bordered  w-full h-9 "
               placeholder="Nhập mã sản phẩm"
             />
           </div>
-          <div className="w-1/2">
+          <div className="w-1/2 ml-2">
             <Autocomplete
               suggestion={listIdPNK()}
               onchange={handleChangeIdPNK}
@@ -199,7 +199,7 @@ export default function InventoryProduct({ onChangeModal }) {
             <input
               onChange={handleChangeName}
               value={title}
-              className="input input-bordered input-success w-full max-w-xs"
+              className="input input-bordered  w-full h-9"
               placeholder="Nhập tên sản phẩm"
             />
           </div>

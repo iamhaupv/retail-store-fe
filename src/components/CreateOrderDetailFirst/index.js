@@ -453,7 +453,7 @@ export default function CreateOrderDetailFirst() {
             <div className="w-5/6 justify-items-end grid mr-2">
               <button
                 onClick={addNewRow}
-                className="drawer-button btn btn-success text-white w-36 h-8 mt-3 "
+                className="drawer-button btn btn-success text-white w-44 h-8 mt-3 "
               >
                 {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -469,6 +469,7 @@ export default function CreateOrderDetailFirst() {
                     d="M12 4.5v15m7.5-7.5h-15"
                   />
                 </svg> */}
+
                 Thêm sản phẩm
               </button>
             </div>
@@ -485,7 +486,7 @@ export default function CreateOrderDetailFirst() {
                 <tr>
                   {/* <th>Mã hàng</th> */}
                   <th>Tên sản phẩm</th>
-                  <th>Mã phiếu</th>
+                  <th>Mã lô</th>
                   <th>Số lượng</th>
                   <th>Đơn vị tính</th>
                   <th>Đơn giá</th>
