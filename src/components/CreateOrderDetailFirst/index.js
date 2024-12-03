@@ -8,8 +8,10 @@ import apiCreateOrder from "../../apis/apiCreateOrder";
 import apiFilterProductSumQuantity from "../../apis/apiFilterProductSumQuantity";
 import apiFilterReceiptByProduct from "../../apis/apiFilterReceiptByProduct";
 import Autocomplete from "../AutoComplete";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function CreateOrderDetailFirst() {
+  const [submittedData, setSubmittedData] = useState(null);
   const [listReceiptId, setListReceiptId] = useState([]);
   const [products, setProducts] = useState([]);
   const [unit, setUnit] = useState("");
@@ -246,7 +248,7 @@ export default function CreateOrderDetailFirst() {
     let totalVAT = 0;
     orderDetails.forEach((detail) => {
       const productTotal = detail.quantity * detail.price * detail.convertQuantity;
-      const productVAT = calculateVAT(detail.quantity, detail.price, detail.VAT);
+      const productVAT = detail.quantity * detail.convertQuantity * detail.price * detail.VAT
       totalAmount += productTotal;
       totalVAT += productVAT;
     });
@@ -324,18 +326,20 @@ export default function CreateOrderDetailFirst() {
       const response = await apiCreateOrder(token, orderData);
 
       if (response.success) {
-        alert("Đơn hàng đã được tạo thành công.");
+        toast.success("Đơn hàng đã được tạo thành công.");
         setOrderDetails([]);
+        setSubmittedData(response)
       } else {
-        alert("Đã có lỗi khi tạo đơn hàng.");
+        toast.error("Đã có lỗi khi tạo đơn hàng.");
       }
     } catch (error) {
       console.error("Lỗi khi submit: ", error);
-      alert("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
+      toast.error("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
     }
   };
   return (
     <>
+    <ToastContainer/>
       <div className="card bg-white h-full rounded-none w-full overflow-y-hidden ">
         <h1 className="font-bold text-xl ml-2 mt-2">Thông tin </h1>
         <div>
@@ -559,10 +563,11 @@ export default function CreateOrderDetailFirst() {
             </div>
           </div>
           <div className="flex w-full h-36 justify-end">
-            <Link to="/reciept">
+            <Link to="/reciept" state={{submittedData}}>
               <button
                 className="drawer-button btn text-white w-36 h-8 mt-3 ml-6"
                 style={{ backgroundColor: "#2f80ed" }}
+                onClick={handleSubmit}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

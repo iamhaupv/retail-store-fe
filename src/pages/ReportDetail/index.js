@@ -103,50 +103,80 @@ export default function ReportDetail() {
       }
       fetchSum()
     }, [])
-    // const data = [
-    //   {
-    //     name: "Page A",
-    //     uv: 4000,
-    //     pv: 2400,
-    //     amt: 2400,
-    //   },
-    //   {
-    //     name: "Page B",
-    //     uv: 3000,
-    //     pv: 1398,
-    //     amt: 2210,
-    //   },
-    //   {
-    //     name: "Page C",
-    //     uv: 2000,
-    //     pv: 9800,
-    //     amt: 2290,
-    //   },
-    //   {
-    //     name: "Page D",
-    //     uv: 2780,
-    //     pv: 3908,
-    //     amt: 2000,
-    //   },
-    //   {
-    //     name: "Page E",
-    //     uv: 1890,
-    //     pv: 4800,
-    //     amt: 2181,
-    //   },
-    //   {
-    //     name: "Page F",
-    //     uv: 2390,
-    //     pv: 3800,
-    //     amt: 2500,
-    //   },
-    //   {
-    //     name: "Page G",
-    //     uv: 3490,
-    //     pv: 4300,
-    //     amt: 2100,
-    //   },
-    // ];
+    const data = [
+      {
+        name: "Tháng 1",
+        DoanhThuTruocDo: 4000,
+        TienVon: 2400,
+        LoiNhuan: 2000,
+      },
+      {
+        name: "Tháng 2",
+        DoanhThuTruocDo: 3000,
+        TienVon: 1398,
+        LoiNhuan: 1111,
+      },
+      {
+        name: "Tháng 3",
+        DoanhThuTruocDo: 2000,
+        TienVon: 9800,
+        LoiNhuan: 14255,
+      },
+      {
+        name: "Tháng 4",
+        DoanhThuTruocDo: 2780,
+        TienVon: 3908,
+        LoiNhuan: 74155,
+      },
+      {
+        name: "Tháng 5",
+        DoanhThuTruocDo: 1890,
+        TienVon: 4800,
+        LoiNhuan: 741,
+      },
+      {
+        name: "Tháng 6",
+        DoanhThuTruocDo: 2390,
+        TienVon: 3800,
+        LoiNhuan: 744,
+      },
+      {
+        name: "Tháng 7",
+        DoanhThuTruocDo: 3490,
+        TienVon: 4300,
+        LoiNhuan: 7777,
+      },
+      {
+        name: "Tháng 8",
+        DoanhThuTruocDo: 3490,
+        TienVon: 4300,
+        LoiNhuan: 144,
+      },
+      {
+        name: "Tháng 9",
+        DoanhThuTruocDo: 3490,
+        TienVon: 4300,
+        LoiNhuan: 741,
+      },
+      {
+        name: "Tháng 10",
+        DoanhThuTruocDo: 3490,
+        TienVon: 4300,
+        LoiNhuan: 744,
+      },
+      {
+        name: "Tháng 11",
+        DoanhThuTruocDo: 3490,
+        TienVon: 4300,
+        LoiNhuan: 74125,
+      },
+      {
+        name: "Tháng 12",
+        DoanhThuTruocDo: 3490,
+        TienVon: 4300,
+        LoiNhuan: 7451,
+      },
+    ];
     const [value, setValue] = useState({
         startDate: null,
         endDate: null,

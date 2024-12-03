@@ -11,8 +11,19 @@ const apiUpdateUnit = async (token, payload) => {
       console.log("api update unit is error" + error);
     }
   };
+  const apiGetAllUnit = async (token) => {
+      try {
+          const response = await axios.get(`${url}unit`, {headers: {
+              Authorization: `Bearer ${token}`
+          }})
+          return response.data
+      } catch (error) {
+          console.log("api get all unit is error " + error)
+      }
+  }
 const apiUnit = {
-    apiUpdateUnit
+    apiUpdateUnit,
+    apiGetAllUnit
 }
 
 

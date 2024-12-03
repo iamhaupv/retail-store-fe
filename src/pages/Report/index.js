@@ -49,6 +49,9 @@ export default function Report() {
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
+  const formattedTotalAmount = (sum && sum.totalAmount) ? sum.totalAmount.toLocaleString() : '0';
+  const formattedTotalVAT = (sum && sum.amountVAT) ? sum.amountVAT.toLocaleString() : '0';
+  const formattedTotalReceipt = (receipt && receipt.totalAmount) ? receipt.totalAmount.toLocaleString() : '0';
   return (
     <>
       <div
@@ -88,7 +91,8 @@ export default function Report() {
                   <div className="w-3/4 justify-start">
                     <h1 className="text-lg mt-5 ml-4">Tổng doanh thu</h1>
                     <h1 className="font-bold text-xl mt-5 ml-4">
-                      {sum && sum.totalAmount} đ
+                      {/* {sum && sum.totalAmount} đ */}
+                      {formattedTotalAmount} đ
                     </h1>
                   </div>
                 </div>
@@ -100,7 +104,7 @@ export default function Report() {
                     <h1 className="flex items-center font-bold text-xl mt-5 ml-4">
                       <div className="w-2 h-4 bg-red-600 mr-4"></div>
                       Tổng VAT</h1>
-                    <h1 className="text-lg mt-2 ml-10">{sum && sum.amountVAT} đ</h1>
+                    <h1 className="text-lg mt-2 ml-10">{formattedTotalVAT} đ</h1>
                   </div>
                   <div className="w-auto justify-start ml-24">
                     <h1 className="flex items-center font-bold text-xl mt-5 ml-4">
@@ -115,7 +119,7 @@ export default function Report() {
                     <div className="w-2 h-4 bg-blue-500 mr-4"></div>
                       Tổng tiền nhập hàng
                     </h1>
-                    <h1 className="text-lg mt-2 ml-10">{receipt && receipt.totalAmount} đ</h1>
+                    <h1 className="text-lg mt-2 ml-10">{formattedTotalReceipt} đ</h1>
                   </div>
                   <div className="w-auto justify-start ml-4">
                     <h1 className="flex items-center font-bold text-xl mt-5 ml-4">

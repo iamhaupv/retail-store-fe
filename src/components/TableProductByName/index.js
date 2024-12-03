@@ -66,6 +66,7 @@ export default function TableProductByName({ listProduct, reloadProducts }) {
           <td>
             <h1 className="">{product.quantity}</h1>
           </td>
+          <td>{product?.unit?.name}</td>
           <td>
             <h1 className="whitespace-nowrap">
               {product.price.toLocaleString()} đ

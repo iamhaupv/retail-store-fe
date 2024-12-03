@@ -559,7 +559,7 @@ export default function CreateOrderDetailSecond() {
             </div>
           </div>
           <div className="flex w-full h-36 justify-end">
-            <Link to="/reciept">
+            {/* <Link to="/reciept">
               <button
                 className="drawer-button btn text-white w-36 h-8 mt-3 ml-6"
                 style={{ backgroundColor: "#2f80ed" }}
@@ -580,7 +580,7 @@ export default function CreateOrderDetailSecond() {
                 </svg>
                 In
               </button>
-            </Link>
+            </Link> */}
             <button
               onClick={handleSubmit}
               className="drawer-button btn btn-success text-white w-36 h-8 mt-3 ml-2"

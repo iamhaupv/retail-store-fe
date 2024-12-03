@@ -13,12 +13,11 @@ export default function EntryForm() {
         sum + (product.quantity || 0) * (product.conversionRate || 1),
       0
     ) || 0;
-
   const calculateTotalAmount = (products) => {
     return products.reduce((total, product) => {
-      const quantityDynamic = product.quantityDynamic || 0; // Số lượng thực tế
+      const quantity = product.quantity
       const importPrice = product.importPrice || 0; // Giá nhập
-      const productTotal = quantityDynamic * importPrice; // Tổng tiền cho mỗi sản phẩm
+      const productTotal = quantity * importPrice * product.unit.convertQuantity
       return total + productTotal; // Tính tổng bằng giá nhập
     }, 0);
   };
@@ -74,7 +73,7 @@ export default function EntryForm() {
     const [day, month, year] = formattedDate.split("/");
     return `Ngày ${day} tháng ${month} năm ${year}`;
   };
-
+  
   return (
     <>
       <div className="w-full h-full min-h-screen justify-center flex bg-base-200 rounded-none overflow-y-auto">
@@ -154,7 +153,7 @@ export default function EntryForm() {
                 <h1 className="flex">
                   Người giao:
                   <h1 className="font-bold ml-1">
-                    {receipt.user.name}
+                    {receipt?.user.employee?.name}
                   </h1>
                 </h1>
                 <h1 className="flex">

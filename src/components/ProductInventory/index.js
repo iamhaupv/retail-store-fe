@@ -59,6 +59,7 @@ export default function ProductInventory({ products }) {
             </td>
             <td>{formatDate(product.expires)}</td>
             <td> {product.quantityDynamic} </td>
+            <td>{product?.unit}</td>
             {/* <td>
               <button
                 id="btn__delete"

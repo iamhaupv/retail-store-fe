@@ -9,7 +9,6 @@ export default function StockInDetail({ receipts }) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
-  console.log(receipts);
   
   return (
     <>
@@ -25,9 +24,9 @@ export default function StockInDetail({ receipts }) {
           <td>
             <h1 className="flex justify-end items-center">
             {receipt.products.reduce((total, product) => {
-                const quantityDynamic = product.quantityDynamic || 0; // Số lượng thực tế
+                const quantity = product.quantity || 0; // Số lượng thực tế
                 const importPrice = product.importPrice || 0; // Giá nhập
-                const productTotal = quantityDynamic * importPrice; // Tổng tiền cho mỗi sản phẩm
+                const productTotal = quantity * importPrice * product.unit.convertQuantity; // Tổng tiền cho mỗi sản phẩm
                 return total + productTotal; // Cộng dồn tổng tiền
               }, 0).toLocaleString()}
             đ

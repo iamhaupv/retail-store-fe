@@ -5,8 +5,10 @@ import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router-dom";
 import apiUpdateProduct from "../../apis/apiUpdateProduct";
 import { toast, ToastContainer } from "react-toastify";
+import apiUnit from "../../apis/apiUnit";
 
 export default function UpdateProduct() {
+  const [units, setUnits] = useState([])
   const location = useLocation();
   const { product } = location.state || {};
   const navigate = useNavigate();
@@ -27,9 +29,24 @@ export default function UpdateProduct() {
     description: product?.description || "",
     brand: product?.brand._id || "",
     category: product?.category._id || "",
-    id: product.id
+    id: product.id,
+    unit: product?.unit?._id
   });
+  console.log(product);
   
+  useEffect(() => {
+    const fetchUnits = async() => {
+      try {
+        const token = localStorage.getItem("accessToken")
+        if(!token) throw new Error("Token is invalid!")
+        const response = await apiUnit.apiGetAllUnit(token)
+        setUnits(response.units)
+      } catch (error) {
+        throw new Error("fetch unit is error", error)
+      }
+    }
+    fetchUnits()
+  }, [])
   const handleBlur = (e) => {
     const { name } = e.target;
     if (!payload[name]) {
@@ -81,6 +98,7 @@ export default function UpdateProduct() {
     setError((prev) => ({ ...prev, [name]: errorMessage }));
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
+  
   const handleClose = (inputKey) => {
     setIsVisible(false);
     setImage((prevImages) => ({
@@ -125,10 +143,9 @@ export default function UpdateProduct() {
     fetchBrands();
     fetchCategories();
   }, []);
-
   const handleSubmit = async () => {
     try {
-      const { title, price, description, brand, category } = payload;
+      const { title, price, description, brand, category, unit } = payload;
       if (!title || !price || !description || !brand || !image) {
         Swal.fire(
           "Thiếu thông tin!",
@@ -159,6 +176,7 @@ export default function UpdateProduct() {
         formData.append("description", description);
         formData.append("brand", brand);
         formData.append("category", category);
+        formData.append("unit", unit);
 
         // Thêm ảnh vào formData
         for (const key in image) {
@@ -876,6 +894,28 @@ export default function UpdateProduct() {
               ))}
             </select>
             {error && <h5 className="ml-1 text-red-500">{error.categories}</h5>}
+            <h4 className="flex font-sans text-base h-10 ml-4 pt-2">
+              Đơn vị tính nhỏ nhất
+              <h5 className="ml-1 text-red-600">(*)</h5>
+            </h4>
+            <div className="ml-1 mr-1 mb-3">
+            <select
+              name="unit"
+              onBlur={handleBlur}
+              onChange={handleChangeInput}
+              value={payload.unit || ""}
+              className="select select-bordered w-11/12 h-11 ml-4 mb-8"
+            >
+              <option value="" disabled>
+                Đơn vị tính
+              </option>
+              {units.map((unit) => (
+                <option key={unit._id} value={unit._id}>
+                  {unit.name}
+                </option>
+              ))}
+            </select>
+            </div>
           </div>
         </div>
       </div>

@@ -140,7 +140,7 @@ export default function ListEmployee() {
             </table>
           </div>
           {/* pagination */}
-        <div className="w-full justify-end pt-3 pr-2">
+        {/* <div className="w-full justify-end pt-3 pr-2">
             <ul className="flex items-center justify-end gap-2 ">
               <li>
                 <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
@@ -202,7 +202,7 @@ export default function ListEmployee() {
                 </button>
               </li>
             </ul>
-        </div>
+        </div> */}
         {/* end Paginination */}
         </div>
       </div>

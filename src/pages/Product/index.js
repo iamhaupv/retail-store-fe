@@ -7,7 +7,10 @@ import { useNavigate } from "react-router-dom";
 import AutoCompleteInput from "../../components/AutocompleteInput";
 import { toast, ToastContainer } from "react-toastify";
 import apiProduct from "../../apis/apiProduct";
+import apiUnit from "../../apis/apiUnit";
 export default function Product() {
+  const [unit, setUnit] = useState({_id: "", name: ""})
+  const [units, setUnits] = useState([])
   const [selectedBrand, setSelectedBrand] = useState({ _id: "", name: "" });
   const [selectedCategory, setSelectedCategory] = useState({
     _id: "",
@@ -22,7 +25,19 @@ export default function Product() {
   const [payload, setPayload] = useState({});
   const [value, setValue] = useState("");
   const [id, setId] = useState(0)
-  
+  useEffect(() => {
+    const fetchUnits = async() => {
+      try {
+        const token = localStorage.getItem("accessToken")
+        if(!token) throw new Error("Token is invalid!")
+        const response = await apiUnit.apiGetAllUnit(token)
+        setUnits(response.units)
+      } catch (error) {
+        throw new Error("fetch unit is error", error)
+      }
+    }
+    fetchUnits()
+  }, [])
   useEffect(()=>{
     const fetchLastIdProductNumber = async() => {
       try {
@@ -36,11 +51,6 @@ export default function Product() {
     }
     fetchLastIdProductNumber()
   }, [])
-  const generateRandomNumber = () => {
-    const randomNumber = Math.floor(Math.random() * 900) + 100;
-    return randomNumber;
-  };
-  const [productId, setProductId] = useState(generateRandomNumber);
   const handleInputChangeBrand = (selectedBrand) => {
     if (selectedBrand) {
       setSelectedBrand({ _id: selectedBrand._id, name: selectedBrand.name });
@@ -58,13 +68,31 @@ export default function Product() {
       setSelectedCategory({ _id: "", name: "" });
     }
   };
+  const handleInputChangeUnit = (selectedCategory) => {
+    if (selectedCategory) {
+      setUnit({
+        _id: selectedCategory._id,
+        name: selectedCategory.name,
+      });
+    } else {
+      setUnit({ _id: "", name: "" });
+    }
+  };
+  console.log(unit);
+  
   const listCategories = () => {
     return categories.map((category) => ({
       _id: category._id,
       name: category.name,
     }));
   };
-
+  const listUnits = () => {
+    return units.map((unit) => ({
+      _id: unit._id,
+      name: unit.name,
+    }));
+  };
+  
   const listBrands = () => {
     return brands.map((brand) => ({
       _id: brand._id,
@@ -216,6 +244,7 @@ export default function Product() {
         formData.append("description", description);
         formData.append("brand", selectedBrand._id);
         formData.append("category", selectedCategory._id);
+        formData.append("unit", unit._id);
         formData.append("id", id);
         for (const key in image) {
           if (image[key]) {
@@ -960,7 +989,19 @@ export default function Product() {
               />
             </div>
             {error && <h5 className="ml-1 text-red-500">{error.categories}</h5>}
+            <h4 className="flex font-sans text-base h-10 ml-4 pt-2">
+              Đơn vị tính nhỏ nhất
+              <h5 className="ml-1 text-red-600">(*)</h5>
+            </h4>
+            <div className="ml-1 mr-1 mb-3">
+              <AutoCompleteInput
+                data={listUnits()}
+                onChange={handleInputChangeUnit}
+                placeholder={"Nhập loại"}
+              />
+            </div>
           </div>
+          
         </div>
       </div>
     </>

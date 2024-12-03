@@ -230,6 +230,7 @@ export default function InventoryProduct({ onChangeModal }) {
               <th>Tình trạng</th>
               <th>Ngày hết hạn</th>
               <th>Số lượng</th>
+              <th>Đơn vị tính</th>
               {/* <th>Thao tác</th> */}
             </tr>
           </thead>
