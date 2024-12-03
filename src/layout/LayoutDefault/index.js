@@ -15,7 +15,7 @@ const LayoutDefault = () => {
   
   switch (location.pathname) {
     case "/":
-      headerContent = <Header title={"Home"} />;
+      headerContent = <Header title={"Tổng quan"} />;
       break;
     case "/employee":
       headerContent = <Header title={"Thêm nhân viên"} />;
