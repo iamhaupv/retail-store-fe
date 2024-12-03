@@ -217,14 +217,14 @@ export default function Inventory() {
         className="w-11/12 h-sceen justify-center flex overflow-y-auto"
         style={{ backgroundColor: "#F5F5F5" }}
       >
-        <div className="w-11/12 justify-center  ">
+        <div className="w-full ml-2 mr-2 justify-center  ">
           <div className=" w-full h-fit  animate__animated animate__fadeInRight ">
-            <div className="card bg-white mb-2 rounded-lg top-7  grid h-52 ">
-              <h4 className="font-bold text-xl w-32 ml-4 mt-4 h-fit">
+            <div className="card bg-white mb-2 rounded-lg top-2  grid h-52 ">
+              <h4 className="font-bold text-xl w-32 ml-4 mt-2 h-fit">
                 Thông tin kho
               </h4>
               <div
-                className="card rounded-lg ml-8 mr-8 mb-24 mt-3 w-12/12  grid "
+                className="card rounded-lg ml-8 mr-8 mb-4 mt-2 w-12/12  grid "
                 style={{ backgroundColor: "#F5F5F5" }}
               >
                 <div className="flex w-12/12">
@@ -317,7 +317,7 @@ export default function Inventory() {
             </div>
           </div>
           <div className="w-full mb-7 animate__animated animate__fadeInRight ">
-            <div className="card bg-white rounded-lg top-7  grid   ">
+            <div className="card bg-white rounded-lg top-1  grid   ">
               <div
                 role="tablist"
                 className="tabs tabs-bordered order-b border-gray-200"

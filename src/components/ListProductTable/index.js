@@ -252,7 +252,7 @@ export default function ListProductTable({ role }) {
             <option value={""} selected>
               Trạng thái
             </option>
-            <option value={"in_stock"}>Đang bán</option>
+            <option value={"in_stock"}>Còn hàng</option>
             <option value={"out_of_stock"}>Hết hàng</option>
           </select>
           <div className="ml-4 w-72 h-10">

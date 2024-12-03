@@ -50,7 +50,7 @@ export default function ListProduct() {
             )} />
             </div>
 
-            <input
+            {/* <input
               type="radio"
               name="my_tabs_1"
               role="tab"
@@ -58,8 +58,8 @@ export default function ListProduct() {
               aria-label="Đang bán"
               style={activeTab === 1 ? { borderColor: "#f89a88" } : {}}
               onClick={() => handleTabClick(1)}
-            />
-            <div
+            /> */}
+            {/* <div
               role="tabpanel"
               className="tab-content p-10 h-full"
               style={{
@@ -69,9 +69,9 @@ export default function ListProduct() {
               <ListProductSale role={localStorage.getItem(
               'role'
             )}  />
-            </div>
+            </div> */}
 
-            <input
+            {/* <input
               type="radio"
               name="my_tabs_1"
               role="tab"
@@ -79,8 +79,8 @@ export default function ListProduct() {
               aria-label="Hết Hàng"
               style={activeTab === 2 ? { borderColor: "#f89a88" } : {}}
               onClick={() => handleTabClick(2)}
-            />
-            <div
+            /> */}
+            {/* <div
               role="tabpanel"
               className="tab-content p-10 h-full"
               style={{
@@ -90,7 +90,7 @@ export default function ListProduct() {
               <ListProductOutStock role={localStorage.getItem(
               'role'
             )} />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
