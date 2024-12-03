@@ -23,7 +23,6 @@ export default function Header(props) {
       throw new Error(error);
     }
   };
-  console.log(user);
   
   return (
     <>

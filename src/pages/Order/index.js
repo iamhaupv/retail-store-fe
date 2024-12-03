@@ -113,7 +113,7 @@ export default function Order() {
                 Thêm
               </button>
               </Link>
-              <Link to="/reciept" state={{selectedOrder}}>
+              <Link to="/receipt" state={{selectedOrder}}>
               <button className="btn btn-success text-white ml-2 w-32">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

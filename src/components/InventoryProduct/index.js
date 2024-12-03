@@ -7,7 +7,8 @@ import FilterProductByCondition from "../FilterProductByCondition";
 import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 export default function InventoryProduct({ onChangeModal }) {
   const [id, setId] = useState("");
-  const [productsById, setProductsById] = useState([]);
+  const [productsByStatus, setProductsByStatus] = useState([]);
+  const [status, setStatus] = useState(""); 
   const [productsByTitle, setProductsByTitle] = useState([]);
   const [products, setProducts] = useState([]);
   const [idPNK, setIdPNK] = useState("");
@@ -15,23 +16,23 @@ export default function InventoryProduct({ onChangeModal }) {
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [filterProduct, setFilterProduct] = useState([]);
-  // useEffect(() => {
-  //   const fetchSearchProductById = async () => {
-  //     try {
-  //       const token = localStorage.getItem("accessToken");
-  //       if (!token) throw new Error("Token is invalid");
-  //       const response = await apiWarehouseReceipt.apiSearchById(token, {
-  //         productId: id,
-  //       });
-  //       setProductsById(response.products);
-  //     } catch (error) {}
-  //   };
-  //   fetchSearchProductById();
-  // }, [id]);
+  useEffect(() => {
+    const fetchSearchProductByExpires = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid");
+        const response = await apiWarehouseReceipt.apiSearchProductExpires(token, {
+          expirationStatus: status,
+        });
+        setProductsByStatus(response.products);
+      } catch (error) {}
+    };
+    fetchSearchProductByExpires();
+  }, [status]);
   useEffect(() => {
     const fetchSearchProductByTile = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken")
         if (!token) throw new Error("Token is invalid");
         const response = await apiWarehouseReceipt.apiSearchByName(token, {
           productId: id, title: title
@@ -211,12 +212,20 @@ export default function InventoryProduct({ onChangeModal }) {
             />
           </div>
           <div className="w-1/2 ml-4">
-            <Autocomplete
+            {/* <Autocomplete
               suggestion={listCategory()}
               onchange={handleChangeCategory}
               value={category}
               placeholder={"Nhập loại sản phẩm"}
-            />
+            /> */}
+           <select onChange={(e) => setStatus(e.target.value)} value={status}>
+  <option value={""} disabled>Chọn trạng thái sản phẩm</option>
+  <option value={"Còn hạn"}>Còn hạn</option>
+  <option value={"Gần hết hạn"}>Gần hết hạn</option>
+  <option value={"Hết hạn"}>Hết hạn</option>
+</select>
+
+
           </div>
         </div>
       </div>
@@ -235,7 +244,7 @@ export default function InventoryProduct({ onChangeModal }) {
             </tr>
           </thead>
           <tbody>  
-  { (id === "" && idPNK === "" && title === "" && brand === "" && category === "") ? (
+  { (id === "" && idPNK === "" && title === "" && brand === "" && status === "") ? (
     <ProductInventory products={products} />
   ) : (filterProduct && filterProduct?.length > 0) ? (
     <FilterProductByCondition products={filterProduct} />

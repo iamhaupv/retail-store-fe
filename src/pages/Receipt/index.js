@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 
-export default function Reciept() {
+export default function Receipt() {
   const location = useLocation();
   const selectedOrder = location.state?.selectedOrder || {};
   const contentRef = useRef();

@@ -20,7 +20,7 @@ import WarehouseReceipt from "../pages/WarehouseReceipt";
 import UpdateProduct from "../pages/UpdateProduct";
 import EntryForm from "../pages/EntryForm";
 import EmployeeSchedule from "../pages/EmployeeSchedule";
-import Reciept from "../pages/Reciept";
+import Receipt from "../pages/Receipt";
 import Report from "../pages/Report";
 import ReportDetail from "../pages/ReportDetail";
 import UpdateSupply from "../pages/UpdateSupply";
@@ -72,8 +72,8 @@ export const routes = [
       },
 
       {
-        path: "/reciept",
-        element: <Reciept />,
+        path: "/receipt",
+        element: <Receipt />,
       },
       {
         path: "/employeelist",

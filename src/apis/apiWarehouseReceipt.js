@@ -31,10 +31,21 @@ const apiSumTotalAmountReceipt = async (token) => {
       console.log("api sum total warehouse receipt is error" + error);
     }
   };
+  const apiSearchProductExpires = async (token, payload) => {
+    try {
+      const response = await axios.post(`${url}warehouse/expires`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.log("api sum total warehouse receipt is error" + error);
+    }
+  };
 const apiWarehouseReceipt = {
     apiSumTotalAmountReceipt,
     apiSearchById,
-    apiSearchByName
+    apiSearchByName,
+    apiSearchProductExpires
 }
 
 export default apiWarehouseReceipt

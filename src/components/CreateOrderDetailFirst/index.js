@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import apiGetCurrentUser from "../../apis/apiGetCurrentUser";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import apiFilterConvertQuantityByUnitName from "../../apis/apiFilterConvertQuantityByUnitName";
 import apiFilterPriceByProductName from "../../apis/apiFilterPriceByProductName";
 import apiGetAllUnit from "../../apis/apiGetAllUnit";
@@ -9,8 +9,11 @@ import apiFilterProductSumQuantity from "../../apis/apiFilterProductSumQuantity"
 import apiFilterReceiptByProduct from "../../apis/apiFilterReceiptByProduct";
 import Autocomplete from "../AutoComplete";
 import { toast, ToastContainer } from "react-toastify";
+import apiOrder from "../../apis/apiOrder";
 
 export default function CreateOrderDetailFirst() {
+  const navigate = useNavigate();
+  const [inforOrder, setInforOrder] = useState({})
   const [submittedData, setSubmittedData] = useState(null);
   const [listReceiptId, setListReceiptId] = useState([]);
   const [products, setProducts] = useState([]);
@@ -20,7 +23,6 @@ export default function CreateOrderDetailFirst() {
   const [convertQuantity, setConverQuantity] = useState("");
   const [receivedAmount, setReceivedAmount] = useState("");
   const [receipts, setReceipts] = useState([]);
-
   const handleReceivedAmountChange = (e) => {
     const value = e.target.value;
     if (value === "" || /^[1-9]\d*$/.test(value)) {
@@ -195,28 +197,25 @@ export default function CreateOrderDetailFirst() {
       const selectedReceipt = listReceiptId.receipts.find(
         (receipt) => receipt.idPNK === selectedReceiptName
       );
-  
+
       // Kiểm tra nếu tìm thấy receipt
       if (!selectedReceipt) {
         console.log("Receipt not found");
         return;
       }
-  
+
       const updatedOrderDetails = [...orderDetails];
       updatedOrderDetails[index] = {
         ...updatedOrderDetails[index],
         warehouseReceipt: selectedReceipt._id,
       };
-  
-      console.log(updatedOrderDetails[index].warehouseReceipt);
-  
+
       setOrderDetails(updatedOrderDetails); // Cập nhật lại state orderDetails
     } catch (error) {
       console.log("Error in handleChangeReceiptId:", error);
     }
   };
-  
-  
+
   const removeRow = (index) => {
     setOrderDetails(orderDetails.filter((_, i) => i !== index));
   };
@@ -247,13 +246,15 @@ export default function CreateOrderDetailFirst() {
     let totalAmount = 0;
     let totalVAT = 0;
     orderDetails.forEach((detail) => {
-      const productTotal = detail.quantity * detail.price * detail.convertQuantity;
-      const productVAT = detail.quantity * detail.convertQuantity * detail.price * detail.VAT
+      const productTotal =
+        detail.quantity * detail.price * detail.convertQuantity;
+      const productVAT =
+        detail.quantity * detail.convertQuantity * detail.price * detail.VAT;
       totalAmount += productTotal;
       totalVAT += productVAT;
     });
     return totalAmount + totalVAT;
-  };  
+  };
   function codeOrder() {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -328,7 +329,71 @@ export default function CreateOrderDetailFirst() {
       if (response.success) {
         toast.success("Đơn hàng đã được tạo thành công.");
         setOrderDetails([]);
-        setSubmittedData(response)
+        setSubmittedData(response);
+      } else {
+        toast.error("Đã có lỗi khi tạo đơn hàng.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi submit: ", error);
+      toast.error("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
+    }
+  };
+  const handleSubmitPrint = async () => {
+    try {
+      // Check if orderDetails is empty
+      if (orderDetails.length === 0) {
+        alert("Vui lòng thêm ít nhất một sản phẩm.");
+        return;
+      }
+
+      // Check for missing data in each row
+      for (let i = 0; i < orderDetails.length; i++) {
+        const detail = orderDetails[i];
+        if (
+          !detail.productName ||
+          !detail.quantity ||
+          !detail.unit ||
+          !detail.price
+        ) {
+          alert(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
+          return;
+        }
+      }
+      let amountVAT = 0;
+      const orderData = {
+        products: orderDetails.map((detail) => {
+          const productVAT = detail.price * detail.VAT * detail.convertQuantity;
+          amountVAT += productVAT * Number(detail.quantity);
+          return {
+            product: detail.productId,
+            quantity: detail.quantity,
+            unit: detail.unitId,
+            price: detail.price,
+            total: detail.total,
+            warehouseReceipt: detail.warehouseReceipt,
+          };
+        }),
+        totalAmount: calculateTotalAmount(),
+        receiveAmount: receivedAmount,
+        change: calculateChange(),
+        user: user._id,
+        amountVAT: amountVAT,
+        id: codeOrder(),
+      };
+
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token không hợp lệ!");
+
+      // Create the order using the API
+      const response = await apiCreateOrder(token, orderData);
+
+      if (response.success) {
+        toast.success("Đơn hàng đã được tạo thành công.");
+        setOrderDetails([]);
+        const id = response.order._id
+        const rs = await apiOrder.apiExtraInfor(token, {id: id})
+        console.log(rs);
+        navigate("/receipt", { state: { selectedOrder: rs.order } });
       } else {
         toast.error("Đã có lỗi khi tạo đơn hàng.");
       }
@@ -339,7 +404,7 @@ export default function CreateOrderDetailFirst() {
   };
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       <div className="card bg-white h-full rounded-none w-full overflow-y-hidden ">
         <h1 className="font-bold text-xl ml-2 mt-2">Thông tin </h1>
         <div>
@@ -390,7 +455,7 @@ export default function CreateOrderDetailFirst() {
                 onClick={addNewRow}
                 className="drawer-button btn btn-success text-white w-36 h-8 mt-3 "
               >
-                <svg
+                {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -403,8 +468,8 @@ export default function CreateOrderDetailFirst() {
                     strokeLinejoin="round"
                     d="M12 4.5v15m7.5-7.5h-15"
                   />
-                </svg>
-                Thêm dòng
+                </svg> */}
+                Thêm sản phẩm
               </button>
             </div>
           </div>
@@ -453,8 +518,10 @@ export default function CreateOrderDetailFirst() {
                     <td>
                       <div className="w-56">
                         <Autocomplete
-                          suggestion={extractIdsFromReceipts(listReceiptId)}   
-                          onchange={(name) => handleChangeReceiptId(index, name)}
+                          suggestion={extractIdsFromReceipts(listReceiptId)}
+                          onchange={(name) =>
+                            handleChangeReceiptId(index, name)
+                          }
                           value={detail.warehouseReceipt}
                           placeholder="Nhập mã phiếu"
                         />
@@ -563,29 +630,28 @@ export default function CreateOrderDetailFirst() {
             </div>
           </div>
           <div className="flex w-full h-36 justify-end">
-            <Link to="/reciept" state={{submittedData}}>
-              <button
-                className="drawer-button btn text-white w-36 h-8 mt-3 ml-6"
-                style={{ backgroundColor: "#2f80ed" }}
-                onClick={handleSubmit}
+            <button
+              className="drawer-button btn text-white w-36 h-8 mt-3 ml-6"
+              style={{ backgroundColor: "#2f80ed" }}
+              onClick={handleSubmitPrint}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"
-                  />
-                </svg>
-                In
-              </button>
-            </Link>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"
+                />
+              </svg>
+              In
+            </button>
+
             <button
               onClick={handleSubmit}
               className="drawer-button btn btn-success text-white w-36 h-8 mt-3 ml-2"
