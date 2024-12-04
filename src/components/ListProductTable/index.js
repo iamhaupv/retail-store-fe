@@ -37,8 +37,8 @@ export default function ListProductTable({ role }) {
       status === "" &&
       brand === "" &&
       id === ""
-        ? productsPagination
-        : products),
+        ? products
+        : productsPagination),
     ].sort((a, b) => {
       if (typeof a[key] === "string") {
         // Sắp xếp theo chuỗi (ABC)
@@ -423,6 +423,7 @@ export default function ListProductTable({ role }) {
                 >
                   Số lượng
                 </th>
+                <th>Đơn vị tính</th>
                 <th
                   onClick={() => sortTable("price")}
                   className={
