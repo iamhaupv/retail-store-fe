@@ -7,6 +7,8 @@ import apiFilterProductMultiCondition from "../../apis/apiFilterProductMultiCond
 import apiGetListCategory from "../../apis/apiGetListCategory";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
 import apiGetAllProductsPagination from "../../apis/apiGetAllProductsPagination";
+import "./ListProductTable.css";
+import Product from "../../pages/Product";
 
 export default function ListProductTable({ role }) {
   const [products, setProducts] = useState([]);
@@ -15,18 +17,57 @@ export default function ListProductTable({ role }) {
   const [status, setStatus] = useState("");
   const [title, setTitle] = useState("");
   const [brand, setBrand] = useState("");
-  const [id, setId] = useState("")
+  const [id, setId] = useState("");
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
   const [productsPagination, setProductsPagination] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 5;
+  // #region table sort
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const sortTable = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+    }
+
+    const sortedData = [
+      ...(category === "" &&
+      title === "" &&
+      status === "" &&
+      brand === "" &&
+      id === ""
+        ? productsPagination
+        : products),
+    ].sort((a, b) => {
+      if (typeof a[key] === "string") {
+        // Sắp xếp theo chuỗi (ABC)
+        if (direction === "asc") {
+          return a[key].localeCompare(b[key]);
+        } else {
+          return b[key].localeCompare(a[key]);
+        }
+      } else if (typeof a[key] === "number") {
+        // Sắp xếp theo số (bé nhất đến lớn nhất)
+        if (direction === "asc") {
+          return a[key] - b[key];
+        } else {
+          return b[key] - a[key];
+        }
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setProducts(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+  };
+  // end region
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
-  
+
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -54,16 +95,16 @@ export default function ListProductTable({ role }) {
       name: matchedUnit.name,
     };
   });
-  const listId = Array.from(
-    new Set(products.map((unit) => unit.id))
-  ).map((id) => {
-    const matchedUnit = products.find((unit) => unit.id === id);
-    return {
-      _id: matchedUnit._id,
-      name: matchedUnit.id,
-    };
-  });
-  
+  const listId = Array.from(new Set(products.map((unit) => unit.id))).map(
+    (id) => {
+      const matchedUnit = products.find((unit) => unit.id === id);
+      return {
+        _id: matchedUnit._id,
+        name: matchedUnit.id,
+      };
+    }
+  );
+
   const fetchProductMultiCondition = async () => {
     try {
       if (!title && !status && !brand && !category && !id) {
@@ -76,7 +117,7 @@ export default function ListProductTable({ role }) {
         status,
         brandName: brand,
         categoryName: category,
-        id: id
+        id: id,
       });
       setListProduct(Array.isArray(response.products) ? response.products : []);
     } catch (error) {
@@ -136,11 +177,11 @@ export default function ListProductTable({ role }) {
   };
   const handleChangeId = (selectedBrandName) => {
     if (selectedBrandName) {
-      setId(selectedBrandName); 
+      setId(selectedBrandName);
     } else {
       setId("");
     }
-  }
+  };
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -205,9 +246,9 @@ export default function ListProductTable({ role }) {
   // Trong phần render cho pagination:
   const visiblePages = getVisiblePages(currentPage, totalPages);
   const reloadProducts = () => {
-    fetchProductMultiCondition(); 
-    fetchProducts()
-    fetchProductsPagination()
+    fetchProductMultiCondition();
+    fetchProducts();
+    fetchProductsPagination();
   };
   return (
     <>
@@ -279,30 +320,35 @@ export default function ListProductTable({ role }) {
 
         <div className="flex justify-between mt-6">
           <h4 className="font-bold text-xl w-full ml-4">
-            {category === "" && title === "" && status === "" && brand === "" && id === ""
+            {category === "" &&
+            title === "" &&
+            status === "" &&
+            brand === "" &&
+            id === ""
               ? products.length
-              : listProduct.length} Sản phẩm
+              : listProduct.length}{" "}
+            Sản phẩm
           </h4>
-          {role === 'admin' && (
-          <Link to="/product">
-            <button className="btn btn-success text-white w-36">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-              Thêm mới
-            </button>
-          </Link>
+          {role === "admin" && (
+            <Link to="/product">
+              <button className="btn btn-success text-white w-36">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+                Thêm mới
+              </button>
+            </Link>
           )}
         </div>
         {/* table Product */}
@@ -317,14 +363,90 @@ export default function ListProductTable({ role }) {
             {/* head */}
             <thead>
               <tr>
-                <th>Mã sản phẩm</th>
-                <th>Sản phẩm</th>
-                <th>Nhà cung cấp</th>
-                <th>Tình trạng</th>
-                <th>Số lượng</th>
-                <th>Đơn vị tính</th>
-                <th>Giá bán</th>
-                <th>Số lượng đã bán</th>
+                <th
+                  onClick={() => sortTable("id")}
+                  className={
+                    sortConfig.key === "id"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                >
+                  Mã sản phẩm
+                </th>
+                <th
+                  onClick={() => sortTable("name")}
+                  className={
+                    sortConfig.key === "name"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                >
+                  Sản phẩm
+                </th>
+                <th
+                  onClick={() => sortTable("brand")}
+                  className={
+                    sortConfig.key === "brand"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                >
+                  Nhà cung cấp
+                </th>
+                <th
+                  onClick={() => sortTable("status")}
+                  className={
+                    sortConfig.key === "status"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                >
+                  Tình trạng
+                </th>
+                <th
+                  onClick={() => sortTable("quantity")}
+                  className={
+                    sortConfig.key === "quantity"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                >
+                  Số lượng
+                </th>
+                <th
+                  onClick={() => sortTable("price")}
+                  className={
+                    sortConfig.key === "price"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                >
+                  Giá bán
+                </th>
+                <th
+                  onClick={() => sortTable("soldQuantity")}
+                  className={
+                    sortConfig.key === "soldQuantity"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                >
+                  Số lượng đã bán
+                </th>
                 <th>Thao tác</th>
               </tr>
             </thead>
@@ -332,10 +454,17 @@ export default function ListProductTable({ role }) {
               {category === "" &&
               title === "" &&
               status === "" &&
-              brand === "" && id === "" ? (
-                <TableProductByName listProduct={products} reloadProducts={reloadProducts} />
+              brand === "" &&
+              id === "" ? (
+                <TableProductByName
+                  listProduct={products}
+                  reloadProducts={reloadProducts}
+                />
               ) : listProduct.length > 0 ? (
-                <TableProductByName listProduct={listProduct} reloadProducts={reloadProducts} />
+                <TableProductByName
+                  listProduct={listProduct}
+                  reloadProducts={reloadProducts}
+                />
               ) : (
                 <td>
                   <div>Không có sản phẩm nào</div>
@@ -348,7 +477,7 @@ export default function ListProductTable({ role }) {
           </table>
         </div>
         {/* pagination */}
-       
+
         {/* end Paginination */}
       </div>
     </>
