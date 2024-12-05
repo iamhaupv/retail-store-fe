@@ -4,8 +4,41 @@ import EmployeeTableDetail from "../../components/EmployeeTableDetail";
 import apiFindEmployeeByName from "../../apis/apiFindEmployeeByName";
 import ChangeInput from "../../components/ChangeInput";
 import apiGetListEmployee from "../../apis/apiGetListEmployee";
-
+import "./ListEmployee.css";
 export default function ListEmployee() {
+  // #region table sort
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const sortTable = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+    }
+
+    const sortedData = [
+      ...(employeeName === "" ? employees : employeeName),
+    ].sort((a, b) => {
+      if (typeof a[key] === "string") {
+        // Sắp xếp theo chuỗi (ABC)
+        if (direction === "asc") {
+          return a[key].localeCompare(b[key]);
+        } else {
+          return b[key].localeCompare(a[key]);
+        }
+      } else if (typeof a[key] === "number") {
+        // Sắp xếp theo số (bé nhất đến lớn nhất)
+        if (direction === "asc") {
+          return a[key] - b[key];
+        } else {
+          return b[key] - a[key];
+        }
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setEmployees(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+  };
+  // end region
   const [employees, setEmployees] = useState([]);
   const fetchEmployees = async () => {
     try {
@@ -52,7 +85,7 @@ export default function ListEmployee() {
     }
   }, [employeeName]);
   const reloadEmployees = () => {
-    fetchEmployees(); 
+    fetchEmployees();
   };
   return (
     <>
@@ -77,8 +110,11 @@ export default function ListEmployee() {
           </div>
           {/* Nofication and Button Add */}
 
-          <div className="flex justify-between mt-6 items-center">   
-            <h4 className="font-bold text-xl w-32 ml-4">{employeeName === "" ? employees.length : employeesFilter.length} Nhân viên</h4>
+          <div className="flex justify-between mt-6 items-center">
+            <h4 className="font-bold text-xl w-32 ml-4">
+              {employeeName === "" ? employees.length : employeesFilter.length}{" "}
+              Nhân viên
+            </h4>
             <Link to="/employee">
               <button className="btn btn-success text-white w-36 mr-4">
                 <svg
@@ -111,27 +147,114 @@ export default function ListEmployee() {
               {/* head */}
               <thead>
                 <tr>
-                  <th>Mã nhân viên</th>
-                  <th>Tên nhân viên</th>
-                  <th>Email</th>
-                  <th>Số điện thoại</th>
-                  <th>Địa chỉ</th>
-                  <th>Ngày sinh</th>
-                  <th>Giới tính</th>
+                  <th
+                    onClick={() => sortTable("id")}
+                    className={
+                      sortConfig.key === "id"
+                        ? sortConfig.direction === "asc"
+                          ? "asc"
+                          : "desc"
+                        : ""
+                    }
+                  >
+                    Mã nhân viên
+                  </th>
+                  <th
+                    onClick={() => sortTable("name")}
+                    className={
+                      sortConfig.key === "name"
+                        ? sortConfig.direction === "asc"
+                          ? "asc"
+                          : "desc"
+                        : ""
+                    }
+                  >
+                    Tên nhân viên
+                  </th>
+                  <th
+                    onClick={() => sortTable("user.email")}
+                    className={
+                      sortConfig.key === "user.email"
+                        ? sortConfig.direction === "asc"
+                          ? "asc"
+                          : "desc"
+                        : ""
+                    }
+                  >
+                    Email
+                  </th>
+                  <th
+                    onClick={() => sortTable("phone")}
+                    className={
+                      sortConfig.key === "phone"
+                        ? sortConfig.direction === "asc"
+                          ? "asc"
+                          : "desc"
+                        : ""
+                    }
+                  >
+                    Số điện thoại
+                  </th>
+                  <th
+                    onClick={() => sortTable("address")}
+                    className={
+                      sortConfig.key === "address"
+                        ? sortConfig.direction === "asc"
+                          ? "asc"
+                          : "desc"
+                        : ""
+                    }
+                  >
+                    Địa chỉ
+                  </th>
+                  <th
+                    onClick={() => sortTable("birthday")}
+                    className={
+                      sortConfig.key === "birthday"
+                        ? sortConfig.direction === "asc"
+                          ? "asc"
+                          : "desc"
+                        : ""
+                    }
+                  >
+                    Ngày sinh
+                  </th>
+                  <th
+                    onClick={() => sortTable("gender")}
+                    className={
+                      sortConfig.key === "gender"
+                        ? sortConfig.direction === "asc"
+                          ? "asc"
+                          : "desc"
+                        : ""
+                    }
+                  >
+                    Giới tính
+                  </th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 {employeeName === "" ? (
                   employees.length > 0 ? (
-                    <EmployeeTableDetail employees={employees} reloadEmployees={reloadEmployees} />
+                    <EmployeeTableDetail
+                      employees={employees}
+                      reloadEmployees={reloadEmployees}
+                    />
                   ) : (
-                    <div className="w-full h-full justify-center items-center">Không tìm thấy</div>
+                    <div className="w-full h-full justify-center items-center">
+                      Không tìm thấy
+                    </div>
                   )
                 ) : employeesFilter.length > 0 ? (
-                  <EmployeeTableDetail employees={employeesFilter} reloadEmployees={reloadEmployees} />
+                  <EmployeeTableDetail
+                    employees={employeesFilter}
+                    reloadEmployees={reloadEmployees}
+                  />
                 ) : (
-                  <div className="w-full h-full justify-center items-center">Không tìm thấy</div>
+                  <div className="w-full h-full justify-center items-center">
+                    Không tìm thấy
+                  </div>
                 )}
               </tbody>
               <tfoot>
@@ -140,7 +263,7 @@ export default function ListEmployee() {
             </table>
           </div>
           {/* pagination */}
-        {/* <div className="w-full justify-end pt-3 pr-2">
+          {/* <div className="w-full justify-end pt-3 pr-2">
             <ul className="flex items-center justify-end gap-2 ">
               <li>
                 <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
@@ -203,7 +326,7 @@ export default function ListEmployee() {
               </li>
             </ul>
         </div> */}
-        {/* end Paginination */}
+          {/* end Paginination */}
         </div>
       </div>
     </>
