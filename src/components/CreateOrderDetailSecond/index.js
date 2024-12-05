@@ -485,7 +485,6 @@ export default function CreateOrderDetailSecond() {
                 <tr>
                   {/* <th>Mã hàng</th> */}
                   <th>Tên sản phẩm</th>
-                  <th>Tên hàng</th>
                   <th>Mã lô</th>
                   <th>Số lượng</th>
                   <th>Đơn vị tính</th>
@@ -524,7 +523,7 @@ export default function CreateOrderDetailSecond() {
                             handleChangeReceiptId(index, name)
                           }
                           value={detail.warehouseReceipt}
-                          placeholder="Nhập mã phiếu"
+                          placeholder="Nhập mã lô"
                         />
                       </div>
                     </td>

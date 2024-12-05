@@ -839,6 +839,7 @@ export default function UpdateProduct() {
                 <button
                   class="btn w-28 ml-4"
                   style={{ backgroundColor: "#e0e0e0" }}
+                  onClick={()=> {navigate("/product-list")}}
                 >
                   Hủy
                 </button>

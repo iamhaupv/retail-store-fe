@@ -1,4 +1,4 @@
-import React, { PureComponent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import {
   BarChart,
@@ -11,234 +11,201 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import apiOrder from "../../apis/apiOrder";
-const data = [
-  {
-    name: "Tháng 1",
-    DoanhThuTruocDo: 4000,
-    TienVon: 2400,
-    LoiNhuan: 2400,
-  },
-  {
-    name: "Tháng 2",
-    DoanhThuTruocDo: 3000,
-    TienVon: 1398,
-    LoiNhuan: 2210,
-  },
-  {
-    name: "Tháng 3",
-    DoanhThuTruocDo: 2000,
-    TienVon: 9800,
-    LoiNhuan: 2290,
-  },
-  {
-    name: "Tháng 4",
-    DoanhThuTruocDo: 2780,
-    TienVon: 3908,
-    LoiNhuan: 2000,
-  },
-  {
-    name: "Tháng 5",
-    DoanhThuTruocDo: 1890,
-    TienVon: 4800,
-    LoiNhuan: 2181,
-  },
-  {
-    name: "Tháng 6",
-    DoanhThuTruocDo: 2390,
-    TienVon: 3800,
-    LoiNhuan: 2500,
-  },
-  {
-    name: "Tháng 7",
-    DoanhThuTruocDo: 3490,
-    TienVon: 4300,
-    LoiNhuan: 2100,
-  },
-  {
-    name: "Tháng 8",
-    DoanhThuTruocDo: 3490,
-    TienVon: 4300,
-    LoiNhuan: 2100,
-  },
-  {
-    name: "Tháng 9",
-    DoanhThuTruocDo: 3490,
-    TienVon: 4300,
-    LoiNhuan: 2100,
-  },
-  {
-    name: "Tháng 10",
-    DoanhThuTruocDo: 3490,
-    TienVon: 4300,
-    LoiNhuan: 2100,
-  },
-  {
-    name: "Tháng 11",
-    DoanhThuTruocDo: 3490,
-    TienVon: 4300,
-    LoiNhuan: 2100,
-  },
-  {
-    name: "Tháng 12",
-    DoanhThuTruocDo: 3490,
-    TienVon: 4300,
-    LoiNhuan: 2100,
-  },
-];
 
 export default function ReportDetail() {
-    const [sum, setSum] = useState({})
-    const [date, setDate] = useState("2024-12-01")
-    useEffect(() => {
-      const fetchSum = async() => {
-        try {
-          const token = localStorage.getItem("accessToken")
-          if(!token) throw new Error("Token is invalid!")
-          const response = await apiOrder.apiSumTotalAmountByDate(token, {date})
-          setSum(response.sum)
-        } catch (error) {
-          console.log("fetch sum is error", error);
-          
+  const [value, setValue] = useState({ startDate: null, endDate: null });
+  const [year, setYear] = useState("2024");
+  const [years, setYears] = useState([]);
+  const [month, setMonth] = useState("11");
+  const [months, setMonths] = useState([]);
+  useEffect(() => {
+    const fetchSumTotalAmountByMonth = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiOrder.apiSumTotalAmountByMonth(token, {
+          month,
+          year,
+        });
+        if (Array.isArray(response?.total)) {
+          setMonths(response.total);
+        } else {
+          setMonths([]);
         }
+      } catch (error) {
+        console.log("fetch sum is error", error);
       }
-      fetchSum()
-    }, [])
-    const data = [
-      {
-        name: "Tháng 1",
-        DoanhThuTruocDo: 4000,
-        TienVon: 2400,
-        LoiNhuan: 2000,
-      },
-      {
-        name: "Tháng 2",
-        DoanhThuTruocDo: 3000,
-        TienVon: 1398,
-        LoiNhuan: 1111,
-      },
-      {
-        name: "Tháng 3",
-        DoanhThuTruocDo: 2000,
-        TienVon: 9800,
-        LoiNhuan: 14255,
-      },
-      {
-        name: "Tháng 4",
-        DoanhThuTruocDo: 2780,
-        TienVon: 3908,
-        LoiNhuan: 74155,
-      },
-      {
-        name: "Tháng 5",
-        DoanhThuTruocDo: 1890,
-        TienVon: 4800,
-        LoiNhuan: 741,
-      },
-      {
-        name: "Tháng 6",
-        DoanhThuTruocDo: 2390,
-        TienVon: 3800,
-        LoiNhuan: 744,
-      },
-      {
-        name: "Tháng 7",
-        DoanhThuTruocDo: 3490,
-        TienVon: 4300,
-        LoiNhuan: 7777,
-      },
-      {
-        name: "Tháng 8",
-        DoanhThuTruocDo: 3490,
-        TienVon: 4300,
-        LoiNhuan: 144,
-      },
-      {
-        name: "Tháng 9",
-        DoanhThuTruocDo: 3490,
-        TienVon: 4300,
-        LoiNhuan: 741,
-      },
-      {
-        name: "Tháng 10",
-        DoanhThuTruocDo: 3490,
-        TienVon: 4300,
-        LoiNhuan: 744,
-      },
-      {
-        name: "Tháng 11",
-        DoanhThuTruocDo: 3490,
-        TienVon: 4300,
-        LoiNhuan: 74125,
-      },
-      {
-        name: "Tháng 12",
-        DoanhThuTruocDo: 3490,
-        TienVon: 4300,
-        LoiNhuan: 7451,
-      },
-    ];
-    const [value, setValue] = useState({
-        startDate: null,
-        endDate: null,
-      });
-  
-    return (
-      <>
-        <div
-          className="w-11/12 h-screen bg-base-100 justify-center flex"
-        >
-          <div
-            className="w-full card bg-white rounded-none mt-2  ml-2 mr-2 animate__animated animate__fadeInRight  "
-            style={{
-              height: "calc(100vh - 85px)",
-            }}
-          >
-            <div className="w-full flex justify-between ">
-              <h1 className="font-bold text-xl ml-2 mt-2">
-                Biểu đồ báo cáo doanh thu
-              </h1>
-              <div className="flex mt-2">
-                <div className="flex items-center">
-                  <p className="w-20">Ngày lập:</p>
-                  <div className="w-72 mr-5 ml-1">
-                    <Datepicker
-                      value={value}
-                      onChange={(newValue) => setValue(newValue)}
-                    />
-                  </div>
-                </div>
-                <select className="select select-bordered w-40 mr-2">
-                  <option selected>Năm</option>
-                  <option>Tháng</option>
-                  <option>Ngày</option>
-                </select>
+    };
+    fetchSumTotalAmountByMonth();
+  }, [month, year]);
+  useEffect(() => {
+    const fetchSum = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiOrder.apiSumTotalAmountByYear(token, {
+          year,
+        });
+        if (Array.isArray(response?.total)) {
+          setYears(response.total);
+        } else {
+          setYears([]);
+        }
+      } catch (error) {
+        console.log("fetch sum is error", error);
+      }
+    };
+    fetchSum();
+  }, [year]);
+  // const transformedData = years.map((item) => ({
+  //   ...item,
+  //   month: item.month,
+  //   totalVAT: item.totalVAT,
+  //   total: item.totalAmount,
+  //   totalImportPrice: item.totalImportPrice
+  // }));
+  const transformedData = (arr) => {
+    return arr.map((item) => ({
+      ...item,
+      month: item.month,
+      totalVAT: item.totalVAT,
+      total: item.totalAmount,
+      totalImportPrice: item.totalImportPrice,
+    }));
+  };
+  // const transformedDataMonth = months.map((item) => ({
+  //   ...item,
+  //   month: item.month,
+  //   totalVAT: item.totalVAT,
+  //   total: item.totalAmount,
+  //   totalImportPrice: item.totalImportPrice
+  // }));
+  const customTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const { total, totalImportPrice } = payload[0].payload;
+      const revenue = total - totalImportPrice;
+      return (
+        <div className="p-2 bg-white border rounded shadow">
+          <p className="font-bold">{label}</p>
+          <p>{`Lợi nhuận: ${revenue.toLocaleString()} VNĐ`}</p>
+          <p>{`Tiền vốn: ${totalImportPrice.toLocaleString()} VNĐ`}</p>
+          <p>{`Tổng doanh thu: ${total.toLocaleString()} VNĐ`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+  const handleChangeYear = (e) => {
+    const value = e.target.value;
+    setYear(value);
+  };
+  const handleChangeMonth = (e) => {
+    const value = e.target.value;
+    setMonth(value);
+  };
+  return (
+    <div className="w-11/12 h-screen bg-base-100 justify-center flex">
+      <div
+        className="w-full card bg-white rounded-none mt-2 ml-2 mr-2 animate__animated animate__fadeInRight"
+        style={{ height: "calc(100vh - 85px)" }}
+      >
+        <div className="w-full flex justify-between">
+          <h1 className="font-bold text-xl ml-2 mt-2">
+            Biểu đồ báo cáo doanh thu
+          </h1>
+          <div className="flex mt-2">
+            {/* <div className="flex items-center">
+              <p className="w-20">Ngày lập:</p>
+              <div className="w-72 mr-5 ml-1">
+                <Datepicker
+                  value={value}
+                  onChange={(newValue) => setValue(newValue)}
+                />
               </div>
-            </div>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                width={500}
-                height={300}
-                data={data}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
+            </div> */}
+            {/* <select className="select select-bordered w-40 mr-2">
+              <option selected>Năm</option>
+              <option>Tháng</option>
+              <option>Ngày</option>
+            </select> */}
+            <div class="flex items-center space-x-2">
+              <label for="year" class="font-semibold text-gray-700">
+                Chọn năm
+              </label>
+              <select
+                name="year"
+                value={year}
+                onChange={handleChangeYear}
+                id="year"
+                class="select select-bordered w-40 p-2 rounded-lg border-gray-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="TienVon" stackId="a" fill="#8884d8" />
-                <Bar dataKey="LoiNhuan" stackId="a" fill="#82ca9d" />
-                <Bar dataKey="DoanhThuTruocDo" fill="#ffc658"  />
-              </BarChart>
-            </ResponsiveContainer>
+                <option value="">
+                  Chọn năm
+                </option>
+                <option value="2020">2017</option>
+                <option value="2020">2018</option>
+                <option value="2020">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+                {/* <option value="2025">2025</option> */}
+              </select>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <label for="month" class="font-semibold text-gray-700">
+                Chọn tháng
+              </label>
+              <select
+                value={month}
+                onChange={handleChangeMonth}
+                id="month"
+                class="select select-bordered w-40 p-2 rounded-lg border-gray-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">
+                  Chọn tháng
+                </option>
+                <option value="1">Tháng 1</option>
+                <option value="2">Tháng 2</option>
+                <option value="3">Tháng 3</option>
+                <option value="4">Tháng 4</option>
+                <option value="5">Tháng 5</option>
+                <option value="6">Tháng 6</option>
+                <option value="7">Tháng 7</option>
+                <option value="8">Tháng 8</option>
+                <option value="9">Tháng 9</option>
+                <option value="10">Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12" selected>Tháng 12</option>
+              </select>
+            </div>
           </div>
         </div>
-      </>
-    );
-  }
 
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            width={500}
+            height={300}
+            data={month !== "" ? transformedData(months) : transformedData(years)}
+            margin={{
+              top: 20,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip content={customTooltip} />
+            <Legend />
+            <Bar dataKey="totalAmount" name={"Tiền vốn"} stackId="a" fill="#8884d8" />
+            <Bar dataKey="totalImportPrice" name={"Lợi nhuận"} stackId="a" fill="#82ca9d" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}

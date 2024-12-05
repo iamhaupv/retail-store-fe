@@ -25,6 +25,8 @@ export default function FilterProductByCondition({ products }) {
       return <span className="text-green-500">Còn hạn</span>;
     }
   };
+  console.log(products);
+  
   return (
     <>
       {products && products.length > 0 ? (
@@ -49,19 +51,20 @@ export default function FilterProductByCondition({ products }) {
                     ) : (
                       <img src="/path/to/default/image.jpg" alt="Default" />
                     )}{" "}
-                    <span>{item.product.title}</span>
+                    <span>{item?.product?.title}</span>
                   </div>
                 </div>
-                {item.product.title}
+                {item?.product?.title}
               </div>
             </td>
             <td>
               <span>{checkExpirationStatus(item.expires)}</span>
             </td>
             <td>{formatDate(item.expires)}</td>
-            <td> {item.quantityDynamic} </td>
-            <td>{item.product.quantity}</td>
-            <td>
+            <td> {item?.quantityDynamic} </td>
+            <td>{item?.product?.unit?.name}</td>
+            <td>{item?.importPrice?.toLocaleString()} đ</td>
+            {/* <td>
               <button
                 id="btn__delete"
                 className="w-6 h-6 rounded-lg "
@@ -83,7 +86,7 @@ export default function FilterProductByCondition({ products }) {
                   />
                 </svg>
               </button>
-            </td>
+            </td> */}
           </tr>
          ))
         ))
