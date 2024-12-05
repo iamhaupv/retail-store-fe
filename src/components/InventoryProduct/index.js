@@ -5,6 +5,7 @@ import Autocomplete from "../AutoComplete";
 import apiGetFilteredWarehouseReceipts from "../../apis/apiGetFilteredWarehouseReceipts";
 import FilterProductByCondition from "../FilterProductByCondition";
 import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
+import "./InventoryProduct.css";
 export default function InventoryProduct({ onChangeModal }) {
   const [id, setId] = useState("");
   const [productsByStatus, setProductsByStatus] = useState([]);
@@ -16,6 +17,45 @@ export default function InventoryProduct({ onChangeModal }) {
   const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [filterProduct, setFilterProduct] = useState([]);
+  // #region table sort
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const sortTable = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+    }
+
+    const sortedData = [
+      ...(id === "" &&
+      idPNK === "" &&
+      title === "" &&
+      brand === "" &&
+      status === ""
+        ? products
+        : products),
+    ].sort((a, b) => {
+      if (typeof a[key] === "string") {
+        // Sắp xếp theo chuỗi (ABC)
+        if (direction === "asc") {
+          return a[key].localeCompare(b[key]);
+        } else {
+          return b[key].localeCompare(a[key]);
+        }
+      } else if (typeof a[key] === "number") {
+        // Sắp xếp theo số (bé nhất đến lớn nhất)
+        if (direction === "asc") {
+          return a[key] - b[key];
+        } else {
+          return b[key] - a[key];
+        }
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setProducts(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+  };
+  // end region
   useEffect(() => {
     const fetchSearchProductByExpires = async () => {
       try {
@@ -39,8 +79,8 @@ export default function InventoryProduct({ onChangeModal }) {
         console.error("Error fetching product by expiration status:", error);
       }
     };
-      fetchSearchProductByExpires();
-  }, [status]); 
+    fetchSearchProductByExpires();
+  }, [status]);
 
   useEffect(() => {
     const fetchSearchProductByTile = async () => {
@@ -273,9 +313,7 @@ export default function InventoryProduct({ onChangeModal }) {
               value={status}
               className="w-full h-7 select select-sm select-bordered"
             >
-              <option value={""}>
-                Trạng thái
-              </option>
+              <option value={""}>Trạng thái</option>
               <option value={"Còn hạn"}>Còn hạn</option>
               <option value={"Gần hết hạn"}>Gần hết hạn</option>
               <option value={"Hết hạn"}>Hết hạn</option>
@@ -287,56 +325,135 @@ export default function InventoryProduct({ onChangeModal }) {
         <table className="table table-pin-rows">
           <thead>
             <tr>
-              <th>Mã sản phẩm</th>
-              <th>Mã phiếu</th>
-              <th>Sản phẩm</th>
-              <th>Tình trạng</th>
-              <th>Ngày hết hạn</th>
-              <th>Số lượng</th>
-              <th>Đơn vị tính</th>
-              <th>Giá nhập</th>
-              {/* <th>Thao tác</th> */}
+              <th
+                onClick={() => sortTable("id")}
+                className={
+                  sortConfig.key === "id"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Mã sản phẩm
+              </th>
+              <th
+                onClick={() => sortTable("idPNK")}
+                className={
+                  sortConfig.key === "idPNK"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Mã phiếu
+              </th>
+              <th
+                onClick={() => sortTable("title")}
+                className={
+                  sortConfig.key === "title"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Sản phẩm
+              </th>
+              <th
+                onClick={() => sortTable("expires")}
+                className={
+                  sortConfig.key === "expires"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Tình trạng
+              </th>
+              <th
+                onClick={() => sortTable("expires")}
+                className={
+                  sortConfig.key === "expires"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Ngày hết hạn
+              </th>
+              <th
+                onClick={() => sortTable("quantityDynamic")}
+                className={
+                  sortConfig.key === "quantityDynamic"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Số lượng
+              </th>
+              <th
+                onClick={() => sortTable("unit")}
+                className={
+                  sortConfig.key === "unit"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Đơn vị tính
+              </th>
             </tr>
           </thead>
           <tbody>
-            {/* <ProductInventory  products={products} />  */}
-            {/* <ProductInventory products={productsByStatus} /> */}
-            {/* <ProductInventory  products={productsByTitle} /> */}
-            {/* <FilterProductByCondition  products={filterProduct} /> */}
-            
-            {/* {status && <ProductInventory products={productsByStatus} />}
-            {title || id ? <ProductInventory products={productsByTitle} /> : null}
-            {(idPNK || brand || category) && <FilterProductByCondition products={filterProduct} />} */}
-           {status && productsByStatus.length > 0 ? (
-        <ProductInventory products={productsByStatus} />
-      ) : null}
+            {status && productsByStatus.length > 0 ? (
+              <ProductInventory products={productsByStatus} />
+            ) : null}
 
-      {/* Hiển thị các sản phẩm theo tên hoặc mã sản phẩm nếu có */}
-      {(title || id) && productsByTitle.length > 0 ? (
-        <ProductInventory products={productsByTitle} />
-      ) : null}
+            {/* Hiển thị các sản phẩm theo tên hoặc mã sản phẩm nếu có */}
+            {(title || id) && productsByTitle.length > 0 ? (
+              <ProductInventory products={productsByTitle} />
+            ) : null}
 
-      {/* Hiển thị các sản phẩm theo mã phiếu hoặc thương hiệu nếu có */}
-      {(idPNK || brand || category) && filterProduct.length > 0 ? (
-        <FilterProductByCondition products={filterProduct} />
-      ) : null}
+            {/* Hiển thị các sản phẩm theo mã phiếu hoặc thương hiệu nếu có */}
+            {(idPNK || brand || category) && filterProduct.length > 0 ? (
+              <FilterProductByCondition products={filterProduct} />
+            ) : null}
 
-      {/* Nếu không có bất kỳ điều kiện tìm kiếm nào, hiển thị toàn bộ danh sách */}
-      {(!status && !title && !id && !idPNK && !brand && !category) && products.length > 0 ? (
-        <ProductInventory products={products} />
-      ) : null}
+            {/* Nếu không có bất kỳ điều kiện tìm kiếm nào, hiển thị toàn bộ danh sách */}
+            {!status &&
+            !title &&
+            !id &&
+            !idPNK &&
+            !brand &&
+            !category &&
+            products.length > 0 ? (
+              <ProductInventory products={products} />
+            ) : null}
 
-      {/* Hiển thị thông báo nếu không tìm thấy kết quả */}
-      {((!status && !title && !id && !idPNK && !brand && !category && products.length === 0) ||
-        (status && productsByStatus.length === 0) ||
-        ((title || id) && productsByTitle.length === 0) ||
-        ((idPNK || brand || category) && filterProduct.length === 0)) && (
-        <tr>
-          <td colSpan="7" className="text-center text-gray-500">
-            Không tìm thấy sản phẩm nào.
-          </td>
-        </tr>
-      )}
+            {/* Hiển thị thông báo nếu không tìm thấy kết quả */}
+            {((!status &&
+              !title &&
+              !id &&
+              !idPNK &&
+              !brand &&
+              !category &&
+              products.length === 0) ||
+              (status && productsByStatus.length === 0) ||
+              ((title || id) && productsByTitle.length === 0) ||
+              ((idPNK || brand || category) && filterProduct.length === 0)) && (
+              <tr>
+                <td colSpan="7" className="text-center text-gray-500">
+                  Không tìm thấy sản phẩm nào.
+                </td>
+              </tr>
+            )}
           </tbody>
           <tfoot>
             <tr></tr>

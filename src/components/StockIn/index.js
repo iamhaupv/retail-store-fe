@@ -6,7 +6,7 @@ import apiFilterReceiptByIdPNK from "../../apis/apiFilterReceiptByIdPNK";
 import apiGetAllReceipt from "../../apis/apiGetAllReceipt";
 import InputPNK from "../InputPNK";
 import apiFilterReceiptByDate from "../../apis/apiFilterReceiptByDate";
-
+import "./StockIn.css";
 export default function StockIn() {
   const [receipts, setReceipts] = useState([]);
   const [idPNKs, setIdPNKs] = useState([]);
@@ -16,6 +16,43 @@ export default function StockIn() {
     startDate: null,
     endDate: null,
   });
+  // #region table sort
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const sortTable = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+    }
+
+    const sortedData = [
+      ...(idPNK === "" &&
+        value.startDate === null &&
+        value.endDate === null
+        ? receipts
+        : value),
+    ].sort((a, b) => {
+      if (typeof a[key] === "string") {
+        // Sắp xếp theo chuỗi (ABC)
+        if (direction === "asc") {
+          return a[key].localeCompare(b[key]);
+        } else {
+          return b[key].localeCompare(a[key]);
+        }
+      } else if (typeof a[key] === "number") {
+        // Sắp xếp theo số (bé nhất đến lớn nhất)
+        if (direction === "asc") {
+          return a[key] - b[key];
+        } else {
+          return b[key] - a[key];
+        }
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setReceipts(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+  };
+  // end region
   const fetchReceipts = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -173,11 +210,56 @@ export default function StockIn() {
           {/* head */}
           <thead>
             <tr>
-              <th>Số phiếu</th>
-              <th>Ngày lập</th>
-              <th>Người lập</th>
-              <th >Tổng sản phẩm</th>
-              <th className="flex justify-end items-center">Tổng tiền (VNĐ)</th>
+              <th
+              onClick={() => sortTable("idPNK")}
+              className={
+                sortConfig.key === "idPNK"
+                  ? sortConfig.direction === "asc"
+                    ? "asc"
+                    : "desc"
+                  : ""
+              }
+              >Số phiếu</th>
+              <th
+              onClick={() => sortTable("createdAt")}
+              className={
+                sortConfig.key === "createdAt"
+                  ? sortConfig.direction === "asc"
+                    ? "asc"
+                    : "desc"
+                  : ""
+              }
+              >Ngày lập</th>
+              <th
+              onClick={() => sortTable("id")}
+              className={
+                sortConfig.key === "id"
+                  ? sortConfig.direction === "asc"
+                    ? "asc"
+                    : "desc"
+                  : ""
+              }
+              >Người lập</th>
+              <th 
+              onClick={() => sortTable("id")}
+              className={
+                sortConfig.key === "id"
+                  ? sortConfig.direction === "asc"
+                    ? "asc"
+                    : "desc"
+                  : ""
+              }
+              >Tổng sản phẩm</th>
+              <th 
+              onClick={() => sortTable("id")}
+              className={
+                sortConfig.key === "id"
+                  ? sortConfig.direction === "asc"
+                    ? "asc flex justify-end items-center"
+                    : "desc flex justify-end items-center"
+                  : "flex justify-end items-center"
+              }
+              >Tổng tiền (VNĐ)</th>
               <th>Thao tác</th>
             </tr>
           </thead>

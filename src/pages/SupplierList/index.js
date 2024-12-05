@@ -7,7 +7,7 @@ import apiFilterBrandByMultiCondition from "../../apis/apiFilterBrandByMultiCond
 import InputPhone from "../../components/InputPhone";
 import InputSupplyName from "../../components/InputSupplyName";
 import Autocomplete from "../../components/AutoComplete";
-
+import "./SupplierList.css"
 export default function SupplierList({role}) {
   const [brands, setBrands] = useState([]);
   const [id, setId] = useState("")
@@ -15,6 +15,44 @@ export default function SupplierList({role}) {
   const [brandPhone, setBrandPhone] = useState("");
   const [brandByName, setBrandByName] = useState("");
   const [brandsByMultiCondition, setBrandsByMultiCondition] = useState([]);
+  // #region table sort
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const sortTable = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+    }
+
+    const sortedData = [
+      ...(brandByName === "" &&
+        brandPhone === "" &&
+        brandSupplyName === "" && 
+        id === "" 
+        ? brands
+        : id),
+    ].sort((a, b) => {
+      if (typeof a[key] === "string") {
+        // Sắp xếp theo chuỗi (ABC)
+        if (direction === "asc") {
+          return a[key].localeCompare(b[key]);
+        } else {
+          return b[key].localeCompare(a[key]);
+        }
+      } else if (typeof a[key] === "number") {
+        // Sắp xếp theo số (bé nhất đến lớn nhất)
+        if (direction === "asc") {
+          return a[key] - b[key];
+        } else {
+          return b[key] - a[key];
+        }
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setBrands(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+  };
+  // end region
   const fetchBrandsByMultiCondition = async () => {
     try {
       if(id === "" && brandByName === "" && brandSupplyName === "" && brandPhone === "") return
@@ -168,11 +206,56 @@ export default function SupplierList({role}) {
               {/* head */}
               <thead>
                 <tr>
-                  <th>Mã</th>
-                  <th>Nhà cung cấp</th>
-                  <th>Địa chỉ</th>
-                  <th>Số điện thoại</th>
-                  <th>Tên người cung cấp</th>
+                  <th 
+                  onClick={() => sortTable("id")}
+                  className={
+                    sortConfig.key === "id"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Mã</th>
+                  <th
+                  onClick={() => sortTable("name")}
+                  className={
+                    sortConfig.key === "name"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Nhà cung cấp</th>
+                  <th
+                  onClick={() => sortTable("address")}
+                  className={
+                    sortConfig.key === "address"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Địa chỉ</th>
+                  <th
+                  onClick={() => sortTable("phone")}
+                  className={
+                    sortConfig.key === "phone"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Số điện thoại</th>
+                  <th
+                  onClick={() => sortTable("supplyName")}
+                  className={
+                    sortConfig.key === "supplyName"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Tên người cung cấp</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
