@@ -255,6 +255,16 @@ export default function CreateOrderDetailFirst() {
     });
     return totalAmount + totalVAT;
   };
+  const calculateTotal = () => {
+    let totalAmount = 0;
+    let totalVAT = 0;
+    orderDetails.forEach((detail) => {
+      const productTotal =
+        detail.quantity * detail.price * detail.convertQuantity;
+      totalVAT += productTotal;
+    });
+    return totalAmount + totalVAT;
+  };
   function codeOrder() {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -524,7 +534,7 @@ export default function CreateOrderDetailFirst() {
                             handleChangeReceiptId(index, name)
                           }
                           value={detail.warehouseReceipt}
-                          placeholder="Nhập mã phiếu"
+                          placeholder="Nhập mã lô"
                         />
                       </div>
                     </td>
@@ -591,11 +601,23 @@ export default function CreateOrderDetailFirst() {
               </tbody>
             </table>
           </div>
-          <div className="flex w-full h-auto">
-            <div className="w-9/12"></div>
-            <div className="w-3/12 h-auto justify-end items-end mt-4">
+          <div className="flex w-full h-auto" style={{marginTop: -60}}>
+            <div className="w-8/12"></div>
+            <div className="h-auto justify-end items-end mt-4">
+            <div className="flex justify-between items-center">
+                <h2 className="font-bold text-lg">TỔNG TIỀN:</h2>
+                <h2 className=" font-sans text-sm mr-2">
+                  {calculateTotal().toLocaleString()} VNĐ
+                </h2>
+              </div>
               <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">Tiền nhận:</h2>
+                <h2 className="font-bold text-lg">TỔNG TIỀN ĐÃ GIẢM:</h2>
+                <h2 className=" font-sans text-sm mr-2">
+                 0 VNĐ
+                </h2>
+              </div>
+              <div className="flex justify-between items-center">
+                <h2 className="font-bold text-lg">TIỀN KHÁCH TRẢ:</h2>
                 <h2 className=" font-sans text-sm mr-2">
                   <input
                     type="number"
@@ -614,13 +636,13 @@ export default function CreateOrderDetailFirst() {
                 </h2>
               </div>
               <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">Tiền thừa:</h2>
+                <h2 className="font-bold text-lg">TIỀN TRẢ LẠI:</h2>
                 <h2 className=" font-sans text-sm mr-2 ">
                   {calculateChange().toLocaleString() || 0} VNĐ
                 </h2>
               </div>
               <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">Tổng tiền:</h2>
+                <h2 className="font-bold text-lg">TỔNG TIỀN PHẢI THANH TOÁN:</h2>
                 <h2
                   className=" font-sans text-lg mr-2"
                   style={{ color: "#f13612" }}

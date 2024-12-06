@@ -54,7 +54,7 @@ export default function SideBar({ role }) {
     // { to: "/product", label: "[+] Thêm mới sản phẩm", key: "Thêm mới sản phẩm" },
     //{ to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },
     // { to: "/category", label: "Quản lý đơn vị tính", key: "Quản lý đơn vị tính" },
-    {  label: "Nhân viên", icon: faClipboardUser },
+    //{  label: "Nhân viên", icon: faClipboardUser },
     { to: "/employeeSchedule",  label: "Lịch làm việc", key: "Lịch làm việc",icon: faCalendar },
     // { to: "/employeelist", label: "Danh sách nhân viên", key: "Danh sách nhân viên" },
     //{ to: "/supply-list",key:"Nhà cung cấp", label: "Nhà cung cấp", icon: faWarehouse },

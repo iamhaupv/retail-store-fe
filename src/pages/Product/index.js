@@ -997,7 +997,7 @@ export default function Product() {
               <AutoCompleteInput
                 data={listUnits()}
                 onChange={handleInputChangeUnit}
-                placeholder={"Nhập loại"}
+                placeholder={"Nhập đơn vị"}
               />
             </div>
           </div>

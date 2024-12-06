@@ -42,6 +42,9 @@ export default function Receipt() {
     const dateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
     return dateTime;
   }
+  const totalProduct = selectedOrder.products.reduce((sum, product) => 
+    sum += product.product.price * product.quantity * product.unit.convertQuantity
+  , 0)
   return (
     <>
       {selectedOrder && (
@@ -138,16 +141,22 @@ export default function Receipt() {
                 </table>
                 <hr className="border-dashed border-black" />
                 <h1 className=" flex justify-end w-full">
-                  Thuế VAT: {selectedOrder.amountVAT.toLocaleString()} VND
+                  TỔNG TIỀN: {totalProduct.toLocaleString()} VND
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  Tiền nhận: {selectedOrder.receiveAmount.toLocaleString()} VND
+                  TỔNG TIỀN ĐÃ GIẢM: 0 VND
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  Tiền thừa: {selectedOrder.change.toLocaleString()} VND
+                  THUẾ VAT: {selectedOrder.amountVAT.toLocaleString()} VND
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  Tổng tiền: {selectedOrder.totalAmount.toLocaleString()} VND
+                  TIỀN KHÁCH TRẢ: {selectedOrder.receiveAmount.toLocaleString()} VND
+                </h1>
+                <h1 className=" flex justify-end w-full">
+                  TIỀN TRẢ LẠI: {selectedOrder.change.toLocaleString()} VND
+                </h1>
+                <h1 className=" flex justify-end w-full">
+                  TỔNG TIỀN PHẢI THANH TOÁN: {selectedOrder.totalAmount.toLocaleString()} VND
                 </h1>
                 <hr className="border-dashed border-black" />
                 <h1 className=" flex justify-center w-full">

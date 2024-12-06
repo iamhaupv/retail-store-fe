@@ -7,7 +7,7 @@ import apiFilterBrandByMultiCondition from "../../apis/apiFilterBrandByMultiCond
 import InputPhone from "../../components/InputPhone";
 import InputSupplyName from "../../components/InputSupplyName";
 import Autocomplete from "../../components/AutoComplete";
-
+import "./SupplierList.css"
 export default function SupplierList({role}) {
   const [brands, setBrands] = useState([]);
   const [id, setId] = useState("")
@@ -15,6 +15,44 @@ export default function SupplierList({role}) {
   const [brandPhone, setBrandPhone] = useState("");
   const [brandByName, setBrandByName] = useState("");
   const [brandsByMultiCondition, setBrandsByMultiCondition] = useState([]);
+  // #region table sort
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const sortTable = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+    }
+
+    const sortedData = [
+      ...(brandByName === "" &&
+        brandPhone === "" &&
+        brandSupplyName === "" && 
+        id === "" 
+        ? brands
+        : id),
+    ].sort((a, b) => {
+      if (typeof a[key] === "string") {
+        // Sắp xếp theo chuỗi (ABC)
+        if (direction === "asc") {
+          return a[key].localeCompare(b[key]);
+        } else {
+          return b[key].localeCompare(a[key]);
+        }
+      } else if (typeof a[key] === "number") {
+        // Sắp xếp theo số (bé nhất đến lớn nhất)
+        if (direction === "asc") {
+          return a[key] - b[key];
+        } else {
+          return b[key] - a[key];
+        }
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setBrands(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+  };
+  // end region
   const fetchBrandsByMultiCondition = async () => {
     try {
       if(id === "" && brandByName === "" && brandSupplyName === "" && brandPhone === "") return
@@ -168,11 +206,56 @@ export default function SupplierList({role}) {
               {/* head */}
               <thead>
                 <tr>
-                  <th>Mã</th>
-                  <th>Nhà cung cấp</th>
-                  <th>Địa chỉ</th>
-                  <th>Số điện thoại</th>
-                  <th>Tên người cung cấp</th>
+                  <th 
+                  onClick={() => sortTable("id")}
+                  className={
+                    sortConfig.key === "id"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Mã</th>
+                  <th
+                  onClick={() => sortTable("name")}
+                  className={
+                    sortConfig.key === "name"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Nhà cung cấp</th>
+                  <th
+                  onClick={() => sortTable("address")}
+                  className={
+                    sortConfig.key === "address"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Địa chỉ</th>
+                  <th
+                  onClick={() => sortTable("phone")}
+                  className={
+                    sortConfig.key === "phone"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Số điện thoại</th>
+                  <th
+                  onClick={() => sortTable("supplyName")}
+                  className={
+                    sortConfig.key === "supplyName"
+                      ? sortConfig.direction === "asc"
+                        ? "asc"
+                        : "desc"
+                      : ""
+                  }
+                  >Tên người cung cấp</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
@@ -193,69 +276,6 @@ export default function SupplierList({role}) {
             </table>
           </div>
           {/* pagination */}
-          <div className="w-full justify-end pt-3 pr-2">
-            <ul className="flex items-center justify-end gap-2 ">
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  <span>
-                    <svg
-                      width="20"
-                      height="21"
-                      viewBox="0 0 20 21"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M17.5 9.8125H4.15625L9.46875 4.40625C9.75 4.125 9.75 3.6875 9.46875 3.40625C9.1875 3.125 8.75 3.125 8.46875 3.40625L2 9.96875C1.71875 10.25 1.71875 10.6875 2 10.9688L8.46875 17.5312C8.59375 17.6562 8.78125 17.75 8.96875 17.75C9.15625 17.75 9.3125 17.6875 9.46875 17.5625C9.75 17.2812 9.75 16.8438 9.46875 16.5625L4.1875 11.2188H17.5C17.875 11.2188 18.1875 10.9062 18.1875 10.5312C18.1875 10.125 17.875 9.8125 17.5 9.8125Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </span>
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  1
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-primary bg-green-500 px-2 text-base font-medium text-white">
-                  2
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  3
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  4
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  5
-                </button>
-              </li>
-              <li>
-                <button className="flex h-10 min-w-10 items-center justify-center rounded-lg border border-stroke bg-white px-2 text-base font-medium text-dark hover:bg-gray-1 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
-                  <svg
-                    width="20"
-                    height="21"
-                    viewBox="0 0 20 21"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 10L11.5312 3.4375C11.25 3.15625 10.8125 3.15625 10.5312 3.4375C10.25 3.71875 10.25 4.15625 10.5312 4.4375L15.7812 9.78125H2.5C2.125 9.78125 1.8125 10.0937 1.8125 10.4688C1.8125 10.8438 2.125 11.1875 2.5 11.1875H15.8437L10.5312 16.5938C10.25 16.875 10.25 17.3125 10.5312 17.5938C10.6562 17.7188 10.8437 17.7812 11.0312 17.7812C11.2187 17.7812 11.4062 17.7188 11.5312 17.5625L18 11C18.2812 10.7187 18.2812 10.2812 18 10Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </button>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </>

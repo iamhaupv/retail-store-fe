@@ -22,7 +22,7 @@ export default function StatOrderDetail({orders,isActive ,onOrderClick }) {
           <div className="font-bold text-sm">{order.id || 0}</div>
           <div className="font-bold text-sm">{order.totalAmount.toLocaleString()} VNĐ</div>
         </div>
-        <div className="mr-1 ml-1 mt-1">Cửa hàng 25 Hour</div>
+        {/* <div className="mr-1 ml-1 mt-1">Cửa hàng 25 Hour</div> */}
         <div className="flex justify-between mr-1 ml-1 ">
           <div className="flex">
             <svg
