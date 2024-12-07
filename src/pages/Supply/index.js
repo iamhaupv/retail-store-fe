@@ -5,17 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import apiBrand from "../../apis/apiBrand";
 export default function Supply() {
-  const [id, setId] = useState(0)
-  useEffect(()=> {
-    const fetchLastBrandId = async() => {
-      const token = localStorage.getItem("accessToken")
-    if(!token) throw new Error("Token is invalid!")
-    const response = await apiBrand.apiLastIdBrand(token)
-    setId(response.newId)
-    }
-    fetchLastBrandId()
-  }, [])
-  const navigate = useNavigate()
+  const [id, setId] = useState(0);
+  useEffect(() => {
+    const fetchLastBrandId = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiBrand.apiLastIdBrand(token);
+      setId(response.newId);
+    };
+    fetchLastBrandId();
+  }, []);
+  const navigate = useNavigate();
   const [image, setImage] = useState({});
   const [isVisible, setIsVisible] = useState(true);
   const [error, setError] = useState(false);
@@ -41,10 +41,10 @@ export default function Supply() {
     const { name, value } = e.target;
     const nameRegex = /^[\w\d.A-Za-zÀ-ỹ\s()'-]{1,50}$/;
     const supplyNameRegex = /^[A-Za-zÀ-ỹ\s'-]{2,}$/;
-    const descriptionRegex = /^([\s\S]{10,1000})$/
+    const descriptionRegex = /^([\s\S]{10,1000})$/;
     const phoneRegex =
       /^(0[1-9]{1}[0-9]{8}|(08[0-9]{8}|09[0-9]{8}|03[0-9]{8}|07[0-9]{8}|05[0-9]{8}|04[0-9]{8}))$/;
-    const addressRegex = /^.{1,100}$/
+    const addressRegex = /^.{1,100}$/;
     let errorMessage;
     // title
     if (name === "name") {
@@ -75,8 +75,7 @@ export default function Supply() {
       if (!value) {
         errorMessage = "Không được để trống!";
       } else if (!phoneRegex.test(value)) {
-        errorMessage =
-          "Số điện thoại phải là số và 11 số";
+        errorMessage = "Số điện thoại phải là số và 11 số";
       }
     }
     //
@@ -132,7 +131,7 @@ export default function Supply() {
         formData.append("description", description);
         formData.append("phone", phone);
         formData.append("address", address);
-        formData.append("id", id)
+        formData.append("id", id);
         for (const key in image) {
           if (image[key]) {
             const file = await fetch(image[key]).then((res) => res.blob());
@@ -143,7 +142,7 @@ export default function Supply() {
         if (response.success) {
           toast.success("Thêm thành công!");
           setTimeout(() => {
-            navigate("/supply-list")
+            navigate("/supply-list");
           }, 2000);
         } else {
           toast.error("Thêm không thành công!");
@@ -155,11 +154,11 @@ export default function Supply() {
     }
   };
   const navigateListBrand = () => {
-    navigate("/supply-list")
-  }
+    navigate("/supply-list");
+  };
   return (
     <>
-      <ToastContainer/>
+      <ToastContainer />
       <div
         className="w-11/12 h-screen justify-center flex"
         style={{ backgroundColor: "#F5F5F5" }}
@@ -179,25 +178,25 @@ export default function Supply() {
                 </h4>
                 <h4 className="flex font-sans text-base w-5/12 ml-4">
                   Mã nhà cung cấp
-                  <h5 className="ml-1 text-red-600 ml-1">(*)</h5>
-
                 </h4>
               </div>
               <div className="flex pt-2">
-                <div className="w-6/12">
-                <input
-                  name="name"
-                  value={payload.name}
-                  onBlur={handleBlur}
-                  onChange={handleChangeInput}
-                  type="text"
-                  placeholder="Tên nhà cung cấp"
-                  className="input input-bordered w-full h-10 ml-4"
-                />
-                {error && (
-                    <h5 className="ml-1 text-red-500">{error.name}</h5>
+                <div className="w-[440px]">
+                  <input
+                    name="name"
+                    value={payload.name}
+                    onBlur={handleBlur}
+                    onChange={handleChangeInput}
+                    type="text"
+                    placeholder="Tên nhà cung cấp"
+                    className="input input-bordered w-full h-10 ml-4"
+                  />
+                  {error && (
+                    <h5 className="ml-4 mt-2 h-10 text-sm text-red-500">
+                      {error.name}
+                    </h5>
                   )}
-                  </div>
+                </div>
                 <input
                   type="text"
                   placeholder="Mã nhà cung cấp"
@@ -210,10 +209,6 @@ export default function Supply() {
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Tên người cung cấp
                   <h5 className="ml-1 text-red-600 ml-1">(*)</h5>
-
-                  {error && (
-                    <h5 className="ml-1 text-red-500">{error.supplyName}</h5>
-                  )}
                 </h4>
                 <h4 className="flex font-sans text-base w-5/12 ml-4">
                   Số điện thoại
@@ -224,15 +219,22 @@ export default function Supply() {
                 </h4>
               </div>
               <div className="flex items-center pt-2">
-                <input
-                  name="supplyName"
-                  value={payload.supplyName}
-                  onChange={handleChangeInput}
-                  type="text"
-                  onBlur={handleBlur}
-                  placeholder="Tên người cung cấp"
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                />
+                <div className="w-[440px]">
+                  <input
+                    name="supplyName"
+                    value={payload.supplyName}
+                    onChange={handleChangeInput}
+                    type="text"
+                    onBlur={handleBlur}
+                    placeholder="Tên người cung cấp"
+                    className="input input-bordered w-full h-10 ml-4"
+                  />
+                  {error && (
+                    <h5 className="ml-4 mt-2 text-sm text-red-500">
+                      {error.supplyName}
+                    </h5>
+                  )}
+                </div>
                 <input
                   name="phone"
                   value={payload.phone}
@@ -243,7 +245,7 @@ export default function Supply() {
                   className="input input-bordered w-5/12 h-10 ml-4"
                 />
               </div>
-              <div className="flex items-center pt-2">
+              <div className="flex items-center pt-2 ">
                 <h4 className="flex font-sans text-base w-6/12 ml-4 ">
                   Địa chỉ
                   {error ? (

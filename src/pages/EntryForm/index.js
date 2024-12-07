@@ -15,9 +15,10 @@ export default function EntryForm() {
     ) || 0;
   const calculateTotalAmount = (products) => {
     return products.reduce((total, product) => {
-      const quantity = product.quantity
+      const quantity = product.quantity;
       const importPrice = product.importPrice || 0; // Giá nhập
-      const productTotal = quantity * importPrice * product.unit.convertQuantity
+      const productTotal =
+        quantity * importPrice * product.unit.convertQuantity;
       return total + productTotal; // Tính tổng bằng giá nhập
     }, 0);
   };
@@ -73,7 +74,7 @@ export default function EntryForm() {
     const [day, month, year] = formattedDate.split("/");
     return `Ngày ${day} tháng ${month} năm ${year}`;
   };
-  
+
   return (
     <>
       <div className="w-full h-full min-h-screen justify-center flex bg-base-200 rounded-none overflow-y-auto">
@@ -130,7 +131,7 @@ export default function EntryForm() {
                   <h1 className="font-bold">Công ty TNHH 24 HOUR</h1>
                   <h1>294/23/513 Phạm Văn Đồng Q.Bình Thạnh Tp.HCM</h1>
                   <h1 className="flex">
-                    Hotline:<h1 className="font-bold ml-1">{receipt.user.mobile}</h1>
+                    Hotline:<h1 className="font-bold ml-1">0374582351</h1>
                   </h1>
                 </div>
               </div>
@@ -153,7 +154,7 @@ export default function EntryForm() {
                 <h1 className="flex">
                   Người giao:
                   <h1 className="font-bold ml-1">
-                    {receipt?.user.employee?.name}
+                    {receipt?.products[0]?.product.brand?.supplyName}
                   </h1>
                 </h1>
                 <h1 className="flex">
@@ -248,7 +249,8 @@ export default function EntryForm() {
                       const importPrice = product.importPrice || 0; // Lấy giá nhập
                       const totalProductPrice =
                         quantity * importPrice * product.unit.convertQuantity;
-                      const price = product.importPrice * product.unit.convertQuantity
+                      const price =
+                        product.importPrice * product.unit.convertQuantity;
                       return (
                         <tr key={product._id || index}>
                           <td
@@ -279,7 +281,7 @@ export default function EntryForm() {
                             className="border-2"
                             style={{ borderColor: "#cecece" }}
                           >
-                            { price.toLocaleString() || "0"} đ
+                            {price.toLocaleString() || "0"} đ
                           </td>
                           <td
                             className="border-2"

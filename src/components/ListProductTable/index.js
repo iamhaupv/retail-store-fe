@@ -37,8 +37,8 @@ export default function ListProductTable({ role }) {
       status === "" &&
       brand === "" &&
       id === ""
-        ? productsPagination
-        : products),
+        ? products
+        : productsPagination),
     ].sort((a, b) => {
       if (typeof a[key] === "string") {
         // Sắp xếp theo chuỗi (ABC)

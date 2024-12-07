@@ -29,7 +29,7 @@ export default function StockInDetail({ receipts }) {
                 const productTotal = quantity * importPrice * product.unit.convertQuantity; // Tổng tiền cho mỗi sản phẩm
                 return total + productTotal; // Cộng dồn tổng tiền
               }, 0).toLocaleString()}
-            đA
+            đ
             </h1>
           </td>
           <td className="justify-items-center">

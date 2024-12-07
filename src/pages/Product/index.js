@@ -9,8 +9,8 @@ import { toast, ToastContainer } from "react-toastify";
 import apiProduct from "../../apis/apiProduct";
 import apiUnit from "../../apis/apiUnit";
 export default function Product() {
-  const [unit, setUnit] = useState({_id: "", name: ""})
-  const [units, setUnits] = useState([])
+  const [unit, setUnit] = useState({ _id: "", name: "" });
+  const [units, setUnits] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState({ _id: "", name: "" });
   const [selectedCategory, setSelectedCategory] = useState({
     _id: "",
@@ -24,33 +24,33 @@ export default function Product() {
   const [error, setError] = useState({});
   const [payload, setPayload] = useState({});
   const [value, setValue] = useState("");
-  const [id, setId] = useState(0)
+  const [id, setId] = useState(0);
   useEffect(() => {
-    const fetchUnits = async() => {
+    const fetchUnits = async () => {
       try {
-        const token = localStorage.getItem("accessToken")
-        if(!token) throw new Error("Token is invalid!")
-        const response = await apiUnit.apiGetAllUnit(token)
-        setUnits(response.units)
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiUnit.apiGetAllUnit(token);
+        setUnits(response.units);
       } catch (error) {
-        throw new Error("fetch unit is error", error)
+        throw new Error("fetch unit is error", error);
       }
-    }
-    fetchUnits()
-  }, [])
-  useEffect(()=>{
-    const fetchLastIdProductNumber = async() => {
+    };
+    fetchUnits();
+  }, []);
+  useEffect(() => {
+    const fetchLastIdProductNumber = async () => {
       try {
-        const token = localStorage.getItem("accessToken")
-        if(!token) throw new Error("Token is invalid!")
-        const response = await apiProduct.apiLastIdNumber(token)
-        setId(response.newId)
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiProduct.apiLastIdNumber(token);
+        setId(response.newId);
       } catch (error) {
         console.log("fetch last id product number is error", error);
       }
-    }
-    fetchLastIdProductNumber()
-  }, [])
+    };
+    fetchLastIdProductNumber();
+  }, []);
   const handleInputChangeBrand = (selectedBrand) => {
     if (selectedBrand) {
       setSelectedBrand({ _id: selectedBrand._id, name: selectedBrand.name });
@@ -79,7 +79,7 @@ export default function Product() {
     }
   };
   console.log(unit);
-  
+
   const listCategories = () => {
     return categories.map((category) => ({
       _id: category._id,
@@ -92,7 +92,7 @@ export default function Product() {
       name: unit.name,
     }));
   };
-  
+
   const listBrands = () => {
     return brands.map((brand) => ({
       _id: brand._id,
@@ -256,7 +256,7 @@ export default function Product() {
         if (response.success) {
           toast.success("Thêm sản phẩm mới thành công!");
           setTimeout(() => {
-            navigate('/product-list');
+            navigate("/product-list");
           }, 2000);
         } else {
           toast.error("Thêm không thành công!");
@@ -267,11 +267,11 @@ export default function Product() {
     }
   };
   const navigateProductList = () => {
-    navigate("/product-list")
-  }
+    navigate("/product-list");
+  };
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <div
         className="w-11/12 h-full justify-center flex overflow-y-auto "
         style={{ backgroundColor: "#F5F5F5" }}
@@ -289,64 +289,86 @@ export default function Product() {
                   Tên sản phẩm
                   <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">Mã sản phẩm</h4>
+                <h4 className="font-sans text-base w-5/12 ml-6">Mã sản phẩm</h4>
               </div>
               <div className="flex items-center pt-2">
-                <input
-                  name="title"
-                  value={payload.title}
-                  onChange={handleChangeInput}
-                  type="text"
-                  placeholder="Tên sản phẩm"
-                  onBlur={handleBlur}
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                />
-                <input
-                  type="text"
-                  placeholder="Mã sản phẩm"
-                  className="input input-bordered w-5/12 h-10 ml-4"
-                  disabled
-                  value={id}
-                />
+                <div className="w-[440px]">
+                  <input
+                    name="title"
+                    value={payload.title}
+                    onChange={handleChangeInput}
+                    type="text"
+                    placeholder="Tên sản phẩm"
+                    onBlur={handleBlur}
+                    className="input input-bordered w-full h-10 ml-4"
+                  />
+                  {error ? (
+                    <h5 className="ml-4 mt-2 text-sm h-10 text-red-500">
+                      {error.title}
+                    </h5>
+                  ) : (
+                    <div className="ml-4 "></div>
+                  )}
+                </div>
+                <div className="w-[388px] ml-4" style={{ marginTop: -50 }}>
+                  <input
+                    type="text"
+                    placeholder="Mã sản phẩm"
+                    className="input input-bordered w-full h-10 ml-4"
+                    disabled
+                    value={id}
+                  />
+                </div>
               </div>
-              {error ? ( <h5 className="ml-4 text-red-500">{error.title}</h5>):(
-                <div className="ml-4 "></div>
-              )}
-              <div className="flex items-center pt-3">
+
+              <div
+                className="flex items-center pt-2"
+                style={{ marginTop: -25 }}
+              >
                 <h4 className="flex font-sans text-base w-6/12 ml-4">
                   Đơn giá
                   <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
               </div>
               <div className="flex items-center pt-2">
-                <input
-                  name="price"
-                  value={value}
-                  onBlur={handleBlur}
-                  onChange={handleChangeInput}
-                  type="text"
-                  placeholder="Đơn giá"
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                />
+                <div className="w-[440px]">
+                  <input
+                    name="price"
+                    value={value}
+                    onBlur={handleBlur}
+                    onChange={handleChangeInput}
+                    type="text"
+                    placeholder="Đơn giá"
+                    className="input input-bordered w-full h-10 ml-4"
+                  />
+                  {error ? (
+                    <h5 className="ml-4 text-red-500 text-sm h-10 mt-2">
+                      {error.price}
+                    </h5>
+                  ) : (
+                    <div className="ml-4 "></div>
+                  )}
+                </div>
               </div>
-              {error ? ( <h5 className="ml-4 text-red-500">{error.price}</h5>):(
-                <div className="ml-4 "></div>
-              )}
-              <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
+              <h4 style={{marginTop: -15}}  className="flex font-sans text-base w-6/12 ml-4 mb-2">
                 Mô tả
                 <h5 className="ml-1 text-red-600">(*)</h5>
               </h4>
+              <div>
               <textarea
                 name="description"
                 value={payload.description}
                 onChange={handleChangeInput}
                 placeholder="Bio"
                 onBlur={handleBlur}
-                className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-3"
+                className="textarea textarea-bordered textarea-lg w-11/12 ml-4"
               />
-              {error ? ( <h5 className="ml-4 text-red-500">{error.description}</h5>):(
+              {error ? (
+                <h5 className="ml-4 text-red-500 h-10 text-sm mt-2" style={{marginTop: -1}}>{error.description}</h5>
+              ) : (
                 <div className="ml-4 "></div>
               )}
+              </div>
             </div>
           </div>
           {/* Hình ảnh sản phẩm */}
@@ -1001,7 +1023,6 @@ export default function Product() {
               />
             </div>
           </div>
-          
         </div>
       </div>
     </>

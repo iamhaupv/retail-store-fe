@@ -409,6 +409,9 @@ export default function InventoryProduct({ onChangeModal }) {
               >
                 Đơn vị tính
               </th>
+              <th>Giá bán</th>
+              <th>Giảm giá</th>
+              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>

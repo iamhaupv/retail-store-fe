@@ -13,7 +13,7 @@ import apiOrder from "../../apis/apiOrder";
 
 export default function CreateOrderDetailFirst() {
   const navigate = useNavigate();
-  const [inforOrder, setInforOrder] = useState({})
+  const [inforOrder, setInforOrder] = useState({});
   const [submittedData, setSubmittedData] = useState(null);
   const [listReceiptId, setListReceiptId] = useState([]);
   const [products, setProducts] = useState([]);
@@ -66,15 +66,18 @@ export default function CreateOrderDetailFirst() {
   const handleChangeQuantity = (index, newQuantity) => {
     const updatedOrderDetails = [...orderDetails];
     const VAT = updatedOrderDetails[index].VAT;
+    const convertQuantity = updatedOrderDetails[index].convertQuantity || 1
+    const discount = updatedOrderDetails[index].discount || 0;
     const price = updatedOrderDetails[index].price;
     updatedOrderDetails[index] = {
       ...updatedOrderDetails[index],
       quantity: newQuantity,
       amountVAT: newQuantity * price * VAT,
+      amountDiscount: (newQuantity * price * discount * convertQuantity) / 100,
       total:
         newQuantity *
           updatedOrderDetails[index].price *
-          updatedOrderDetails[index].convertQuantity || 0,
+          updatedOrderDetails[index].convertQuantity || 1,
     };
 
     setOrderDetails(updatedOrderDetails);
@@ -143,6 +146,7 @@ export default function CreateOrderDetailFirst() {
         productId: response.product ? response.product._id : "",
         price: response.product.price || 0,
         VAT: response.product.VAT || 0,
+        discount: response.product.discount || 0,
         total:
           updatedOrderDetails[index].quantity *
           (response.product.price || 0) *
@@ -185,6 +189,7 @@ export default function CreateOrderDetailFirst() {
       price: 0,
       total: 0,
       warehouseReceipt: "",
+      amountDiscount: 0,
     };
     // setOrderDetails([...orderDetails, newRow]);
     setOrderDetails((prevOrderDetails) => {
@@ -289,13 +294,10 @@ export default function CreateOrderDetailFirst() {
   };
   const handleSubmit = async () => {
     try {
-      // Check if orderDetails is empty
       if (orderDetails.length === 0) {
-        alert("Vui lòng thêm ít nhất một sản phẩm.");
+        toast.error("Vui lòng thêm ít nhất một sản phẩm.");
         return;
       }
-
-      // Check for missing data in each row
       for (let i = 0; i < orderDetails.length; i++) {
         const detail = orderDetails[i];
         if (
@@ -304,7 +306,7 @@ export default function CreateOrderDetailFirst() {
           !detail.unit ||
           !detail.price
         ) {
-          alert(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
+          toast.error(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
           return;
         }
       }
@@ -314,6 +316,7 @@ export default function CreateOrderDetailFirst() {
           const productVAT = detail.price * detail.VAT * detail.convertQuantity;
           amountVAT += productVAT * Number(detail.quantity);
           return {
+            discount: detail.amountDiscount,
             product: detail.productId,
             quantity: detail.quantity,
             unit: detail.unitId,
@@ -340,6 +343,7 @@ export default function CreateOrderDetailFirst() {
         toast.success("Đơn hàng đã được tạo thành công.");
         setOrderDetails([]);
         setSubmittedData(response);
+        setReceivedAmount(0);
       } else {
         toast.error("Đã có lỗi khi tạo đơn hàng.");
       }
@@ -352,7 +356,7 @@ export default function CreateOrderDetailFirst() {
     try {
       // Check if orderDetails is empty
       if (orderDetails.length === 0) {
-        alert("Vui lòng thêm ít nhất một sản phẩm.");
+        toast.error("Vui lòng thêm ít nhất một sản phẩm.");
         return;
       }
 
@@ -365,7 +369,7 @@ export default function CreateOrderDetailFirst() {
           !detail.unit ||
           !detail.price
         ) {
-          alert(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
+          toast.error(`Dòng ${i + 1} thiếu thông tin, vui lòng kiểm tra lại.`);
           return;
         }
       }
@@ -375,6 +379,7 @@ export default function CreateOrderDetailFirst() {
           const productVAT = detail.price * detail.VAT * detail.convertQuantity;
           amountVAT += productVAT * Number(detail.quantity);
           return {
+            discount: detail.amountDiscount,
             product: detail.productId,
             quantity: detail.quantity,
             unit: detail.unitId,
@@ -400,10 +405,11 @@ export default function CreateOrderDetailFirst() {
       if (response.success) {
         toast.success("Đơn hàng đã được tạo thành công.");
         setOrderDetails([]);
-        const id = response.order._id
-        const rs = await apiOrder.apiExtraInfor(token, {id: id})
+        const id = response.order._id;
+        const rs = await apiOrder.apiExtraInfor(token, { id: id });
         console.log(rs);
         navigate("/receipt", { state: { selectedOrder: rs.order } });
+        setReceivedAmount(0);
       } else {
         toast.error("Đã có lỗi khi tạo đơn hàng.");
       }
@@ -412,6 +418,12 @@ export default function CreateOrderDetailFirst() {
       toast.error("Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.");
     }
   };
+  const handleCancel = () => {
+    setOrderDetails([]);
+  };
+  const discount = orderDetails.reduce((sum, order) => {
+    return sum += order.amountDiscount * order.convertQuantity
+  }, 0)
   return (
     <>
       <ToastContainer />
@@ -465,21 +477,6 @@ export default function CreateOrderDetailFirst() {
                 onClick={addNewRow}
                 className="drawer-button btn btn-success text-white w-44 h-8 mt-3 "
               >
-                {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg> */}
-
                 Thêm sản phẩm
               </button>
             </div>
@@ -501,6 +498,7 @@ export default function CreateOrderDetailFirst() {
                   <th>Đơn vị tính</th>
                   <th>Đơn giá</th>
                   <th>Thành tiền</th>
+                  <th>Giảm giá</th>
                   <th>Thao tác</th>
                 </tr>
               </thead>
@@ -570,8 +568,9 @@ export default function CreateOrderDetailFirst() {
                         />
                       </div>
                     </td>
-                    <td>{detail.price.toLocaleString() || "0"} đ</td>
-                    <td>{detail.total.toLocaleString() || 0} đ</td>
+                    <td>{detail?.price?.toLocaleString() || "0"} đ</td>           
+                    <td>{(detail?.total).toLocaleString() || 0} đ</td>
+                    <td>{(detail?.amountDiscount * detail.quantity * detail.convertQuantity).toLocaleString()} đ</td>
                     <td>
                       <button
                         id="btn__delete"
@@ -601,20 +600,18 @@ export default function CreateOrderDetailFirst() {
               </tbody>
             </table>
           </div>
-          <div className="flex w-full h-auto" style={{marginTop: -60}}>
+          <div className="flex w-full h-auto" style={{ marginTop: -60 }}>
             <div className="w-8/12"></div>
             <div className="h-auto justify-end items-end mt-4">
-            <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">TỔNG TIỀN:</h2>
                 <h2 className=" font-sans text-sm mr-2">
-                  {calculateTotal().toLocaleString()} VNĐ
+                  {(calculateTotal()).toLocaleString()} VNĐ
                 </h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">TỔNG TIỀN ĐÃ GIẢM:</h2>
-                <h2 className=" font-sans text-sm mr-2">
-                 0 VNĐ
-                </h2>
+                <h2 className=" font-sans text-sm mr-2">{discount?.toLocaleString()} VNĐ</h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">TIỀN KHÁCH TRẢ:</h2>
@@ -630,7 +627,7 @@ export default function CreateOrderDetailFirst() {
                 </h2>
               </div>
               <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">Thuế VAT:</h2>
+                <h2 className="font-bold text-lg">THUẾ VAT:</h2>
                 <h2 className=" font-sans text-sm mr-2">
                   {totalVAT.toLocaleString()} VNĐ
                 </h2>
@@ -642,12 +639,14 @@ export default function CreateOrderDetailFirst() {
                 </h2>
               </div>
               <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">TỔNG TIỀN PHẢI THANH TOÁN:</h2>
+                <h2 className="font-bold text-lg">
+                  TỔNG TIỀN PHẢI THANH TOÁN:
+                </h2>
                 <h2
                   className=" font-sans text-lg mr-2"
                   style={{ color: "#f13612" }}
                 >
-                  {calculateTotalAmount().toLocaleString() || 0} VNĐ
+                  {(calculateTotalAmount() - discount).toLocaleString() || 0} VNĐ
                 </h2>
               </div>
             </div>
@@ -698,6 +697,7 @@ export default function CreateOrderDetailFirst() {
             <button
               className="drawer-button btn text-white w-36 h-8 mt-3 ml-2 mr-2"
               style={{ backgroundColor: "#f13612" }}
+              onClick={handleCancel}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

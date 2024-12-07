@@ -1,17 +1,6 @@
-import React, { PureComponent, useCallback, useEffect, useState } from "react";
-import Datepicker from "react-tailwindcss-datepicker";
-import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
+import React, { useCallback, useEffect, useState } from "react";
+import { PieChart, Pie, Sector } from "recharts";
 import apiOrder from "../../apis/apiOrder";
-
-const data = [
-  { name: "Sản phẩm A", value: 400 },
-  { name: "Sản phẩm B", value: 300 },
-  { name: "Sản phẩm C", value: 300 },
-  { name: "Sản phẩm D", value: 200 },
-  { name: "Sản phẩm E", value: 100 },
-  { name: "Sản phẩm F", value: 100 },
-];
-
 
 export default function PieChartProduct() {
   const [year, setYear] = useState("2024");
@@ -243,7 +232,6 @@ export default function PieChartProduct() {
               activeIndex={activeIndex}
               activeShape={renderActiveShape}
               data={month !== "" ? transformedData(months) : transformedData(years)}
-              // data={data}
               cx={450}
               cy={300}
               innerRadius={180}

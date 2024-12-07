@@ -1,5 +1,5 @@
 import "./Home.css";
-import React, { PureComponent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -11,77 +11,53 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import apiOrder from "../../apis/apiOrder";
-// import {
-//   Chart as ChartJS,
-//   CategoryScale,
-//   LinearScale,
-//   PointElement,
-//   LineElement,
-//   Title,
-//   Tooltip,
-//   Legend,
-// } from "chart.js";
-
-// ChartJS.register(
-//   CategoryScale,
-//   LinearScale,
-//   PointElement,
-//   LineElement,
-//   Title,
-//   Tooltip,
-//   Legend
-// );
-
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+import apiProduct from "../../apis/apiProduct";
 
 export default function Home() {
+  const [percen, setPercen] = useState({});
   const [year, setYear] = useState("2024");
   const [years, setYears] = useState([]);
   const [month, setMonth] = useState("11");
   const [months, setMonths] = useState([]);
+  const [revenue, setRevenue] = useState({});
+  const [productQuantity, setProductQuantity] = useState([]);
+  const [product_out_of_stock, setProduct_out_of_stock] = useState([]);
+  useEffect(() => {
+    const fetchPercen = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiOrder.apiGetTotalAmountComparison(token);
+      setPercen(response.comparison);
+    };
+    fetchPercen();
+  }, []);
+  useEffect(() => {
+    const fetchProductOutOfStock = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiProduct.apiGetAllProduct_OUT_OF_STOCK(token);
+      setProduct_out_of_stock(response.products);
+    };
+    fetchProductOutOfStock();
+  }, []);
+  useEffect(() => {
+    const fetchProductQuantity = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiProduct.apiGetAllProduct(token);
+      setProductQuantity(response.products);
+    };
+    fetchProductQuantity();
+  }, []);
+  useEffect(() => {
+    const fetchRevenueCurrentDay = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiOrder.apiGetTotalAmountCurrentDay(token);
+      setRevenue(response.total);
+    };
+    fetchRevenueCurrentDay();
+  }, []);
   useEffect(() => {
     const fetchSumTotalAmountByMonth = async () => {
       try {
@@ -129,21 +105,6 @@ export default function Home() {
     const value = e.target.value;
     setMonth(value);
   };
-  const customTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      const { total, totalImportPrice } = payload[0].payload;
-      const revenue = total - totalImportPrice;
-      return (
-        <div className="p-2 bg-white border rounded shadow">
-          <p className="font-bold">{label}</p>
-          <p>{`Lợi nhuận: ${revenue.toLocaleString()} VNĐ`}</p>
-          <p>{`Tiền vốn: ${totalImportPrice.toLocaleString()} VNĐ`}</p>
-          <p>{`Tổng doanh thu: ${total.toLocaleString()} VNĐ`}</p>
-        </div>
-      );
-    }
-    return null;
-  };
   const transformedData = (arr) => {
     return arr.map((item) => ({
       ...item,
@@ -153,9 +114,10 @@ export default function Home() {
       totalImportPrice: item.totalImportPrice,
     }));
   };
-  console.log('Months:', months);
-console.log('Years:', years);
-
+  function roundNumber(value, decimalPlaces) {
+    const factor = Math.pow(10, decimalPlaces);
+    return Math.round(value * factor) / factor;
+  }
   return (
     <>
       <div
@@ -171,7 +133,7 @@ console.log('Years:', years);
                     DOANH THU TRONG NGÀY
                   </h1>
                   <h1 className="font-bold text-xl w-full mt-1">
-                    30.756.000 VNĐ
+                    {revenue?.totalAmount?.toLocaleString()} VNĐ
                   </h1>
                 </div>
                 <div className="w-1/3 justify-end mt-2 flex pr-3">
@@ -194,7 +156,12 @@ console.log('Years:', years);
                 </div>
               </div>
               <h1 className="w-full flex ml-4 mt-4 mb-4">
-                <h1 className="text-green-400 mr-1">+55%</h1>
+                <h1 className={`${revenue?.totalAmount > 0 ? 'text-red-400 mr-1' : 'text-green-400 mr-1'}`}>
+                  {revenue?.totalAmount > 0
+                    ? +roundNumber(percen?.percentageChange?.totalAmount, 2)
+                    : -roundNumber(percen?.percentageChange?.totalAmount, 2)}
+                  %
+                </h1>
                 kể từ ngày hôm qua
               </h1>
             </div>
@@ -204,7 +171,9 @@ console.log('Years:', years);
                   <h1 className="font-semibold text-sm w-full text-slate-500 mt-4">
                     SỐ LƯỢNG ĐƠN HÀNG
                   </h1>
-                  <h1 className="font-bold text-xl w-full mt-1">3.421</h1>
+                  <h1 className="font-bold text-xl w-full mt-1">
+                    {revenue?.totalOrders}
+                  </h1>
                 </div>
                 <div className="w-1/3 justify-end mt-2 flex pr-3">
                   <label className="btn btn-circle bg-yellow-400 text-white ml-16">
@@ -226,7 +195,9 @@ console.log('Years:', years);
                 </div>
               </div>
               <h1 className="w-full flex ml-4 mt-4 mb-4">
-                <h1 className="text-green-400 mr-1">+35%</h1>
+                <h1 className={`${revenue?.totalOrders > 0 ? 'text-red-400 mr-1' : 'text-green-400 mr-1'} `}>
+                  {revenue?.totalOrders > 0 ? + roundNumber(percen?.percentageChange?.totalOrders, 2) : - revenue?.totalOrders}%
+                </h1>
                 kể từ ngày hôm qua
               </h1>
             </div>
@@ -236,7 +207,9 @@ console.log('Years:', years);
                   <h1 className="font-semibold text-sm w-full text-slate-500 mt-4">
                     SẢN PHẨM
                   </h1>
-                  <h1 className="font-bold text-xl w-full mt-1">3.421</h1>
+                  <h1 className="font-bold text-xl w-full mt-1">
+                    {productQuantity?.length}
+                  </h1>
                 </div>
                 <div className="w-1/3 justify-end mt-2 flex pr-3">
                   <label className="btn btn-circle bg-blue-400 text-white ml-16">
@@ -258,7 +231,9 @@ console.log('Years:', years);
                 </div>
               </div>
               <h1 className="w-full flex ml-4 mt-4 mb-4">
-                <h1 className="text-red-500 mr-1">15</h1>
+                <h1 className="text-red-500 mr-1">
+                  {product_out_of_stock?.length}
+                </h1>
                 sản phẩm hết hàng
               </h1>
             </div>
@@ -339,7 +314,11 @@ console.log('Years:', years);
                 <LineChart
                   width={500}
                   height={350}
-                  data={month !== "" ? transformedData(months) : transformedData(years)}
+                  data={
+                    month !== ""
+                      ? transformedData(months)
+                      : transformedData(years)
+                  }
                   margin={{
                     top: 5,
                     right: 30,
@@ -350,7 +329,7 @@ console.log('Years:', years);
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip  />
+                  <Tooltip />
                   <Legend />
                   <Line
                     type="monotone"
@@ -359,8 +338,18 @@ console.log('Years:', years);
                     stroke="#8884d8"
                     activeDot={{ r: 8 }}
                   />
-                  <Line type="monotone" dataKey="revenue" name="Lợi nhuận" stroke="#82ca9d" />
-                  <Line type="monotone" dataKey="totalAmount" name="Doanh thu" stroke="red" />
+                  <Line
+                    type="monotone"
+                    dataKey="revenue"
+                    name="Lợi nhuận"
+                    stroke="#82ca9d"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="totalAmount"
+                    name="Doanh thu"
+                    stroke="red"
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>

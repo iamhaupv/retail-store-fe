@@ -1,5 +1,4 @@
 import React from "react";
-import Barcode from "../Barcode";
 import { Link } from "react-router-dom";
 
 export default function SupplyTableDetail({ brands }) {

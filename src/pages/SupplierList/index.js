@@ -270,9 +270,6 @@ export default function SupplierList({role}) {
                   <div>Khong tim thay</div>
                 )}
               </tbody>
-              <tfoot>
-                <tr></tr>
-              </tfoot>
             </table>
           </div>
           {/* pagination */}

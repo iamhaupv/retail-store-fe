@@ -8,9 +8,9 @@ import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 
 export default function Report() {
   const [year, setYear] = useState("2024");
-  const [years, setYears] = useState([]);
+  const [years, setYears] = useState({});
   const [month, setMonth] = useState("11");
-  const [months, setMonths] = useState([]);
+  const [months, setMonths] = useState({});
   const [receipt, setReceipt] = useState({});
   const [sum, setSum] = useState({});
   const [orders, setOrders] = useState([]);
@@ -48,19 +48,12 @@ export default function Report() {
   useEffect(() => {
     fetchSumTotalAmount();
   }, []);
-  console.log(sum);
 
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
-  const formattedTotalAmount =
-    sum && sum.totalAmount ? sum.totalAmount.toLocaleString() : "0";
-  const formattedTotalVAT =
-    sum && sum.amountVAT ? sum.amountVAT.toLocaleString() : "0";
-  const formattedTotalReceipt =
-    receipt && receipt.totalAmount ? receipt.totalAmount.toLocaleString() : "0";
   const handleChangeYear = (e) => {
     const value = e.target.value;
     setYear(value);
@@ -69,6 +62,45 @@ export default function Report() {
     const value = e.target.value;
     setMonth(value);
   };
+  useEffect(() => {
+    const fetchSumTotalAmountByMonth = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiOrder.apiGetTotalAmountAndVATByMonthReport(token, {
+          month,
+          year,
+        });
+        if (response?.total) {
+          setMonths(response.total);
+        } else {
+          setMonths({});
+        }
+      } catch (error) {
+        console.log("fetch sum is error", error);
+      }
+    };
+    fetchSumTotalAmountByMonth();
+  }, [month, year]);
+  useEffect(() => {
+    const fetchSum = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiOrder.apiGetTotalAmountAndVATByYearReport(token, {
+          year,
+        });
+        if (response?.total) {
+          setYears(response.total);
+        } else {
+          setYears({});
+        }
+      } catch (error) {
+        console.log("fetch sum is error", error);
+      }
+    };
+    fetchSum();
+  }, [year]);
   return (
     <>
       <div
@@ -94,7 +126,7 @@ export default function Report() {
               </Link>
             </div>
             <div className="w-full flex">
-              <div className="w-1/4 justify-start ml-4 ">
+              <div className="w-1/6 justify-start ml-4 ">
                 <div className="w-auto flex h-fit justify-start items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -110,25 +142,24 @@ export default function Report() {
                       d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z"
                     />
                   </svg>
-                  <div className="w-3/4 justify-start">
+                  <div className="justify-start">
                     <h1 className="text-lg mt-5 ml-4">Tổng doanh thu</h1>
                     <h1 className="font-bold text-xl mt-5 ml-4">
-                      {/* {sum && sum.totalAmount} đ */}
-                      {formattedTotalAmount} đ
+                      {month !== "" ? months?.totalAmount?.toLocaleString() : years?.totalAmount?.toLocaleString()} VNĐ
                     </h1>
                   </div>
                 </div>
               </div>
               <div className="divider divider-horizontal" />
-              <div className="w-3/4 justify-start">
-                <div className="w-fit flex items-center justify-start">
-                  <div className="w-auto justify-start">
+              <div className="justify-start">
+                <div className="flex items-center justify-start">
+                  <div className="justify-start">
                     <h1 className="flex items-center font-bold text-xl mt-5 ml-4">
                       <div className="w-2 h-4 bg-red-600 mr-4"></div>
                       Tổng VAT
                     </h1>
                     <h1 className="text-lg mt-2 ml-10">
-                      {formattedTotalVAT} đ
+                      {month !== "" ? months?.totalVAT?.toLocaleString() : years?.totalVAT?.toLocaleString()} VNĐ
                     </h1>
                   </div>
                   <div className="w-auto justify-start ml-24">
@@ -136,7 +167,7 @@ export default function Report() {
                       <div className="w-2 h-4 bg-green-400 mr-4"></div>
                       Lợi nhuận
                     </h1>
-                    <h1 className="text-lg mt-2 ml-10">10.000.000 đ</h1>
+                    <h1 className="text-lg mt-2 ml-10">{month !== "" ? months?.revenue?.toLocaleString() : years?.revenue?.toLocaleString()} VNĐ</h1>
                   </div>
                 </div>
                 <div className="w-fit flex items-center justify-start">
@@ -146,7 +177,7 @@ export default function Report() {
                       Tổng tiền nhập hàng
                     </h1>
                     <h1 className="text-lg mt-2 ml-10">
-                      {formattedTotalReceipt} đ
+                      {month !== "" ? months?.totalImportPrice?.toLocaleString() : years?.totalImportPrice?.toLocaleString()} VNĐ
                     </h1>
                   </div>
                   <div className="w-auto justify-start ml-4">
@@ -154,9 +185,9 @@ export default function Report() {
                       <div className="w-2 h-4 bg-yellow-600 mr-4"></div>
                       Đơn đã bán
                     </h1>
-                    <h1 className="text-lg mt-2 ml-10">{orders.length}</h1>
+                    <h1 className="text-lg mt-2 ml-10">{month !== "" ? months?.totalOrders : years?.totalOrders}</h1>
                   </div>
-                  <div class="flex items-center space-x-2">
+                  <div className="absolute flex top-[15px] right-[200px]"><div class="flex items-center space-x-2">
                     <label for="year" class="font-semibold text-gray-700">
                        Năm
                     </label>
@@ -208,7 +239,7 @@ export default function Report() {
                         Tháng 12
                       </option>
                     </select>
-                  </div>
+                  </div></div>
                 </div>
               </div>
             </div>
@@ -223,6 +254,7 @@ export default function Report() {
               <h1 className="font-bold text-xl mt-5 ml-4">
                 Top 5 bán chạy theo
               </h1>
+              
             </div>
             <div
               role="tablist"
