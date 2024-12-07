@@ -25,6 +25,7 @@ export default function ListProductTable({ role }) {
   const limit = 5;
   // #region table sort
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
   const sortTable = (key) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
@@ -38,7 +39,7 @@ export default function ListProductTable({ role }) {
       brand === "" &&
       id === ""
         ? products
-        : productsPagination),
+        : listProduct),
     ].sort((a, b) => {
       if (typeof a[key] === "string") {
         // Sắp xếp theo chuỗi (ABC)
@@ -59,8 +60,21 @@ export default function ListProductTable({ role }) {
     });
 
     setSortConfig({ key, direction });
-    setProducts(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+    if(category === "" &&
+      title === "" &&
+      status === "" &&
+      brand === "" &&
+      id === ""){
+        setProducts(sortedData);
+      } else{
+        setListProduct(sortedData);
+      }
+      
+     // Cập nhật lại danh sách sản phẩm đã sắp xếp
   };
+
+
+  
   // end region
   const handleNextPage = () => {
     if (currentPage < totalPages) {
