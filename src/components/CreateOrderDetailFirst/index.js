@@ -483,7 +483,7 @@ export default function CreateOrderDetailFirst() {
                 disabled
               />
             </div>
-            <div className="w-5/6 justify-items-end grid mr-2">
+            <div className="w-5/6 justify-items-end grid mr-2 mb-2">
               <button
                 onClick={addNewRow}
                 className="drawer-button btn btn-success text-white w-44 h-8 mt-3 "
@@ -495,7 +495,7 @@ export default function CreateOrderDetailFirst() {
           <div
             className=" overflow-y-auto"
             style={{
-              height: "calc(90vh - 350px)",
+              height: "calc(90vh - 410px)",
             }}
           >
             <table className="table table-pin-rows">
@@ -503,8 +503,8 @@ export default function CreateOrderDetailFirst() {
               <thead>
                 <tr>
                   {/* <th>Mã hàng</th> */}
-                  <th>Tên sản phẩm</th>
                   <th>Hình ảnh</th>
+                  <th>Tên sản phẩm</th>
                   <th>Mã lô</th>
                   <th>Số lượng</th>
                   <th>Đơn vị tính</th>
@@ -517,6 +517,9 @@ export default function CreateOrderDetailFirst() {
               <tbody>
                 {orderDetails.map((detail, index) => (
                   <tr className="hover:bg-slate-100">
+                    <td>
+                      {detail.images.length > 0 ? <img src={detail.images} alt="Hình ảnh sản phẩm"/> : <div></div>}
+                    </td>
                     <td>
                       <div className="w-56">
                         <Autocomplete
@@ -536,9 +539,7 @@ export default function CreateOrderDetailFirst() {
                         />
                       </div>
                     </td>
-                    <td>
-                      {detail.images.length > 0 ? <img src={detail.images} alt="Hình ảnh sản phẩm"/> : <div></div>}
-                    </td>
+                    
                     <td>
                       <div className="w-56">
                         <Autocomplete
@@ -564,7 +565,7 @@ export default function CreateOrderDetailFirst() {
                           }
                         }}
                         min={1}
-                        className="input w-32 h-8"
+                        className="input w-24 h-8"
                         placeholder="1"
                       />
                     </td>
@@ -583,9 +584,9 @@ export default function CreateOrderDetailFirst() {
                         />
                       </div>
                     </td>
-                    <td>{detail?.price?.toLocaleString() || "0"} đ</td>
-                    <td>{(detail?.total).toLocaleString() || 0} đ</td>
-                    <td>{(detail?.amountDiscount).toLocaleString()} đ</td>
+                    <td className="whitespace-nowrap">{detail?.price?.toLocaleString() || "0"} đ</td>
+                    <td className="whitespace-nowrap">{(detail?.total).toLocaleString() || 0} đ</td>
+                    <td className="whitespace-nowrap">{(detail?.amountDiscount).toLocaleString()} đ</td>
                     <td>
                       <button
                         id="btn__delete"
@@ -615,11 +616,11 @@ export default function CreateOrderDetailFirst() {
               </tbody>
             </table>
           </div>
-          <div className="flex w-full h-auto" style={{ marginTop: -60 }}>
+          <div className="flex w-full ml-20 h-auto" >
             <div className="w-8/12"></div>
             <div className="h-auto justify-end items-end mt-4">
               <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">TỔNG TIỀN:</h2>
+                <h2 className="font-bold text-lg ">TỔNG TIỀN:</h2>
                 <h2 className=" font-sans text-sm mr-2">
                   {calculateTotal().toLocaleString()} VNĐ
                 </h2>

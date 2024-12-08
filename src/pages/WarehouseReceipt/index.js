@@ -30,7 +30,7 @@ export default function WarehouseReceipt() {
   const [category, setCategory] = useState("");
   const [brands, setBrands] = useState([]);
   const [value, setValue] = useState("");
-  const [id, setId] = useState("")
+  const [id, setId] = useState("");
 
   //#region format tiền tệ
   const formatCurrency = (value) => {
@@ -167,14 +167,14 @@ export default function WarehouseReceipt() {
   );
   const fetchProductMultiCondition = async () => {
     try {
-      if(brand === "" && category === "" && name === "" && id === "") return 
+      if (brand === "" && category === "" && name === "" && id === "") return;
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid");
       const response = await apiFilterProductMultiCondition(token, {
         brandName: brand,
         categoryName: category,
         title: name,
-        id: id
+        id: id,
       });
       setListProduct(Array.isArray(response.products) ? response.products : []);
     } catch (error) {
@@ -465,9 +465,18 @@ export default function WarehouseReceipt() {
 
           <div className="w-full h-fit mr-4 rounded-sm pt-4 pb-8">
             <div className="card bg-white h-fit rounded-sm top-7 grid pt-6">
-              <h4 className="font-bold text-xl w-full ml-4">
-                Danh sách mặt hàng {brand}
-              </h4>
+              <div className="w-full flex justify-between items-center">
+                <h4 className="font-bold text-xl w-96 ml-4">
+                  Danh sách mặt hàng {brand}
+                </h4>
+                {isClicked ? (
+                  <button className="btn mr-2" onClick={openModal}>
+                    Thêm sản phẩm
+                  </button>
+                ) : (
+                  ""
+                )}
+              </div>
               <div className="flex pt-8 h-fit w-full pb-2">
                 <button className="hidden" onClick={openModal} id="FileMain" />
                 {isClicked ? (
