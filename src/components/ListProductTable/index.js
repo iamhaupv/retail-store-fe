@@ -40,8 +40,8 @@ export default function ListProductTable({ role }) {
       status === "" &&
       brand === "" &&
       id === ""
-        ? productsPagination
-        : products),
+        ? products
+        : listProduct),
     ].sort((a, b) => {
       //console.log("Key, value", typeof a[key]); 
       if (typeof a[key] === "string") {
