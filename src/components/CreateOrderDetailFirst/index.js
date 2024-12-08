@@ -65,10 +65,13 @@ export default function CreateOrderDetailFirst() {
   }, [productName]);
   const handleChangeQuantity = (index, newQuantity) => {
     const updatedOrderDetails = [...orderDetails];
+    const orderDetail = updatedOrderDetails[index];
     const VAT = updatedOrderDetails[index].VAT;
-    const convertQuantity = updatedOrderDetails[index].convertQuantity || 1
     const discount = updatedOrderDetails[index].discount || 0;
     const price = updatedOrderDetails[index].price;
+    const convertQuantity = orderDetail.convertQuantity || 1;
+    console.log(convertQuantity);
+
     updatedOrderDetails[index] = {
       ...updatedOrderDetails[index],
       quantity: newQuantity,
@@ -122,6 +125,11 @@ export default function CreateOrderDetailFirst() {
       unit: selectedUnit,
       unitId: response.unit ? response.unit._id : "",
       convertQuantity: convertQuantity,
+      amountDiscount:
+        (updatedOrderDetails[index].price *
+          updatedOrderDetails[index].quantity *
+          updatedOrderDetails[index].discount * convertQuantity) /
+        100,
       total:
         updatedOrderDetails[index].quantity *
           updatedOrderDetails[index].price *
@@ -147,6 +155,7 @@ export default function CreateOrderDetailFirst() {
         price: response.product.price || 0,
         VAT: response.product.VAT || 0,
         discount: response.product.discount || 0,
+        images: response.product.images[0],
         total:
           updatedOrderDetails[index].quantity *
           (response.product.price || 0) *
@@ -190,6 +199,7 @@ export default function CreateOrderDetailFirst() {
       total: 0,
       warehouseReceipt: "",
       amountDiscount: 0,
+      images: []
     };
     // setOrderDetails([...orderDetails, newRow]);
     setOrderDetails((prevOrderDetails) => {
@@ -422,8 +432,9 @@ export default function CreateOrderDetailFirst() {
     setOrderDetails([]);
   };
   const discount = orderDetails.reduce((sum, order) => {
-    return sum += order.amountDiscount * order.convertQuantity
-  }, 0)
+    return (sum += order.amountDiscount);
+  }, 0);
+  console.log(orderDetails);
   return (
     <>
       <ToastContainer />
@@ -493,6 +504,7 @@ export default function CreateOrderDetailFirst() {
                 <tr>
                   {/* <th>Mã hàng</th> */}
                   <th>Tên sản phẩm</th>
+                  <th>Hình ảnh</th>
                   <th>Mã lô</th>
                   <th>Số lượng</th>
                   <th>Đơn vị tính</th>
@@ -523,6 +535,9 @@ export default function CreateOrderDetailFirst() {
                           placeholder="Nhập tên sản phẩm"
                         />
                       </div>
+                    </td>
+                    <td>
+                      {detail.images.length > 0 ? <img src={detail.images} alt="Hình ảnh sản phẩm"/> : <div></div>}
                     </td>
                     <td>
                       <div className="w-56">
@@ -568,9 +583,9 @@ export default function CreateOrderDetailFirst() {
                         />
                       </div>
                     </td>
-                    <td>{detail?.price?.toLocaleString() || "0"} đ</td>           
+                    <td>{detail?.price?.toLocaleString() || "0"} đ</td>
                     <td>{(detail?.total).toLocaleString() || 0} đ</td>
-                    <td>{(detail?.amountDiscount * detail.quantity * detail.convertQuantity).toLocaleString()} đ</td>
+                    <td>{(detail?.amountDiscount).toLocaleString()} đ</td>
                     <td>
                       <button
                         id="btn__delete"
@@ -606,12 +621,14 @@ export default function CreateOrderDetailFirst() {
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">TỔNG TIỀN:</h2>
                 <h2 className=" font-sans text-sm mr-2">
-                  {(calculateTotal()).toLocaleString()} VNĐ
+                  {calculateTotal().toLocaleString()} VNĐ
                 </h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">TỔNG TIỀN ĐÃ GIẢM:</h2>
-                <h2 className=" font-sans text-sm mr-2">{discount?.toLocaleString()} VNĐ</h2>
+                <h2 className=" font-sans text-sm mr-2">
+                  {discount?.toLocaleString()} VNĐ
+                </h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">TIỀN KHÁCH TRẢ:</h2>
@@ -646,7 +663,8 @@ export default function CreateOrderDetailFirst() {
                   className=" font-sans text-lg mr-2"
                   style={{ color: "#f13612" }}
                 >
-                  {(calculateTotalAmount() - discount).toLocaleString() || 0} VNĐ
+                  {(calculateTotalAmount() - discount).toLocaleString() || 0}{" "}
+                  VNĐ
                 </h2>
               </div>
             </div>

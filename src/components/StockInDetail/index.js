@@ -20,7 +20,7 @@ export default function StockInDetail({ receipts }) {
             {/* {receipt.user.name} */}
             {receipt?.user?.employee?.name}
           </td>
-          <td className="flex justify-end mr-3">{receipt.products.length}</td>
+          <td className="content-end">{receipt.products.length}</td>
           <td>
             <h1 className="flex justify-end items-center">
             {receipt.products.reduce((total, product) => {

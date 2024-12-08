@@ -346,7 +346,7 @@ export default function Home() {
                   />
                   <Line
                     type="monotone"
-                    dataKey="totalAmount"
+                    dataKey={(`totalAmount`).toLocaleString()}
                     name="Doanh thu"
                     stroke="red"
                   />

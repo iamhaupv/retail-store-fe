@@ -32,9 +32,9 @@ export default function InventoryProduct({ onChangeModal }) {
       brand === "" &&
       status === ""
         ? products
-        : products),
+        : filterProduct),
     ].sort((a, b) => {
-      if (typeof a[key] === "string") {
+      if (typeof a[key] == "string") {
         // Sắp xếp theo chuỗi (ABC)
         if (direction === "asc") {
           return a[key].localeCompare(b[key]);
@@ -409,7 +409,16 @@ export default function InventoryProduct({ onChangeModal }) {
               >
                 Đơn vị tính
               </th>
-              <th>Giá bán</th>
+              <th onClick={() => sortTable("importPrice")}
+                className={
+                  sortConfig.key === "importPrice"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }>
+                Giá nhập
+              </th>
               <th>Giảm giá</th>
               <th>Thao tác</th>
             </tr>

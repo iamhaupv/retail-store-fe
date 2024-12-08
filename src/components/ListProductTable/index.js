@@ -25,11 +25,14 @@ export default function ListProductTable({ role }) {
   const limit = 5;
   // #region table sort
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
   const sortTable = (key) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
     }
+
+    console.log("Key, value", key); 
 
     const sortedData = [
       ...(category === "" &&
@@ -37,9 +40,10 @@ export default function ListProductTable({ role }) {
       status === "" &&
       brand === "" &&
       id === ""
-        ? products
-        : productsPagination),
+        ? productsPagination
+        : products),
     ].sort((a, b) => {
+      //console.log("Key, value", typeof a[key]); 
       if (typeof a[key] === "string") {
         // Sắp xếp theo chuỗi (ABC)
         if (direction === "asc") {
@@ -54,13 +58,100 @@ export default function ListProductTable({ role }) {
         } else {
           return b[key] - a[key];
         }
+      } else if (typeof a[key] === "object") {
+        for (const [key2, value] of Object.entries(a[key])) {
+          if (key2 === "name") {
+            // Sắp xếp theo chuỗi (ABC)
+            if (direction === "asc") {
+              return a[key]["name"].localeCompare(b[key]["name"]);
+            } else {
+              return b[key]["name"].localeCompare(a[key]["name"]);
+            }
+          }
+          // if (key2 === "name") {
+          //   if (direction === "asc") {
+          //     return a[key]["name"].localeCompare(b[key]["name"]);
+          //   } else {
+          //     return b[key]["name"].localeCompare(a[key]["name"]);
+          //   }
+          // } 
+        }
       }
       return 0;
     });
 
     setSortConfig({ key, direction });
-    setProducts(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+    if(category === "" &&
+      title === "" &&
+      status === "" &&
+      brand === "" &&
+      id === ""){
+        setProducts(sortedData);
+      } else{
+        setListProduct(sortedData);
+      }
+      
+     // Cập nhật lại danh sách sản phẩm đã sắp xếp
   };
+
+  const sortTable2 = (key) => {
+    console.log("Key", key);
+
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+    }
+
+    if (Object.keys(key).length <= 0) {
+      console.log("Object key", Object.keys(key));
+      
+
+      const sortedData = [
+        ...(category === "" &&
+        title === "" &&
+        status === "" &&
+        brand === "" &&
+        id === ""
+          ? products
+          : listProduct),
+      ].sort((a, b) => {
+        if (typeof a[key] === "string") {
+          // Sắp xếp theo chuỗi (ABC)
+          if (direction === "asc") {
+            return a[key].localeCompare(b[key]);
+          } else {
+            return b[key].localeCompare(a[key]);
+          }
+        } else if (typeof a[key] === "number") {
+          // Sắp xếp theo số (bé nhất đến lớn nhất)
+          if (direction === "asc") {
+            return a[key] - b[key];
+          } else {
+            return b[key] - a[key];
+          }
+        }
+        return 0;
+      });
+  
+      setSortConfig({ key, direction });
+      if(category === "" &&
+        title === "" &&
+        status === "" &&
+        brand === "" &&
+        id === ""){
+          setProducts(sortedData);
+        } else{
+          setListProduct(sortedData);
+        }  
+    } else {
+      for (const [key, value] of Object.entries(key)) {
+        console.log(`${key}: ${value}`);
+      }
+    }
+
+     // Cập nhật lại danh sách sản phẩm đã sắp xếp
+  };
+  
   // end region
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -376,9 +467,9 @@ export default function ListProductTable({ role }) {
                   Mã sản phẩm
                 </th>
                 <th
-                  onClick={() => sortTable("name")}
+                  onClick={() => sortTable("title")}
                   className={
-                    sortConfig.key === "name"
+                    sortConfig.key === "title"
                       ? sortConfig.direction === "asc"
                         ? "asc"
                         : "desc"
@@ -424,6 +515,16 @@ export default function ListProductTable({ role }) {
                   Số lượng
                 </th>
                 <th
+                 onClick={() => sortTable("unit")}
+                 className={
+                   sortConfig.key === "price"
+                     ? sortConfig.direction === "asc"
+                       ? "asc"
+                       : "desc"
+                     : ""
+                 }
+                >Đơn vị tính</th>
+                <th
                   onClick={() => sortTable("price")}
                   className={
                     sortConfig.key === "price"
@@ -436,9 +537,9 @@ export default function ListProductTable({ role }) {
                   Giá bán
                 </th>
                 <th
-                  onClick={() => sortTable("soldQuantity")}
+                  onClick={() => sortTable("sold")}
                   className={
-                    sortConfig.key === "soldQuantity"
+                    sortConfig.key === "sold"
                       ? sortConfig.direction === "asc"
                         ? "asc"
                         : "desc"

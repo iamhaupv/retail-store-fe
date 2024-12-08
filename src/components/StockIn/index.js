@@ -23,13 +23,11 @@ export default function StockIn() {
     if (sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
     }
-
+    let count = 0;
     const sortedData = [
-      ...(idPNK === "" &&
-        value.startDate === null &&
-        value.endDate === null
+      ...(idPNK === "" && value.startDate === null && value.endDate === null
         ? receipts
-        : value),
+        : recepitsByDate),
     ].sort((a, b) => {
       if (typeof a[key] === "string") {
         // Sắp xếp theo chuỗi (ABC)
@@ -38,6 +36,7 @@ export default function StockIn() {
         } else {
           return b[key].localeCompare(a[key]);
         }
+
       } else if (typeof a[key] === "number") {
         // Sắp xếp theo số (bé nhất đến lớn nhất)
         if (direction === "asc") {
@@ -45,12 +44,48 @@ export default function StockIn() {
         } else {
           return b[key] - a[key];
         }
+      } else if (typeof a[key] === "object") {
+        console.log("Key 3", a[key].length, a[key], key);
+        
+        if (key === "products") {
+          // Sắp xếp theo chuỗi (ABC)
+          if (direction === "asc") {
+            return a[key].length - b[key].length
+          } else {
+            return b[key].length - a[key].length
+          }
+        }
+
+        for (const [key2, value] of Object.entries(a[key])) {
+          if (key2 === "employee") {
+            // Sắp xếp theo chuỗi (ABC)
+            if (direction === "asc") {
+              return a[key]["employee"]["name"].localeCompare(
+                b[key]["employee"]["name"]
+              );
+            } else {
+              return b[key]["employee"]["name"].localeCompare(
+                a[key]["employee"]["name"]
+              );
+            }
+          }
+        }
+        // console.info(receipts)
+        // console.info(receipts[count].products.length)
+        // count++;
+        // console.info("=====",count)
       }
       return 0;
     });
 
     setSortConfig({ key, direction });
-    setReceipts(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
+    if(idPNK === "" && value.startDate === null && value.endDate === null){
+      setReceipts(sortedData);
+    }else{
+      setReceiptsByDate(sortedData)
+    }
+    
+ // Cập nhật lại danh sách sản phẩm đã sắp xếp
   };
   // end region
   const fetchReceipts = async () => {
@@ -130,18 +165,18 @@ export default function StockIn() {
   useEffect(() => {
     handleFilterIdPNK();
   }, [idPNK]);
-  
-  const receiptCount = idPNK === "" && value.startDate === null && value.endDate === null
-  ? receipts.length
-  : idPNK !== "" && value.startDate === null && value.endDate === null
-  ? idPNKs.length
-  : value.startDate !== null && value.endDate !== null && idPNK === ""
-  ? recepitsByDate.length
-  : idPNK !== "" && value.startDate !== null && value.endDate !== null
-  ? idPNKs.length
-  : 0;
 
-  
+  const receiptCount =
+    idPNK === "" && value.startDate === null && value.endDate === null
+      ? receipts.length
+      : idPNK !== "" && value.startDate === null && value.endDate === null
+      ? idPNKs.length
+      : value.startDate !== null && value.endDate !== null && idPNK === ""
+      ? recepitsByDate.length
+      : idPNK !== "" && value.startDate !== null && value.endDate !== null
+      ? idPNKs.length
+      : 0;
+
   return (
     <div className="">
       <div className="flex justify-between">
@@ -162,12 +197,12 @@ export default function StockIn() {
           </svg>
         </label> */}
         <div className="w-56">
-        <InputPNK
-          placeholder={`Nhập mã phiếu`}
-          onchange={handleChange}
-          suggestion={listReceipts()}
-          value={idPNK}
-        />
+          <InputPNK
+            placeholder={`Nhập mã phiếu`}
+            onchange={handleChange}
+            suggestion={listReceipts()}
+            value={idPNK}
+          />
         </div>
         {/* Calender */}
 
@@ -183,7 +218,9 @@ export default function StockIn() {
       </div>
       <div className="flex justify-between items-center mt-10">
         <h3 className=" font-bold text-lg rounded-sm">Phiếu nhập kho</h3>
-        <h3 className=" font-bold text-lg rounded-sm">{receiptCount} Phiếu nhập kho</h3>
+        <h3 className=" font-bold text-lg rounded-sm">
+          {receiptCount} Phiếu nhập kho
+        </h3>
         <Link to="/WarehouseReceipt">
           <button className="btn btn-success text-white w-52">
             <svg
@@ -211,55 +248,65 @@ export default function StockIn() {
           <thead>
             <tr>
               <th
-              onClick={() => sortTable("idPNK")}
-              className={
-                sortConfig.key === "idPNK"
-                  ? sortConfig.direction === "asc"
-                    ? "asc"
-                    : "desc"
-                  : ""
-              }
-              >Số phiếu</th>
+                onClick={() => sortTable("idPNK")}
+                className={
+                  sortConfig.key === "idPNK"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Số phiếu
+              </th>
               <th
-              onClick={() => sortTable("createdAt")}
-              className={
-                sortConfig.key === "createdAt"
-                  ? sortConfig.direction === "asc"
-                    ? "asc"
-                    : "desc"
-                  : ""
-              }
-              >Ngày lập</th>
+                onClick={() => sortTable("createdAt")}
+                className={
+                  sortConfig.key === "createdAt"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Ngày lập
+              </th>
               <th
-              onClick={() => sortTable("id")}
-              className={
-                sortConfig.key === "id"
-                  ? sortConfig.direction === "asc"
-                    ? "asc"
-                    : "desc"
-                  : ""
-              }
-              >Người lập</th>
-              <th 
-              onClick={() => sortTable("id")}
-              className={
-                sortConfig.key === "id"
-                  ? sortConfig.direction === "asc"
-                    ? "asc"
-                    : "desc"
-                  : ""
-              }
-              >Tổng sản phẩm</th>
-              <th 
-              onClick={() => sortTable("id")}
-              className={
-                sortConfig.key === "id"
-                  ? sortConfig.direction === "asc"
-                    ? "asc flex justify-end items-center"
-                    : "desc flex justify-end items-center"
-                  : "flex justify-end items-center"
-              }
-              >Tổng tiền (VNĐ)</th>
+                onClick={() => sortTable("user")}
+                className={
+                  sortConfig.key === "user"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Người lập
+              </th>
+              <th
+                onClick={() => sortTable("products")}
+                className={
+                  sortConfig.key === "products"
+                    ? sortConfig.direction === "asc"
+                      ? "asc"
+                      : "desc"
+                    : ""
+                }
+              >
+                Tổng sản phẩm
+              </th>
+              <th
+                onClick={() => sortTable("user")}
+                className={
+                  sortConfig.key === "user"
+                    ? sortConfig.direction === "asc"
+                      ? "asc flex justify-end items-center"
+                      : "desc flex justify-end items-center"
+                    : "flex justify-end items-center"
+                }
+              >
+                Tổng tiền (VNĐ)
+              </th>
               <th>Thao tác</th>
             </tr>
           </thead>

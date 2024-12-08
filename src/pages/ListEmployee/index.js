@@ -15,7 +15,7 @@ export default function ListEmployee() {
     }
 
     const sortedData = [
-      ...(employeeName === "" ? employees : employeeName),
+      ...(employeeName === "" ? employees : employees),
     ].sort((a, b) => {
       if (typeof a[key] === "string") {
         // Sắp xếp theo chuỗi (ABC)
@@ -32,6 +32,18 @@ export default function ListEmployee() {
           return b[key] - a[key];
         }
       }
+      else if (typeof a[key] === "object") {
+        for (const [key2, value] of Object.entries(a[key])) {
+          if (key2 === "email") {
+            // Sắp xếp theo chuỗi (ABC)
+            if (direction === "asc") {
+              return a[key]["email"].localeCompare(b[key]["email"]);
+            } else {
+              return b[key]["email"].localeCompare(a[key]["email"]);
+            }
+          }
+        }
+        }
       return 0;
     });
 
@@ -172,9 +184,9 @@ export default function ListEmployee() {
                     Tên nhân viên
                   </th>
                   <th
-                    onClick={() => sortTable("user.email")}
+                    onClick={() => sortTable("user")}
                     className={
-                      sortConfig.key === "user.email"
+                      sortConfig.key === "user"
                         ? sortConfig.direction === "asc"
                           ? "asc"
                           : "desc"

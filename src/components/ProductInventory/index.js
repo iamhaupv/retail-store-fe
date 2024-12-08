@@ -50,7 +50,7 @@ export default function ProductInventory({ products }) {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
       const response = await apiProduct.apiAddDiscount(token, {
-        id: currentProduct._id,
+        id: currentProduct.id,
         discount: currentProduct.discount,
       });
       setIsModalOpen(false);
