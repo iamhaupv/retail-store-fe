@@ -427,6 +427,8 @@ export default function InventoryProduct({ onChangeModal }) {
                 }>
                 Giá nhập
               </th>
+              <th>Giảm giá</th>
+              <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>

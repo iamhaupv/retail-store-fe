@@ -404,7 +404,7 @@ export default function CreateOrderDetailSecond() {
   };
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="card bg-white h-full rounded-none w-full overflow-y-hidden ">
         <h1 className="font-bold text-xl ml-2 mt-2">Thông tin </h1>
         <div>

@@ -8,7 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import apiUnit from "../../apis/apiUnit";
 
 export default function UpdateProduct() {
-  const [units, setUnits] = useState([])
+  const [units, setUnits] = useState([]);
   const location = useLocation();
   const { product } = location.state || {};
   const navigate = useNavigate();
@@ -30,23 +30,23 @@ export default function UpdateProduct() {
     brand: product?.brand._id || "",
     category: product?.category._id || "",
     id: product.id,
-    unit: product?.unit?._id
+    unit: product?.unit?._id,
   });
   console.log(product);
-  
+
   useEffect(() => {
-    const fetchUnits = async() => {
+    const fetchUnits = async () => {
       try {
-        const token = localStorage.getItem("accessToken")
-        if(!token) throw new Error("Token is invalid!")
-        const response = await apiUnit.apiGetAllUnit(token)
-        setUnits(response.units)
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiUnit.apiGetAllUnit(token);
+        setUnits(response.units);
       } catch (error) {
-        throw new Error("fetch unit is error", error)
+        throw new Error("fetch unit is error", error);
       }
-    }
-    fetchUnits()
-  }, [])
+    };
+    fetchUnits();
+  }, []);
   const handleBlur = (e) => {
     const { name } = e.target;
     if (!payload[name]) {
@@ -98,7 +98,7 @@ export default function UpdateProduct() {
     setError((prev) => ({ ...prev, [name]: errorMessage }));
     setPayload((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleClose = (inputKey) => {
     setIsVisible(false);
     setImage((prevImages) => ({
@@ -189,7 +189,7 @@ export default function UpdateProduct() {
         if (response.success) {
           toast.success("Cập nhật thành công!");
           setTimeout(() => {
-            navigate('/product-list');
+            navigate("/product-list");
           }, 2000);
         } else {
           toast.success("Cập nhật không thành công!");
@@ -201,7 +201,7 @@ export default function UpdateProduct() {
   };
   return (
     <>
-      <ToastContainer/>
+      <ToastContainer />
       <div
         className="w-11/12 h-full justify-center flex overflow-y-auto "
         style={{ backgroundColor: "#F5F5F5" }}
@@ -217,46 +217,64 @@ export default function UpdateProduct() {
                   Tên sản phẩm
                   <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
-                <h4 className="font-sans text-base w-5/12 ml-4">Mã sản phẩm</h4>
+                <h4 className="font-sans text-base w-5/12 ml-6">Mã sản phẩm</h4>
               </div>
               <div className="flex items-center pt-2">
-                <input
-                  name="title"
-                  value={payload.title}
-                  onChange={handleChangeInput}
-                  type="text"
-                  placeholder="Tên sản phẩm"
-                  onBlur={handleBlur}
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                />
-                <input
-                  type="text"
-                  placeholder="Mã sản phẩm"
-                  className="input input-bordered w-5/12 h-10 ml-4"
-                  disabled
-                  value={payload.id}
-                />
+                <div className="w-[440px]">
+                  <input
+                    name="title"
+                    value={payload.title}
+                    onChange={handleChangeInput}
+                    type="text"
+                    placeholder="Tên sản phẩm"
+                    onBlur={handleBlur}
+                    className="input input-bordered w-full h-10 ml-4"
+                  />
+                  {error && (
+                    <h5 className="ml-4 h-10 text-sm mt-2 text-red-500">
+                      {error.title}
+                    </h5>
+                  )}
+                </div>
+                <div className="w-[380px] ml-4" style={{ marginTop: -50 }}>
+                  <input
+                    type="text"
+                    placeholder="Mã sản phẩm"
+                    className="input input-bordered w-full h-10 ml-4"
+                    disabled
+                    value={payload.id}
+                  />
+                </div>
               </div>
-              {error && <h5 className="ml-4 text-red-500">{error.title}</h5>}
-              <div className="flex items-center pt-3">
-                <h4 className="flex font-sans text-base w-6/12 ml-4">
+
+              <div
+                className="flex items-center pt-2"
+                style={{ marginTop: -20 }}
+              >
+                <h4 className="flex font-sans text-base w-[440px] ml-4">
                   Đơn giá
                   <h5 className="ml-1 text-red-600">(*)</h5>
                 </h4>
               </div>
               <div className="flex items-center pt-2">
-                <input
-                  name="price"
-                  value={payload.price}
-                  onBlur={handleBlur}
-                  onChange={handleChangeInput}
-                  type="text"
-                  placeholder="Đơn giá"
-                  className="input input-bordered w-6/12 h-10 ml-4"
-                />
+                <div className="w-[440px]">
+                  <input
+                    name="price"
+                    value={payload.price}
+                    onBlur={handleBlur}
+                    onChange={handleChangeInput}
+                    type="text"
+                    placeholder="Đơn giá"
+                    className="input input-bordered w-full h-10 ml-4"
+                  />
+                  {error && (
+                    <h5 className="mt-2 h-10 text-sm ml-4 text-red-500">
+                      {error.price}
+                    </h5>
+                  )}
+                </div>
               </div>
-              {error && <h5 className="ml-4 text-red-500">{error.price}</h5>}
-              <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2">
+              <h4 className="flex font-sans text-base w-6/12 ml-4 mb-2" style={{marginTop: -15}}>
                 Mô tả
                 <h5 className="ml-1 text-red-600">(*)</h5>
               </h4>
@@ -269,7 +287,7 @@ export default function UpdateProduct() {
                 className="textarea textarea-bordered textarea-lg w-11/12 ml-4 mb-3"
               />
               {error && (
-                <h5 className="ml-4 text-red-500 mb-3">{error.description}</h5>
+                <h5 className="ml-4 h-10 text-sm text-red-500 mb-3">{error.description}</h5>
               )}
             </div>
           </div>
@@ -839,7 +857,9 @@ export default function UpdateProduct() {
                 <button
                   class="btn w-28 ml-4"
                   style={{ backgroundColor: "#e0e0e0" }}
-                  onClick={()=> {navigate("/product-list")}}
+                  onClick={() => {
+                    navigate("/product-list");
+                  }}
                 >
                   Hủy
                 </button>
@@ -900,22 +920,22 @@ export default function UpdateProduct() {
               <h5 className="ml-1 text-red-600">(*)</h5>
             </h4>
             <div className="ml-1 mr-1 mb-3">
-            <select
-              name="unit"
-              onBlur={handleBlur}
-              onChange={handleChangeInput}
-              value={payload.unit || ""}
-              className="select select-bordered w-11/12 h-11 ml-4 mb-8"
-            >
-              <option value="" disabled>
-                Đơn vị tính
-              </option>
-              {units.map((unit) => (
-                <option key={unit._id} value={unit._id}>
-                  {unit.name}
+              <select
+                name="unit"
+                onBlur={handleBlur}
+                onChange={handleChangeInput}
+                value={payload.unit || ""}
+                className="select select-bordered w-11/12 h-11 ml-4 mb-8"
+              >
+                <option value="" disabled>
+                  Đơn vị tính
                 </option>
-              ))}
-            </select>
+                {units.map((unit) => (
+                  <option key={unit._id} value={unit._id}>
+                    {unit.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

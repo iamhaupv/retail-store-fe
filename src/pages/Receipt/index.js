@@ -31,20 +31,34 @@ export default function Receipt() {
       pdf.save("document.pdf");
     });
   };
-  function formatDate() {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // Tháng từ 0-11, nên phải cộng thêm 1 và đảm bảo 2 chữ số
-    const day = currentDate.getDate().toString().padStart(2, "0"); // Đảm bảo 2 chữ số cho ngày
-    const hours = currentDate.getHours().toString().padStart(2, "0");
-    const minutes = currentDate.getMinutes().toString().padStart(2, "0");
-    const seconds = currentDate.getSeconds().toString().padStart(2, "0");
-    const dateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
-    return dateTime;
+  function parseDateTime(dateTimeString) {
+    const date = new Date(dateTimeString); // Chuyển chuỗi thành đối tượng Date
+    const year = date.getFullYear(); // Lấy năm
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Lấy tháng (0-11, cộng 1 để chuyển thành tháng 1-12)
+    const day = date.getDate().toString().padStart(2, "0"); // Lấy ngày
+    const hours = date.getHours().toString().padStart(2, "0"); // Lấy giờ
+    const minutes = date.getMinutes().toString().padStart(2, "0"); // Lấy phút
+    const seconds = date.getSeconds().toString().padStart(2, "0"); // Lấy giây
+    const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    return formattedDateTime;
   }
-  const totalProduct = selectedOrder.products.reduce((sum, product) => 
-    sum += product.product.price * product.quantity * product.unit.convertQuantity
-  , 0)
+
+  const totalProduct = selectedOrder.products.reduce(
+    (sum, product) =>
+      (sum +=
+        product.product.price *
+        product.quantity *
+        product.unit.convertQuantity),
+    0
+  );
+  const totalDiscount = selectedOrder.products.reduce((sum, product) => {
+    const discount = product?.product?.discount || 0;
+    const price = product?.product?.price;
+    const quantity = product?.quantity;
+    const convertQuantity = product?.unit?.convertQuantity || 1;
+    const productDiscount = price * quantity * discount * convertQuantity;
+    return sum + (productDiscount / 100);
+  }, 0);
   return (
     <>
       {selectedOrder && (
@@ -97,15 +111,17 @@ export default function Receipt() {
                 </h1>
 
                 <h1 className=" flex justify-center w-full">
-                222/67/73 Phan Văn Trị Q.Bình Thạnh Tp.HCM
+                  222/67/73 Phan Văn Trị Q.Bình Thạnh Tp.HCM
                 </h1>
                 <hr className="border border-black" />
                 <h1 className="font-bold text-xl flex justify-center w-full">
                   Phiếu thanh toán
                 </h1>
-                <h1 className=" flex justify-start w-full">Số HD: {selectedOrder.id}</h1>
                 <h1 className=" flex justify-start w-full">
-                  Ngày HD: {formatDate(selectedOrder.createdAt)}
+                  Số HD: {selectedOrder.id}
+                </h1>
+                <h1 className=" flex justify-start w-full">
+                  Ngày HD: {parseDateTime(selectedOrder.createdAt)}
                 </h1>
                 <h1 className=" flex justify-start w-full">
                   Nhân viên: {selectedOrder?.user?.employee?.name}
@@ -119,20 +135,38 @@ export default function Receipt() {
                       <th>Tên SP</th>
                       <th>Đơn vị tính</th>
                       <th>Số lượng</th>
-                      <th>Giá bán</th>
+                      <th>Đơn giá</th>
                       <th>Thành tiền</th>
+                      <th>Giảm giá</th>
                     </tr>
                   </thead>
                   <tbody>
                     {selectedOrder.products.length > 0 ? (
                       selectedOrder.products.map((product) => (
                         <tr key={product.product._id}>
-                        <th>{product.product.title}</th>
-                        <td>{product.unit.name}</td>
-                        <td>{product.quantity}</td>
-                        <td>{(product.product.price * product.unit.convertQuantity).toLocaleString()} đ</td>
-                        <td>{(product.product.price * product.quantity * product.unit.convertQuantity).toLocaleString()} đ</td>
-                      </tr>
+                          <th>{product.product.title}</th>
+                          <td>{product.unit.name}</td>
+                          <td>{product.quantity}</td>
+                          <td>{product.product.price.toLocaleString()} VNĐ</td>
+                          <td>
+                            {(
+                              product.product.price *
+                              product.quantity *
+                              product.unit.convertQuantity
+                            ).toLocaleString()}{" "}
+                            VNĐ
+                          </td>
+                          <td>
+                            {(
+                              (product.quantity *
+                                product.product.price *
+                                product.unit.convertQuantity *
+                                (product.product.discount || 0)) /
+                              100
+                            ).toLocaleString() || 0}{" "}
+                            VNĐ
+                          </td>
+                        </tr>
                       ))
                     ) : (
                       <div>Không có</div>
@@ -141,22 +175,24 @@ export default function Receipt() {
                 </table>
                 <hr className="border-dashed border-black" />
                 <h1 className=" flex justify-end w-full">
-                  TỔNG TIỀN: {totalProduct.toLocaleString()} VND
+                  TỔNG TIỀN: {totalProduct.toLocaleString()} VNĐ
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  TỔNG TIỀN ĐÃ GIẢM: 0 VND
+                  TỔNG TIỀN ĐÃ GIẢM: {totalDiscount.toLocaleString()} VNĐ
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  THUẾ VAT: {selectedOrder.amountVAT.toLocaleString()} VND
+                  THUẾ VAT: {selectedOrder.amountVAT.toLocaleString()} VNĐ
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  TIỀN KHÁCH TRẢ: {selectedOrder.receiveAmount.toLocaleString()} VND
+                  TIỀN KHÁCH TRẢ: {selectedOrder.receiveAmount.toLocaleString()}{" "}
+                  VNĐ
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  TIỀN TRẢ LẠI: {selectedOrder.change.toLocaleString()} VND
+                  TIỀN TRẢ LẠI: {selectedOrder.change.toLocaleString()} VNĐ
                 </h1>
                 <h1 className=" flex justify-end w-full">
-                  TỔNG TIỀN PHẢI THANH TOÁN: {selectedOrder.totalAmount.toLocaleString()} VND
+                  TỔNG TIỀN PHẢI THANH TOÁN:{" "}
+                  {selectedOrder.totalAmount.toLocaleString()} VNĐ
                 </h1>
                 <hr className="border-dashed border-black" />
                 <h1 className=" flex justify-center w-full">

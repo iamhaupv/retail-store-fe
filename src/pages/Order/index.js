@@ -97,6 +97,14 @@ export default function Order() {
         product?.unit?.convertQuantity),
     0
   );
+  const totalDiscount = selectedOrder?.products?.reduce((sum, product) => {
+    const discount = product?.product?.discount || 0;
+    const price = product?.product?.price;
+    const quantity = product?.quantity;
+    const convertQuantity = product?.unit?.convertQuantity || 1;
+    const productDiscount = price * quantity * discount * convertQuantity;
+    return sum + productDiscount / 100;
+  }, 0);
   return (
     <>
       <div
@@ -318,6 +326,7 @@ export default function Order() {
                         <th>Đơn vị tính</th>
                         <th>Đơn giá</th>
                         <th>Thành tiền</th>
+                        <th>Giảm giá</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -325,9 +334,6 @@ export default function Order() {
                         <OrderTableDetail order={selectedOrder} />
                       )}
                     </tbody>
-                    <tfoot>
-                      <tr></tr>
-                    </tfoot>
                   </table>
                 </div>
                 <div className="flex w-full">
@@ -341,13 +347,13 @@ export default function Order() {
                     </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">TỔNG TIỀN ĐÃ GIẢM:</h2>
-                      <h2 className=" font-sans text-sm mr-2">0 VNĐ</h2>
+                      <h2 className=" font-sans text-sm mr-2">{totalDiscount?.toLocaleString()} VNĐ</h2>
                     </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">THUẾ VAT:</h2>
                       <h2 className=" font-sans text-sm mr-2">
                         {selectedOrder &&
-                          selectedOrder.amountVAT.toLocaleString()}{" "}
+                          selectedOrder?.amountVAT?.toLocaleString()}{" "}
                         VNĐ
                       </h2>
                     </div>
@@ -373,7 +379,7 @@ export default function Order() {
                         style={{ color: "#f13612" }}
                       >
                         {selectedOrder &&
-                          selectedOrder.totalAmount.toLocaleString()}{" "}
+                          selectedOrder?.totalAmount?.toLocaleString()}{" "}
                         VNĐ
                       </h2>
                     </div>
