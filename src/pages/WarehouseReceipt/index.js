@@ -470,7 +470,7 @@ export default function WarehouseReceipt() {
                   Danh sách mặt hàng {brand}
                 </h4>
                 {isClicked ? (
-                  <button className="btn mr-2" onClick={openModal}>
+                  <button id="UpdateModal" className="btn mr-2" onClick={openModal}>
                     Thêm sản phẩm
                   </button>
                 ) : (
