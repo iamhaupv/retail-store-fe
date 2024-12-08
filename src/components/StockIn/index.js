@@ -242,7 +242,10 @@ export default function StockIn() {
         </Link>
       </div>
       {/* Table StockIn */}
-      <div className="overflow-y-auto h-80 mt-7">
+      <div className="overflow-y-auto  mt-7"
+      style={{
+        height: "calc(100vh - 354px)",
+      }}>
         <table className="table  table-pin-rows">
           {/* head */}
           <thead>

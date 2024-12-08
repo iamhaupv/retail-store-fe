@@ -12,6 +12,67 @@ export default function Category() {
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false); // Thêm state loading
 
+   // #region table sort
+   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+   const sortTable = (key) => {
+     let direction = "asc";
+     if (sortConfig.key === key && sortConfig.direction === "asc") {
+       direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+     }
+ 
+     console.log("Key, value", key); 
+ 
+     const sortedData = [
+       ...(units),
+     ].sort((a, b) => {
+       //console.log("Key, value", typeof a[key]); 
+       if (typeof a[key] === "string") {
+         // Sắp xếp theo chuỗi (ABC)
+         if (direction === "asc") {
+           return a[key].localeCompare(b[key]);
+         } else {
+           return b[key].localeCompare(a[key]);
+         }
+       } else if (typeof a[key] === "number") {
+         // Sắp xếp theo số (bé nhất đến lớn nhất)
+         if (direction === "asc") {
+           return a[key] - b[key];
+         } else {
+           return b[key] - a[key];
+         }
+       } else if (typeof a[key] === "object") {
+         for (const [key2, value] of Object.entries(a[key])) {
+           if (key2 === "name") {
+             // Sắp xếp theo chuỗi (ABC)
+             if (direction === "asc") {
+               return a[key]["name"].localeCompare(b[key]["name"]);
+             } else {
+               return b[key]["name"].localeCompare(a[key]["name"]);
+             }
+           }
+           // if (key2 === "name") {
+           //   if (direction === "asc") {
+           //     return a[key]["name"].localeCompare(b[key]["name"]);
+           //   } else {
+           //     return b[key]["name"].localeCompare(a[key]["name"]);
+           //   }
+           // } 
+         }
+       }
+       return 0;
+     });
+ 
+     setSortConfig({ key, direction });
+         setUnits(sortedData);
+      // Cập nhật lại danh sách sản phẩm đã sắp xếp
+   };
+ 
+      // Cập nhật lại danh sách sản phẩm đã sắp xếp
+   
+   
+   // end region
+
   const handleBlur = async (e) => {
     const { name } = e.target;
     if (!payload[name]) {
@@ -183,8 +244,26 @@ export default function Category() {
                 <table className="table h-full table-pin-rows">
                   <thead>
                     <tr>
-                      <th>Đơn vị tính</th>
-                      <th>Số lượng quy đổi</th>
+                      <th
+                      onClick={() => sortTable("name")}
+                      className={
+                        sortConfig.key === "name"
+                          ? sortConfig.direction === "asc"
+                            ? "asc"
+                            : "desc"
+                          : ""
+                      }
+                      >Đơn vị tính</th>
+                      <th
+                      onClick={() => sortTable("convertQuantity")}
+                      className={
+                        sortConfig.key === "convertQuantity"
+                          ? sortConfig.direction === "asc"
+                            ? "asc"
+                            : "desc"
+                          : ""
+                      }
+                      >Số lượng quy đổi</th>
                       <th>Thao tác</th>
                     </tr>
                   </thead>

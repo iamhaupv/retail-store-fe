@@ -84,14 +84,69 @@ export default function Report() {
           >
             <div className="w-full flex justify-between">
               <h1 className="font-bold text-xl mt-5 ml-4">Báo cáo doanh thu</h1>
-              <Link to="/reportDetail">
-                <button
-                  className="btn w-36 mr-2 mt-5"
-                  style={{ backgroundColor: "#e5edf8", color: "#2f80ed" }}
-                >
-                  Xem biểu đồ
-                </button>
-              </Link>
+              <div className="flex w-fit gap-2">
+                <div class="flex items-center space-x-2">
+                  <label for="year" class="mt-5 font-semibold text-gray-700">
+                    Năm
+                  </label>
+                  <select
+                    name="year"
+                    value={year}
+                    onChange={handleChangeYear}
+                    id="year"
+                    class="select select-bordered mt-5 w-40 p-2 rounded-lg border-gray-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Chọn năm</option>
+                    <option value="2020">2017</option>
+                    <option value="2020">2018</option>
+                    <option value="2020">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024" selected>
+                      2024
+                    </option>
+                    {/* <option value="2025">2025</option> */}
+                  </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                  <label for="month" class="mt-5 font-semibold text-gray-700">
+                    Tháng
+                  </label>
+                  <select
+                    value={month}
+                    onChange={handleChangeMonth}
+                    id="month"
+                    class="select select-bordered mt-5 w-40 p-2 rounded-lg border-gray-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Chọn tháng</option>
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12" selected>
+                      Tháng 12
+                    </option>
+                  </select>
+                </div>
+                <Link to="/reportDetail">
+                  <button
+                    className="btn w-36 mr-2 mt-5"
+                    style={{ backgroundColor: "#e5edf8", color: "#2f80ed" }}
+                  >
+                    Xem biểu đồ
+                  </button>
+                </Link>
+              </div>
             </div>
             <div className="w-full flex">
               <div className="w-1/4 justify-start ml-4 ">
@@ -155,59 +210,6 @@ export default function Report() {
                       Đơn đã bán
                     </h1>
                     <h1 className="text-lg mt-2 ml-10">{orders.length}</h1>
-                  </div>
-                  <div class="flex items-center space-x-2">
-                    <label for="year" class="font-semibold text-gray-700">
-                       Năm
-                    </label>
-                    <select
-                      name="year"
-                      value={year}
-                      onChange={handleChangeYear}
-                      id="year"
-                      class="select select-bordered w-40 p-2 rounded-lg border-gray-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Chọn năm</option>
-                      <option value="2020">2017</option>
-                      <option value="2020">2018</option>
-                      <option value="2020">2019</option>
-                      <option value="2020">2020</option>
-                      <option value="2021">2021</option>
-                      <option value="2022">2022</option>
-                      <option value="2023">2023</option>
-                      <option value="2024" selected>
-                        2024
-                      </option>
-                      {/* <option value="2025">2025</option> */}
-                    </select>
-                  </div>
-
-                  <div class="flex items-center space-x-2">
-                    <label for="month" class="font-semibold text-gray-700">
-                      Tháng
-                    </label>
-                    <select
-                      value={month}
-                      onChange={handleChangeMonth}
-                      id="month"
-                      class="select select-bordered w-40 p-2 rounded-lg border-gray-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Chọn tháng</option>
-                      <option value="1">Tháng 1</option>
-                      <option value="2">Tháng 2</option>
-                      <option value="3">Tháng 3</option>
-                      <option value="4">Tháng 4</option>
-                      <option value="5">Tháng 5</option>
-                      <option value="6">Tháng 6</option>
-                      <option value="7">Tháng 7</option>
-                      <option value="8">Tháng 8</option>
-                      <option value="9">Tháng 9</option>
-                      <option value="10">Tháng 10</option>
-                      <option value="11">Tháng 11</option>
-                      <option value="12" selected>
-                        Tháng 12
-                      </option>
-                    </select>
                   </div>
                 </div>
               </div>

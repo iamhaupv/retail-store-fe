@@ -260,7 +260,11 @@ export default function InventoryProduct({ onChangeModal }) {
     }
   };
   return (
-    <div className="w-auto">
+    <div className="w-auto "
+    style={{
+      height: "calc(100vh - 200px)",
+    }}
+    >
       <div>
         <div className="flex justify-center">
           <div className="w-1/2">
@@ -321,7 +325,11 @@ export default function InventoryProduct({ onChangeModal }) {
           </div>
         </div>
       </div>
-      <div className="overflow-y-auto h-80 mt-7">
+      <div className="overflow-y-auto  mt-7"
+      style={{
+        height: "calc(100vh - 240px)",
+      }}
+      >
         <table className="table table-pin-rows">
           <thead>
             <tr>
