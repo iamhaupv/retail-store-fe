@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import OrderTableList from "../../components/OrderTableList";
 import Datepicker from "react-tailwindcss-datepicker";
 import StatOrderDetail from "../../components/statOrderDetail";
 import OrderTableDetail from "../../components/OrderTableDetail";
@@ -7,8 +6,11 @@ import { Link } from "react-router-dom";
 import apiGetListEmployee from "../../apis/apiGetListEmployee";
 import apiGetAllOrder from "../../apis/apiGetAllOrder";
 import apiFilterOrderByCondition from "../../apis/apiFilterOrderByCondition";
+import apiOrder from "../../apis/apiOrder";
 
 export default function Order() {
+  const [orderDays, setOrderDays] = useState([])
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [order, setOrder] = useState("");
   const [value, setValue] = useState({
     startDate: null,
@@ -18,6 +20,32 @@ export default function Order() {
   const [employee, setEmployee] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orders, setOrders] = useState([]);
+  const formatDateSubmit = (date) => {
+    if (!(date instanceof Date) || isNaN(date)) {
+      throw new Error("Invalid date object");
+    }
+  
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+  
+    return `${year}-${month}-${day}`;
+  };
+  const orderDate = formatDateSubmit(currentDate)
+  
+  useEffect(()=>{
+    const fetchOrderDay = async() => {
+      try {
+        const token = localStorage.getItem("accessToken")
+        if(!token) throw new Error("Missing input!")
+        const response = await apiOrder.apiGetOrderDay(token, {date: orderDate})
+        setOrderDays(response.data)
+      } catch (error) {
+        console.log("fetch order day");
+      }
+    }
+    fetchOrderDay()
+  }, [currentDate])
   const fetchOrderByCondition = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -92,9 +120,7 @@ export default function Order() {
   const totalProduct = selectedOrder?.products.reduce(
     (sum, product) =>
       (sum +=
-        product?.product?.price *
-        product?.quantity *
-        product?.unit?.convertQuantity),
+        product?.price * product?.quantity * product?.unit?.convertQuantity),
     0
   );
   const totalDiscount = selectedOrder?.products?.reduce((sum, product) => {
@@ -105,6 +131,16 @@ export default function Order() {
     const productDiscount = price * quantity * discount * convertQuantity;
     return sum + productDiscount / 100;
   }, 0);
+  const handleNextWeek = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() + 1); // Tiến thêm 7 ngày
+    setCurrentDate(newDate);
+  };
+  const handlePrevWeek = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() - 1); // Quay lại 7 ngày
+    setCurrentDate(newDate);
+  };
   return (
     <>
       <div
@@ -114,6 +150,25 @@ export default function Order() {
         <div className="w-full animate__animated animate__fadeInRight ">
           <div className=" mt-3 mr-3 flex justify-between">
             <h4 className="font-bold text-xl w-full ml-4">Danh sách hóa đơn</h4>
+            <div className="w-32 p-1 bg-white rounded-lg shadow-md text-center">
+      <div className="mb-1">
+        <h2 className="text-xs font-medium text-gray-700">{formatDate(currentDate)}</h2>
+      </div>
+      <div className="flex justify-between">
+        <button
+          onClick={handlePrevWeek}
+          className="px-1 py-0.5 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none text-xs"
+        >
+          Trở về
+        </button>
+        <button
+          onClick={handleNextWeek}
+          className="px-1 py-0.5 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none text-xs"
+        >
+          Tiếp tục
+        </button>
+      </div>
+    </div>
             <div className="flex w-fit">
               <Link to="/createOrder">
                 <button className="drawer-button btn btn-success text-white w-32">
@@ -134,7 +189,15 @@ export default function Order() {
                   Thêm
                 </button>
               </Link>
-              <Link to="/receipt" state={{ selectedOrder }}>
+              <Link
+                to="/receipt"
+                state={{ selectedOrder }}
+                onClick={(e) => {
+                  if (!selectedOrder) {
+                    e.preventDefault();
+                  }
+                }}
+              >
                 <button className="btn btn-success text-white ml-2 w-32">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +287,7 @@ export default function Order() {
                   value.startDate === null &&
                   value.endDate === null ? (
                     <StatOrderDetail
-                      orders={orders}
+                      orders={orderDays}
                       onOrderClick={handleOrderClick}
                     />
                   ) : listOrderByCondition.length > 0 ? (
@@ -338,7 +401,10 @@ export default function Order() {
                 </div>
                 <div className="flex w-full">
                   <div className="w-9/12"></div>
-                  <div className="w-full justify-end items-end" style={{marginTop: -15}}>
+                  <div
+                    className="w-full justify-end items-end"
+                    style={{ marginTop: -15 }}
+                  >
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">TỔNG TIỀN:</h2>
                       <h2 className=" font-sans text-sm mr-2">
@@ -347,7 +413,9 @@ export default function Order() {
                     </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">TỔNG TIỀN ĐÃ GIẢM:</h2>
-                      <h2 className=" font-sans text-sm mr-2">{totalDiscount?.toLocaleString()} VNĐ</h2>
+                      <h2 className=" font-sans text-sm mr-2">
+                        {totalDiscount?.toLocaleString()} VNĐ
+                      </h2>
                     </div>
                     <div className="flex justify-between items-center">
                       <h2 className="font-bold text-lg">THUẾ VAT:</h2>

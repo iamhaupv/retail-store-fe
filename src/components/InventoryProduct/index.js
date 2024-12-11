@@ -6,6 +6,7 @@ import apiGetFilteredWarehouseReceipts from "../../apis/apiGetFilteredWarehouseR
 import FilterProductByCondition from "../FilterProductByCondition";
 import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 import "./InventoryProduct.css";
+import { ToastContainer } from "react-toastify";
 export default function InventoryProduct({ onChangeModal }) {
   const [id, setId] = useState("");
   const [productsByStatus, setProductsByStatus] = useState([]);
@@ -182,11 +183,11 @@ export default function InventoryProduct({ onChangeModal }) {
 
   const listIdPNK = () => {
     const uniqueIdPNK = [];
-    products.forEach((product) => {
-      if (!uniqueIdPNK.some((item) => item.name === product.idPNK)) {
-        uniqueIdPNK.push({
-          _id: product._id,
-          name: product.idPNK,
+    products?.forEach((product) => {
+      if (!uniqueIdPNK?.some((item) => item.name === product?.idPNK)) {
+        uniqueIdPNK?.push({
+          _id: product?._id,
+          name: product?.idPNK,
         });
       }
     });
@@ -195,7 +196,7 @@ export default function InventoryProduct({ onChangeModal }) {
   };
   const listTitle = () => {
     const uniqueTitle = [];
-    products.forEach((product) => {
+    products?.forEach((product) => {
       if (!uniqueTitle.some((item) => item.name === product.title)) {
         uniqueTitle.push({
           _id: product._id,
@@ -208,7 +209,7 @@ export default function InventoryProduct({ onChangeModal }) {
   };
   const listBrand = () => {
     const uniqueBrand = [];
-    products.forEach((product) => {
+    products?.forEach((product) => {
       if (!uniqueBrand.some((item) => item.name === product.brand)) {
         uniqueBrand.push({
           _id: product._id,
@@ -221,7 +222,7 @@ export default function InventoryProduct({ onChangeModal }) {
   };
   const listCategory = () => {
     const uniqueCategory = [];
-    products.forEach((product) => {
+    products?.forEach((product) => {
       if (!uniqueCategory.some((item) => item.name === product.category)) {
         uniqueCategory.push({
           _id: product._id,
@@ -260,6 +261,8 @@ export default function InventoryProduct({ onChangeModal }) {
     }
   };
   return (
+   <>
+   <ToastContainer/>
     <div className="w-auto "
     style={{
       height: "calc(100vh - 200px)",
@@ -481,5 +484,6 @@ export default function InventoryProduct({ onChangeModal }) {
         </table>
       </div>
     </div>
+   </>
   );
 }

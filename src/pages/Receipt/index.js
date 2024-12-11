@@ -46,18 +46,12 @@ export default function Receipt() {
   const totalProduct = selectedOrder.products.reduce(
     (sum, product) =>
       (sum +=
-        product.product.price *
-        product.quantity *
-        product.unit.convertQuantity),
+        product?.price * product?.quantity * product?.unit?.convertQuantity),
     0
   );
   const totalDiscount = selectedOrder.products.reduce((sum, product) => {
-    const discount = product?.product?.discount || 0;
-    const price = product?.product?.price;
-    const quantity = product?.quantity;
-    const convertQuantity = product?.unit?.convertQuantity || 1;
-    const productDiscount = price * quantity * discount * convertQuantity;
-    return sum + (productDiscount / 100);
+    const discount = product?.discountAmount || 0;
+    return sum += discount
   }, 0);
   return (
     <>
@@ -147,24 +141,17 @@ export default function Receipt() {
                           <th>{product.product.title}</th>
                           <td>{product.unit.name}</td>
                           <td>{product.quantity}</td>
-                          <td>{product.product.price.toLocaleString()} VNĐ</td>
+                          <td>{product.price.toLocaleString()} VNĐ</td>
                           <td>
                             {(
-                              product.product.price *
+                              product.price *
                               product.quantity *
                               product.unit.convertQuantity
                             ).toLocaleString()}{" "}
                             VNĐ
                           </td>
                           <td>
-                            {(
-                              (product.quantity *
-                                product.product.price *
-                                product.unit.convertQuantity *
-                                (product.product.discount || 0)) /
-                              100
-                            ).toLocaleString() || 0}{" "}
-                            VNĐ
+                            {product.discountAmount.toLocaleString() || 0} VNĐ
                           </td>
                         </tr>
                       ))

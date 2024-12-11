@@ -129,9 +129,9 @@ export default function Report() {
                     class="select select-bordered mt-5 w-40 p-2 rounded-lg border-gray-300 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Chọn năm</option>
-                    <option value="2020">2017</option>
-                    <option value="2020">2018</option>
-                    <option value="2020">2019</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
                     <option value="2020">2020</option>
                     <option value="2021">2021</option>
                     <option value="2022">2022</option>
