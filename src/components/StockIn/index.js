@@ -8,81 +8,45 @@ import InputPNK from "../InputPNK";
 import apiFilterReceiptByDate from "../../apis/apiFilterReceiptByDate";
 import "./StockIn.css";
 import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
-import Calendar from "../Calendar";
 export default function StockIn() {
+  const getToday = () => {
+    const today = new Date();
+    return new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  };  
   const [value, setValue] = useState({
-    startDate: null,
-    endDate: null,
+    startDate: getToday(),
+    endDate: getToday(),
   });
   const [receiptsWeek, setReceiptsWeek] = useState([])
-  const [currentDate, setCurrentDate] = useState(new Date());
 
   const [receipts, setReceipts] = useState([]);
   const [idPNKs, setIdPNKs] = useState([]);
   const [recepitsByDate, setReceiptsByDate] = useState([]);
   const [idPNK, setIdPNK] = useState("");
-  const handleNextWeek = () => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() + 7); // Tiến thêm 7 ngày
-    setCurrentDate(newDate);
-  };
-  const handlePrevWeek = () => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() - 7); // Quay lại 7 ngày
-    setCurrentDate(newDate);
-  };
-  const formatDate = (date) => {
-    const day = date.getDate();
-    const month = date.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1
-    const year = date.getFullYear();
-    return `${day < 10 ? `0${day}` : day}/${month < 10 ? `0${month}` : month}/${year}`;
-  };
-  const getStartEndDateOfWeek = (date) => {
-    const startDate = new Date(date);
-    const endDate = new Date(date);
-    
-    // Lấy ngày trong tuần (0 = Chủ Nhật, 1 = Thứ Hai, ..., 6 = Thứ Bảy)
-    const dayOfWeek = startDate.getDay();
-
-    // Tính toán ngày đầu tuần (Thứ Hai)
-    startDate.setDate(startDate.getDate() - dayOfWeek + 1); // set to Monday
-
-    // Tính toán ngày cuối tuần (Chủ Nhật)
-    endDate.setDate(startDate.getDate() + 6); // set to Sunday
-
-    return {
-      startDate,
-      endDate,
-    };
-  };
-  const formatDateSubmit = (date) => {
-    if (!(date instanceof Date) || isNaN(date)) {
-      throw new Error("Invalid date object");
-    }
+  const handleNextDay = () => {
+    const newStartDate = new Date(value.startDate);
+    const newEndDate = new Date(value.endDate);
   
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
+    newStartDate.setDate(newStartDate.getDate() + 1); 
+    newEndDate.setDate(newEndDate.getDate() + 1); 
   
-    return `${year}-${month}-${day}`;
+    setValue({
+      startDate: newStartDate,
+      endDate: newEndDate,
+    });
   };
-  const { startDate, endDate } = getStartEndDateOfWeek(currentDate);
-  const start = formatDateSubmit(startDate)
-  const end = formatDateSubmit(endDate)
-  useEffect(() => {
-    const fetchReceiptWeek = async ( ) => {
-      try {
-        const token = localStorage.getItem("accessToken")
-        if(!token) throw new Error("Token is invalid!")
-        const response = await apiWarehouseReceipt.apiGetAllWarehouseReceiptWeek(token, {startDate: start, endDate: end})
-        setReceiptsWeek(Array.isArray(response.receipts) ? response.receipts : [])
-      } catch (error) {
-        console.log("fetch receipts week is error", error);
-      }
-    }
-    fetchReceiptWeek()
-  }, [currentDate])
+  const handlePrevDay = () => {
+    const newStartDate = new Date(value.startDate);
+    const newEndDate = new Date(value.endDate);
   
+    newStartDate.setDate(newStartDate.getDate() - 1); 
+    newEndDate.setDate(newEndDate.getDate() - 1);
+  
+    setValue({
+      startDate: newStartDate,
+      endDate: newEndDate,
+    });
+  };
   // #region table sort
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const sortTable = (key) => {
@@ -243,18 +207,6 @@ export default function StockIn() {
       : idPNK !== "" && value.startDate !== null && value.endDate !== null
       ? idPNKs.length
       : 0;
-      const getWeekRange = (date) => {
-        const monday = new Date(date);
-        const dayOfWeek = monday.getDay(); // 0: Chủ nhật, 1: Thứ hai, ..., 6: Thứ bảy
-        const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Điều chỉnh để về thứ 2
-        monday.setDate(monday.getDate() + diff);
-      
-        const sunday = new Date(monday);
-        sunday.setDate(monday.getDate() + 6);
-      
-        return { startOfWeek: monday, endOfWeek: sunday };
-      };
-      const { startOfWeek, endOfWeek } = getWeekRange(currentDate);
   return (
     <div className="">
       <div className="flex justify-between">
@@ -285,17 +237,17 @@ export default function StockIn() {
         {/*  */}
         <div className="w-32 p-1 bg-white rounded-lg shadow-md text-center">
       <div className="mb-1">
-        <h2 className="text-xs font-medium text-gray-700">{formatDate(startOfWeek)} - {formatDate(endOfWeek)}</h2>
+      
       </div>
       <div className="flex justify-between">
         <button
-          onClick={handlePrevWeek}
+          onClick={handlePrevDay}
           className="px-1 py-0.5 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none text-xs"
         >
           Trở về
         </button>
         <button
-          onClick={handleNextWeek}
+          onClick={handleNextDay}
           className="px-1 py-0.5 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none text-xs"
         >
           Tiếp tục

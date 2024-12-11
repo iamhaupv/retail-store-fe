@@ -57,59 +57,61 @@ export default function InventoryProduct({ onChangeModal }) {
     setProducts(sortedData); // Cập nhật lại danh sách sản phẩm đã sắp xếp
   };
   // end region
+  const fetchSearchProductByExpires = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+
+      // Reset dữ liệu cũ trước khi gọi API mới
+      setProductsByStatus([]);
+
+      // Lấy dữ liệu mới từ API
+      const response = await apiWarehouseReceipt.apiSearchProductExpires(
+        token,
+        {
+          expirationStatus: status,
+        }
+      );
+
+      // Cập nhật sản phẩm theo trạng thái hết hạn
+      setProductsByStatus(response.products || []);
+    } catch (error) {
+      console.error("Error fetching product by expiration status:", error);
+    }
+  };
   useEffect(() => {
-    const fetchSearchProductByExpires = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) throw new Error("Token is invalid");
-
-        // Reset dữ liệu cũ trước khi gọi API mới
-        setProductsByStatus([]);
-
-        // Lấy dữ liệu mới từ API
-        const response = await apiWarehouseReceipt.apiSearchProductExpires(
-          token,
-          {
-            expirationStatus: status,
-          }
-        );
-
-        // Cập nhật sản phẩm theo trạng thái hết hạn
-        setProductsByStatus(response.products || []);
-      } catch (error) {
-        console.error("Error fetching product by expiration status:", error);
-      }
-    };
+    
     fetchSearchProductByExpires();
   }, [status]);
-
+  const fetchSearchProductByTile = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid");
+      const response = await apiWarehouseReceipt.apiSearchByName(token, {
+        productId: id,
+        title: title,
+      });
+      setProductsByTitle(
+        Array.isArray(response?.products) ? response?.products : []
+      );
+    } catch (error) {}
+  };
   useEffect(() => {
-    const fetchSearchProductByTile = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) throw new Error("Token is invalid");
-        const response = await apiWarehouseReceipt.apiSearchByName(token, {
-          productId: id,
-          title: title,
-        });
-        setProductsByTitle(
-          Array.isArray(response?.products) ? response?.products : []
-        );
-      } catch (error) {}
-    };
+    
     fetchSearchProductByTile();
   }, [title, id]);
+  const fetchProductByReceipt = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiGetAllProductByReceipt(token);
+      setProducts(response.products || []);
+    } catch (error) {
+      console.log("fetch product by shelf is error " + error);
+    }
+  };
   useEffect(() => {
-    const fetchProductByReceipt = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) throw new Error("Token is invalid!");
-        const response = await apiGetAllProductByReceipt(token);
-        setProducts(response.products || []);
-      } catch (error) {
-        console.log("fetch product by shelf is error " + error);
-      }
-    };
+    
     fetchProductByReceipt();
   }, []);
   const handleChangeId = (e) => {
@@ -142,35 +144,35 @@ export default function InventoryProduct({ onChangeModal }) {
   //     };
   //     if(idPNK || brand) fetchProductByCondition();
   // }, [idPNK, brand, category]);
+  const fetchProductByCondition = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
 
-  useEffect(() => {
-    const fetchProductByCondition = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) throw new Error("Token is invalid!");
+      // Reset filterProduct để làm sạch dữ liệu cũ trước khi gọi API
+      setFilterProduct([]);
 
-        // Reset filterProduct để làm sạch dữ liệu cũ trước khi gọi API
+      // Gọi API để lấy dữ liệu mới dựa trên các điều kiện
+      const response = await apiGetFilteredWarehouseReceipts(token, {
+        title: title,
+        idPNK: idPNK,
+        brand: brand,
+        category: category,
+      });
+
+      // Nếu API trả về dữ liệu hợp lệ, cập nhật filterProduct với dữ liệu mới
+      if (response && Array.isArray(response.receipts)) {
+        setFilterProduct(response.receipts);
+      } else {
+        // Nếu không có dữ liệu, đảm bảo rằng filterProduct là mảng rỗng
         setFilterProduct([]);
-
-        // Gọi API để lấy dữ liệu mới dựa trên các điều kiện
-        const response = await apiGetFilteredWarehouseReceipts(token, {
-          title: title,
-          idPNK: idPNK,
-          brand: brand,
-          category: category,
-        });
-
-        // Nếu API trả về dữ liệu hợp lệ, cập nhật filterProduct với dữ liệu mới
-        if (response && Array.isArray(response.receipts)) {
-          setFilterProduct(response.receipts);
-        } else {
-          // Nếu không có dữ liệu, đảm bảo rằng filterProduct là mảng rỗng
-          setFilterProduct([]);
-        }
-      } catch (error) {
-        console.log("Error fetching products by condition:", error);
       }
-    };
+    } catch (error) {
+      console.log("Error fetching products by condition:", error);
+    }
+  };
+  useEffect(() => {
+    
 
     // Kiểm tra nếu có thay đổi giá trị idPNK hoặc brand, thì gọi API
     if (idPNK || brand) {
@@ -259,6 +261,12 @@ export default function InventoryProduct({ onChangeModal }) {
     } else {
       setCategory("");
     }
+  };
+  const reloadProducts = () => {
+    fetchSearchProductByTile();
+    fetchProductByCondition()
+    fetchSearchProductByExpires()
+    fetchProductByReceipt()
   };
   return (
    <>
@@ -436,17 +444,17 @@ export default function InventoryProduct({ onChangeModal }) {
           </thead>
           <tbody>
             {status && productsByStatus.length > 0 ? (
-              <ProductInventory products={productsByStatus} />
+              <ProductInventory products={productsByStatus} reloadProducts={reloadProducts} />
             ) : null}
 
             {/* Hiển thị các sản phẩm theo tên hoặc mã sản phẩm nếu có */}
             {(title || id) && productsByTitle.length > 0 ? (
-              <ProductInventory products={productsByTitle} />
+              <ProductInventory products={productsByTitle} reloadProducts={reloadProducts} />
             ) : null}
 
             {/* Hiển thị các sản phẩm theo mã phiếu hoặc thương hiệu nếu có */}
             {(idPNK || brand || category) && filterProduct.length > 0 ? (
-              <FilterProductByCondition products={filterProduct} />
+              <FilterProductByCondition products={filterProduct} reloadProducts={reloadProducts} />
             ) : null}
 
             {/* Nếu không có bất kỳ điều kiện tìm kiếm nào, hiển thị toàn bộ danh sách */}
@@ -457,7 +465,7 @@ export default function InventoryProduct({ onChangeModal }) {
             !brand &&
             !category &&
             products.length > 0 ? (
-              <ProductInventory products={products} />
+              <ProductInventory products={products} reloadProducts={reloadProducts} />
             ) : null}
 
             {/* Hiển thị thông báo nếu không tìm thấy kết quả */}

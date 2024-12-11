@@ -6,46 +6,46 @@ import { Link } from "react-router-dom";
 import apiGetListEmployee from "../../apis/apiGetListEmployee";
 import apiGetAllOrder from "../../apis/apiGetAllOrder";
 import apiFilterOrderByCondition from "../../apis/apiFilterOrderByCondition";
-import apiOrder from "../../apis/apiOrder";
 
 export default function Order() {
-  const [orderDays, setOrderDays] = useState([])
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const getToday = () => {
+    const today = new Date();
+    return new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  };  
   const [order, setOrder] = useState("");
   const [value, setValue] = useState({
-    startDate: null,
-    endDate: null,
+    startDate: getToday(),
+    endDate: getToday(),
   });
+  const handleNextDay = () => {
+    const newStartDate = new Date(value.startDate);
+    const newEndDate = new Date(value.endDate);
+  
+    newStartDate.setDate(newStartDate.getDate() + 1); 
+    newEndDate.setDate(newEndDate.getDate() + 1); 
+  
+    setValue({
+      startDate: newStartDate,
+      endDate: newEndDate,
+    });
+  };
+  const handlePrevDay = () => {
+    const newStartDate = new Date(value.startDate);
+    const newEndDate = new Date(value.endDate);
+  
+    newStartDate.setDate(newStartDate.getDate() - 1); 
+    newEndDate.setDate(newEndDate.getDate() - 1);
+  
+    setValue({
+      startDate: newStartDate,
+      endDate: newEndDate,
+    });
+  };
   const [listOrderByCondition, setListOrderByCondition] = useState([]);
   const [employee, setEmployee] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orders, setOrders] = useState([]);
-  const formatDateSubmit = (date) => {
-    if (!(date instanceof Date) || isNaN(date)) {
-      throw new Error("Invalid date object");
-    }
   
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
-  
-    return `${year}-${month}-${day}`;
-  };
-  const orderDate = formatDateSubmit(currentDate)
-  
-  useEffect(()=>{
-    const fetchOrderDay = async() => {
-      try {
-        const token = localStorage.getItem("accessToken")
-        if(!token) throw new Error("Missing input!")
-        const response = await apiOrder.apiGetOrderDay(token, {date: orderDate})
-        setOrderDays(response.data)
-      } catch (error) {
-        console.log("fetch order day");
-      }
-    }
-    fetchOrderDay()
-  }, [currentDate])
   const fetchOrderByCondition = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -131,16 +131,6 @@ export default function Order() {
     const productDiscount = price * quantity * discount * convertQuantity;
     return sum + productDiscount / 100;
   }, 0);
-  const handleNextWeek = () => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() + 1); // Tiến thêm 7 ngày
-    setCurrentDate(newDate);
-  };
-  const handlePrevWeek = () => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(newDate.getDate() - 1); // Quay lại 7 ngày
-    setCurrentDate(newDate);
-  };
   return (
     <>
       <div
@@ -151,18 +141,15 @@ export default function Order() {
           <div className=" mt-3 mr-3 flex justify-between">
             <h4 className="font-bold text-xl w-full ml-4">Danh sách hóa đơn</h4>
             <div className="w-32 p-1 bg-white rounded-lg shadow-md text-center">
-      <div className="mb-1">
-        <h2 className="text-xs font-medium text-gray-700">{formatDate(currentDate)}</h2>
-      </div>
       <div className="flex justify-between">
         <button
-          onClick={handlePrevWeek}
+          onClick={handlePrevDay}
           className="px-1 py-0.5 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none text-xs"
         >
           Trở về
         </button>
         <button
-          onClick={handleNextWeek}
+          onClick={handleNextDay}
           className="px-1 py-0.5 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none text-xs"
         >
           Tiếp tục
@@ -287,7 +274,7 @@ export default function Order() {
                   value.startDate === null &&
                   value.endDate === null ? (
                     <StatOrderDetail
-                      orders={orderDays}
+                      orders={listOrderByCondition}
                       onOrderClick={handleOrderClick}
                     />
                   ) : listOrderByCondition.length > 0 ? (

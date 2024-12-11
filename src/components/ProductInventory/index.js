@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import apiProduct from "../../apis/apiProduct";
 import { toast, ToastContainer } from "react-toastify";
 import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
-export default function ProductInventory({ products }) {
+export default function ProductInventory({ products, reloadProducts }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
@@ -56,6 +56,7 @@ export default function ProductInventory({ products }) {
         discount: currentProduct.discount,
       });
       setIsModalOpen(false);
+      reloadProducts()
       if (response.success) {
         toast.success("Lưu thành công!");
       } else {
@@ -78,6 +79,7 @@ export default function ProductInventory({ products }) {
       const isDisplay = false
       const response = await apiWarehouseReceipt.apiChangeIsDisplayProduct(token, {receiptId, productId, isDisplay})
       setIsDeleteModal(false)
+      reloadProducts()
       if(response.success) toast.success("Xóa thành công!")
       
       else toast.error("Xóa không thành công!")
