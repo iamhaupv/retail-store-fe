@@ -8,7 +8,7 @@ import apiCreateOrder from "../../apis/apiCreateOrder";
 import apiFilterProductSumQuantity from "../../apis/apiFilterProductSumQuantity";
 import apiFilterReceiptByProduct from "../../apis/apiFilterReceiptByProduct";
 import Autocomplete from "../AutoComplete";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import apiOrder from "../../apis/apiOrder";
 
 export default function CreateOrderDetailFirst() {
@@ -238,37 +238,15 @@ export default function CreateOrderDetailFirst() {
   useEffect(() => {
     fetchUser();
   }, []);
-  const calculateChange = () => {
-    return Math.max(0, receivedAmount - calculateTotalAmount());
-  };
-  const calculateVAT = (quantity, price, VAT) => {
-    return quantity * price * VAT;
-  };
-  const calculateTotalVAT = (orderDetails) => {
-    let amountVAT = 0;
-    orderDetails.forEach((detail) => {
-      const productVAT = calculateVAT(
-        detail.quantity * detail.convertQuantity,
-        detail.price,
-        detail.VAT
-      );
-      amountVAT += productVAT;
-    });
-    return amountVAT;
-  };
-  const totalVAT = calculateTotalVAT(orderDetails);
+  
   const calculateTotalAmount = () => {
     let totalAmount = 0;
-    let totalVAT = 0;
     orderDetails.forEach((detail) => {
       const productTotal =
         detail.quantity * detail.price * detail.convertQuantity;
-      const productVAT =
-        detail.quantity * detail.convertQuantity * detail.price * detail.VAT;
       totalAmount += productTotal;
-      totalVAT += productVAT;
     });
-    return totalAmount + totalVAT;
+    return totalAmount
   };
   const calculateTotal = () => {
     let totalAmount = 0;
@@ -302,6 +280,17 @@ export default function CreateOrderDetailFirst() {
     const dateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
     return dateTime;
   };
+  const calculateTotalVAT = (orderDetails) => {
+    let amountVAT = 0;
+    orderDetails.forEach((detail) => {
+      const productVAT = detail.quantity * detail.convertQuantity * detail.price
+      const discount = productVAT - detail.amountDiscount
+      const totalAmountDiscount = discount * detail.VAT
+      amountVAT += totalAmountDiscount;
+    });
+    return amountVAT;
+  };
+  const totalVAT = calculateTotalVAT(orderDetails);
   const handleSubmit = async () => {
     try {
       if (orderDetails.length === 0) {
@@ -320,11 +309,12 @@ export default function CreateOrderDetailFirst() {
           return;
         }
       }
-      let amountVAT = 0;
+      // let amountVAT = 0;
       const orderData = {
         products: orderDetails.map((detail) => {
-          const productVAT = detail.price * detail.VAT * detail.convertQuantity;
-          amountVAT += productVAT * Number(detail.quantity);
+          // const productVAT = detail.price * detail.VAT * detail.convertQuantity;
+          // const discount = productVAT - detail.amountDiscount
+          // amountVAT += (productVAT * Number(detail.quantity) * discount);
           return {
             discount: detail.amountDiscount,
             product: detail.productId,
@@ -335,11 +325,11 @@ export default function CreateOrderDetailFirst() {
             warehouseReceipt: detail.warehouseReceipt,
           };
         }),
-        totalAmount: calculateTotalAmount(),
+        totalAmount: calculateTotalAmount() + totalVAT - discount,
         receiveAmount: receivedAmount,
-        change: calculateChange(),
+        change: receivedAmount - (calculateTotalAmount() + totalVAT - discount),
         user: user._id,
-        amountVAT: amountVAT,
+        amountVAT: totalVAT,
         id: codeOrder(),
       };
 
@@ -383,11 +373,11 @@ export default function CreateOrderDetailFirst() {
           return;
         }
       }
-      let amountVAT = 0;
+      // let amountVAT = 0;
       const orderData = {
         products: orderDetails.map((detail) => {
-          const productVAT = detail.price * detail.VAT * detail.convertQuantity;
-          amountVAT += productVAT * Number(detail.quantity);
+          // const productVAT = detail.price * detail.VAT * detail.convertQuantity;
+          // amountVAT += (productVAT * Number(detail.quantity) * discount);
           return {
             discount: detail.amountDiscount,
             product: detail.productId,
@@ -398,11 +388,11 @@ export default function CreateOrderDetailFirst() {
             warehouseReceipt: detail.warehouseReceipt,
           };
         }),
-        totalAmount: calculateTotalAmount(),
+        totalAmount: calculateTotalAmount() + totalVAT - discount,
         receiveAmount: receivedAmount,
-        change: calculateChange(),
+        change: receivedAmount - (calculateTotalAmount() + totalVAT - discount),
         user: user._id,
-        amountVAT: amountVAT,
+        amountVAT: totalVAT,
         id: codeOrder(),
       };
 
@@ -434,10 +424,10 @@ export default function CreateOrderDetailFirst() {
   const discount = orderDetails.reduce((sum, order) => {
     return (sum += order.amountDiscount);
   }, 0);
-  console.log(orderDetails);
+  console.log(discount);
+  
   return (
     <>
-      <ToastContainer />
       <div className="card bg-white h-full rounded-none w-full overflow-y-hidden ">
         <h1 className="font-bold text-xl ml-2 mt-2">Thông tin </h1>
         <div>
@@ -647,13 +637,13 @@ export default function CreateOrderDetailFirst() {
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">THUẾ VAT:</h2>
                 <h2 className=" font-sans text-sm mr-2">
-                  {totalVAT.toLocaleString()} VNĐ
+                  {(totalVAT).toLocaleString()} VNĐ
                 </h2>
               </div>
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">TIỀN TRẢ LẠI:</h2>
                 <h2 className=" font-sans text-sm mr-2 ">
-                  {calculateChange().toLocaleString() || 0} VNĐ
+                {Math.max(0, receivedAmount - (calculateTotalAmount() + totalVAT - discount)).toLocaleString()} VNĐ
                 </h2>
               </div>
               <div className="flex justify-between items-center">
@@ -664,7 +654,7 @@ export default function CreateOrderDetailFirst() {
                   className=" font-sans text-lg mr-2"
                   style={{ color: "#f13612" }}
                 >
-                  {(calculateTotalAmount() - discount).toLocaleString() || 0}{" "}
+                  {(calculateTotalAmount() + totalVAT - discount).toLocaleString() || 0}{" "}
                   VNĐ
                 </h2>
               </div>

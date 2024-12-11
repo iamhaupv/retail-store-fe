@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CreateOrderDetailFirst from "../../components/CreateOrderDetailFirst";
 import CreateOrderDetailSecond from "../../components/CreateOrderDetailSecond";
+import { ToastContainer } from "react-toastify";
 
 export default function CreateOrder() {
   const [activeTab, setActiveTab] = useState(0);
@@ -10,6 +11,7 @@ export default function CreateOrder() {
   };
   return (
     <>
+     <ToastContainer />
       <div
         className="w-11/12 h-screen justify-center flex"
         style={{ backgroundColor: "#F5F5F5" }}
@@ -22,6 +24,7 @@ export default function CreateOrder() {
             className="tab whitespace-nowrap"
             aria-label="Đơn hàng 1"
             defaultChecked
+            onChange={() => handleTabClick(0)}
           />
           <div
             role="tabpanel"
@@ -36,6 +39,7 @@ export default function CreateOrder() {
             role="tab"
             className="tab whitespace-nowrap"
             aria-label="Đơn hàng 2"
+            onChange={() => handleTabClick(1)}
           />
           <div
             role="tabpanel"

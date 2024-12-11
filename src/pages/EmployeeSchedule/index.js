@@ -1,8 +1,39 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import apiEmployee from "../../apis/apiEmployee";
+import apiShift from "../../apis/apiShift";
 export default function EmployeeSchedule() {
+  const [shifts, setShifts] = useState([])
+  const [employees, setEmployees] = useState([])
   const [selectedDate, setSelectedDate] = useState(moment());
-
+  useEffect(() => {
+    const fetchShifts = async() => {
+      try {
+        const token = localStorage.getItem("accessToken")
+        if(!token) throw new Error("Token is invalid!")
+        const response = await apiShift.apiGetAllShifts(token)
+        setShifts(response?.shifts)
+      } catch (error) {
+        console.log("fetch employees is error", error);
+        
+      }
+    } 
+    fetchShifts()
+  }, [])
+  useEffect(() => {
+    const fetchEmployees = async() => {
+      try {
+        const token = localStorage.getItem("accessToken")
+        if(!token) throw new Error("Token is invalid!")
+        const response = await apiEmployee.apiGetListEmployee(token)
+        setEmployees(response.data)
+      } catch (error) {
+        console.log("fetch employees is error", error);
+        
+      }
+    } 
+    fetchEmployees()
+  }, [])
   const handleDateChange = (event) => {
     setSelectedDate(moment(event.target.value));
   };
@@ -189,9 +220,9 @@ export default function EmployeeSchedule() {
                   <option disabled selected>
                     Chọn nhân viên
                   </option>
-                  <option>Nguyễn Thanh khoa</option>
-                  <option>Phạm Văn Hậu</option>
-                  <option>Nguyễn Đức Long</option>
+                 {employees.map((employee) => (
+                  <option value={employee._id}>{employee.name}</option>
+                 ))}
                 </select>
               </div>
               <div className="flex justify-start items-center mt-2">
@@ -200,9 +231,9 @@ export default function EmployeeSchedule() {
                   <option disabled selected>
                     Chọn ca làm
                   </option>
-                  <option>7:30 - 12:30</option>
-                  <option>12:30 - 17:30</option>
-                  <option>17:30 - 22:30</option>
+                  {shifts?.map((shift) => (
+                    <option value={shift?._id}>{shift?.name}</option>
+                  ))}
                 </select>
               </div>
               <button className=" btn btn-success text-white w-36 ml-80 mt-4 ">

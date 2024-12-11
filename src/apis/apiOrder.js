@@ -191,6 +191,16 @@ const apiGetTotalAmountComparison = async (token) => {
     console.log("api top 5 product last 365 days is error" + error);
   }
 };
+const apiGetOrderDay = async (token, payload) => {
+  try {
+    const response = await axios.post(`${url}order/order-day`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("api top 5 product last 365 days is error" + error);
+  }
+};
 const apiOrder = {
   apiSumTotalAmount,
   apiSumTotalAmountByYear,
@@ -209,7 +219,8 @@ const apiOrder = {
   apiTop5ProductCategoryLast30Days,
   apiTop5ProductCategoryLast365Days,
   apiGetTotalAmountCurrentDay,
-  apiGetTotalAmountComparison
+  apiGetTotalAmountComparison,
+  apiGetOrderDay
 };
 
 export default apiOrder;

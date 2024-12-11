@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import apiProduct from "../../apis/apiProduct";
 import { toast } from "react-toastify";
+import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 export default function FilterProductByCondition({ products }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [receiptId, setReceiptId] = useState(null)
   function formatDate(date) {
     if (!(date instanceof Date)) {
       date = new Date(date);
@@ -32,6 +35,8 @@ export default function FilterProductByCondition({ products }) {
     setCurrentProduct(product);
     setIsModalOpen(true);
   };
+  console.log(currentProduct);
+  
   const handleDiscountChange = async (e) => {
     const { name, value } = e.target;
     if (name === "discount") {
@@ -63,7 +68,27 @@ export default function FilterProductByCondition({ products }) {
       console.error("Error updating discount:", error);
     }
   }
-  
+  const handleOpenModalDelete = (product, receiptId) => {
+    setIsDeleteModal(true);
+    setCurrentProduct(product)
+    setReceiptId(receiptId)
+  };
+  const handleDeleteProduct = async(product) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid!")
+      const productId = product._id
+      const isDisplay = false
+      const response = await apiWarehouseReceipt.apiChangeIsDisplayProduct(token, {receiptId, productId, isDisplay})
+      setIsDeleteModal(false)
+      if(response.success) toast.success("Xóa thành công!")
+      
+      else toast.error("Xóa không thành công!")
+    } catch (error) {
+      console.log("handle delete product is error", error);
+      
+    }
+  }
   return (
     <>
       {products && products.length > 0 ? (
@@ -106,7 +131,7 @@ export default function FilterProductByCondition({ products }) {
                 <button
                   className=" w-6 h-6 rounded-sm mr-2"
                   style={{ backgroundColor: "#ebf3fe", outline: "" }}
-                  onClick={() => handleOpenChangeDiscount(product)}
+                  onClick={() => handleOpenChangeDiscount(item.product)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -126,12 +151,9 @@ export default function FilterProductByCondition({ products }) {
                 </button>
 
                 <button
-                  id="btn__delete"
                   className="w-6 h-6 rounded-sm "
                   style={{ backgroundColor: "#feebe8", outline: "" }}
-                  onClick={() =>
-                    document.getElementById("DeleteSupplyDetail").showModal()
-                  }
+                  onClick={()=>handleOpenModalDelete(item.product, product._id)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -183,19 +205,6 @@ export default function FilterProductByCondition({ products }) {
           </td>
         </tr>
       )}
-      <dialog id="Delete" className="modal">
-        <div className="modal-box w-3/12">
-          <h3 className="font-bold text-lg">
-            Bạn muốn xóa sản phẩm này khỏi kệ?
-          </h3>
-          <div className="flex modal-action justify-between">
-            <button className="btn w-20 bg-orange-500">Đồng ý</button>
-            <form method="dialog">
-              <button className="btn w-20">Hủy</button>
-            </form>
-          </div>
-        </div>
-      </dialog>
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
@@ -235,6 +244,40 @@ export default function FilterProductByCondition({ products }) {
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="btn bg-gray-500 text-white"
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
+            <h3 className="font-bold text-lg text-center mb-4">
+              Bạn muốn xóa sản phẩm này khỏi kho?
+            </h3>
+            
+            <p className="text-sm text-gray-600 text-center mb-6">
+              Bạn đang muốn xóa sản phẩm {currentProduct.title}.
+            </p>
+            <div className="mb-4">
+                <img
+                  src={currentProduct?.images[0]}
+                  alt={currentProduct?.title}
+                  className="w-full h-64 object-cover rounded-md"
+                />
+              </div>
+            <div className="flex justify-center gap-4">
+              <button
+                className="btn w-24 bg-red-500 text-white hover:bg-red-600"
+                onClick={()=>handleDeleteProduct(currentProduct)}
+              >
+                Đồng ý
+              </button>
+              <button
+                className="btn w-24 bg-gray-300 text-black hover:bg-gray-400"
+                onClick={() => setIsDeleteModal(false)}
               >
                 Hủy
               </button>

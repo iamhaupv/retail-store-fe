@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import apiProduct from "../../apis/apiProduct";
 import { toast, ToastContainer } from "react-toastify";
+import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 export default function ProductInventory({ products }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   function formatDate(date) {
     if (!(date instanceof Date)) {
@@ -39,13 +41,13 @@ export default function ProductInventory({ products }) {
       if (value < 0) value = 0;
       if (value > 100) value = 100;
     }
-  
+
     setCurrentProduct((prevProduct) => ({
       ...prevProduct,
       [name]: value,
     }));
   };
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) throw new Error("Token is invalid!");
@@ -54,18 +56,38 @@ export default function ProductInventory({ products }) {
         discount: currentProduct.discount,
       });
       setIsModalOpen(false);
-      if(response.success){
-        toast.success("Lưu thành công!")
-      }else{
-        toast.error("Lưu không công!")
+      if (response.success) {
+        toast.success("Lưu thành công!");
+      } else {
+        toast.error("Lưu không công!");
       }
     } catch (error) {
       console.error("Error updating discount:", error);
     }
+  };
+  const handleOpenModalDelete = (product) => {
+    setIsDeleteModal(true);
+    setCurrentProduct(product)
+  };
+  const handleDeleteProduct = async(product) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      if(!token) throw new Error("Token is invalid!")
+      const receiptId = product.warehouseReceipt
+      const productId = product._id
+      const isDisplay = false
+      const response = await apiWarehouseReceipt.apiChangeIsDisplayProduct(token, {receiptId, productId, isDisplay})
+      setIsDeleteModal(false)
+      if(response.success) toast.success("Xóa thành công!")
+      
+      else toast.error("Xóa không thành công!")
+    } catch (error) {
+      console.log("handle delete product is error", error);
+      
+    }
   }
   return (
     <>
-    <ToastContainer/>
       {Array.isArray(products) && products.length > 0 ? (
         products.map((product) => (
           <tr key={product._id}>
@@ -126,12 +148,10 @@ export default function ProductInventory({ products }) {
                 </button>
 
                 <button
-                  id="btn__delete"
+                  id="Delete"
                   className="w-6 h-6 rounded-sm "
                   style={{ backgroundColor: "#feebe8", outline: "" }}
-                  onClick={() =>
-                    document.getElementById("DeleteSupplyDetail").showModal()
-                  }
+                  onClick={()=>handleOpenModalDelete(product)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -183,24 +203,6 @@ export default function ProductInventory({ products }) {
           </td>
         </tr>
       )}
-      <dialog id="Delete" className="modal">
-        <div className="modal-box w-3/12">
-          <h3 className="font-bold text-lg">
-            Bạn muốn xóa sản phẩm này khỏi kệ?
-          </h3>
-          <div className="flex modal-action justify-between">
-            <button className="btn w-20 bg-orange-500">Đồng ý</button>
-            <form method="dialog">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="btn w-20"
-              >
-                Hủy
-              </button>
-            </form>
-          </div>
-        </div>
-      </dialog>
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
@@ -240,6 +242,40 @@ export default function ProductInventory({ products }) {
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="btn bg-gray-500 text-white"
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
+            <h3 className="font-bold text-lg text-center mb-4">
+              Bạn muốn xóa sản phẩm này khỏi kho?
+            </h3>
+            
+            <p className="text-sm text-gray-600 text-center mb-6">
+              Bạn đang muốn xóa sản phẩm {currentProduct.title}.
+            </p>
+            <div className="mb-4">
+                <img
+                  src={currentProduct?.images[0]}
+                  alt={currentProduct?.title}
+                  className="w-full h-64 object-cover rounded-md"
+                />
+              </div>
+            <div className="flex justify-center gap-4">
+              <button
+                className="btn w-24 bg-red-500 text-white hover:bg-red-600"
+                onClick={()=>handleDeleteProduct(currentProduct)}
+              >
+                Đồng ý
+              </button>
+              <button
+                className="btn w-24 bg-gray-300 text-black hover:bg-gray-400"
+                onClick={() => setIsDeleteModal(false)}
               >
                 Hủy
               </button>

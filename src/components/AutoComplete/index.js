@@ -6,18 +6,21 @@ import {
   ComboboxOptions,
 } from "@headlessui/react";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Autocomplete({ suggestion, onchange, placeholder }) {
+export default function Autocomplete({ suggestion, onchange, placeholder, defaultValue}) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null); 
 
-  // const filteredSuggestion =
-  //   query === ""
-  //     ? suggestion
-  //     : suggestion.filter((object) => {
-  //         return object.name.toLowerCase().includes(query.toLowerCase());
-  //       });
+  useEffect(() => {
+    if (defaultValue) {
+      const defaultObj = suggestion.find(item => item.name === defaultValue);
+      if (defaultObj) {
+        setSelected(defaultObj);  // Nếu có giá trị mặc định, set selected
+        setQuery(defaultValue);   // Và set query để ô nhập có giá trị mặc định
+      }
+    }
+  }, [defaultValue, suggestion]);
   const filteredSuggestion =
   query === ""
     ? suggestion

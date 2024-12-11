@@ -13,6 +13,7 @@ import apiFilterCategoryByBrand from "../../apis/apiFilterCategoryByBrand";
 import apiFilterProductByBrand from "../../apis/apiFilterProductByBrand";
 
 export default function WarehouseReceipt() {
+  const [isUpdate, setIsupdate] = useState(false)
   const [listProduct, setListProduct] = useState([]);
   const navigate = useNavigate();
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -426,6 +427,16 @@ export default function WarehouseReceipt() {
     fetchProducts();
     generateWarehouseReceiptCode();
   }, []);
+  const handleUpdate = async() => {
+    openModal()
+    setIsupdate(true)
+    const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const response = await apiFilterProductByBrand(token, {
+        brandName: brand,
+      });
+      setListProduct(response.products)
+  }
   return (
     <>
       <div
@@ -470,7 +481,7 @@ export default function WarehouseReceipt() {
                   Danh sách mặt hàng {brand}
                 </h4>
                 {isClicked ? (
-                  <button id="UpdateModal" className="btn mr-2" onClick={openModal}>
+                  <button className="btn mr-2" onClick={handleUpdate}>
                     Thêm sản phẩm
                   </button>
                 ) : (
@@ -671,7 +682,8 @@ export default function WarehouseReceipt() {
                   suggestion={listBrand}
                   onchange={handleChangeBrand} // This should call your API or update state
                   placeholder="Chọn nhà cung cấp"
-                  value={brand} // Pass the current brand state
+                  value={brand}
+                  defaultValue={isUpdate ? brand : ""}
                 />
               </div>
               {brand && (
