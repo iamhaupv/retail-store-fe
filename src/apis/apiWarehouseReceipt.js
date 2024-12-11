@@ -69,13 +69,24 @@ const apiChangeIsDisplayProduct = async (token, payload) => {
     console.log("api get all warehouse receipt week is error" + error);
   }
 };
+const apiSearchProducts = async (token, payload) => {
+  try {
+    const response = await axios.post(`${url}warehouse/search-product`, payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("api search products is error" + error);
+  }
+};
 const apiWarehouseReceipt = {
   apiSumTotalAmountReceipt,
   apiSearchById,
   apiSearchByName,
   apiSearchProductExpires,
   apiGetAllWarehouseReceiptWeek,
-  apiChangeIsDisplayProduct
+  apiChangeIsDisplayProduct,
+  apiSearchProducts
 };
 
 export default apiWarehouseReceipt;
