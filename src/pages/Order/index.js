@@ -140,7 +140,7 @@ export default function Order() {
         <div className="w-full animate__animated animate__fadeInRight ">
           <div className=" mt-3 mr-3 flex justify-between">
             <h4 className="font-bold text-xl w-full ml-4">Danh sách hóa đơn</h4>
-            <div className="w-32 p-1 bg-white rounded-lg shadow-md text-center">
+            {/* <div className="w-32 p-1 bg-white rounded-lg shadow-md text-center">
       <div className="flex justify-between">
         <button
           onClick={handlePrevDay}
@@ -155,7 +155,7 @@ export default function Order() {
           Tiếp tục
         </button>
       </div>
-    </div>
+    </div> */}
             <div className="flex w-fit">
               <Link to="/createOrder">
                 <button className="drawer-button btn btn-success text-white w-32">
@@ -223,6 +223,44 @@ export default function Order() {
               )}
             </select>
             <div className="flex w-fit">
+            <button
+                    type="button"
+                    className="btn w-28 h-3 justify-items-center border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
+                    onClick={handlePrevDay}
+                  >
+                    <svg
+                      class="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    Trở về
+                  </button>
+                  <button
+                    type="button"
+                    className="btn w-28 h-3 ml-4 mr-2 justify-items-center  border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
+                    onClick={handleNextDay}
+                  >
+                    Tiếp
+                    <svg
+                      class="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
               <div className="w-72 mr-2">
                 <Datepicker
                   value={value}
