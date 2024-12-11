@@ -8,7 +8,7 @@ export default function SupplyTableDetail({ brands }) {
         <tr className="z-20 hover:bg-slate-100">
           <th>
             <div>
-              <div className="font-bold">{brand.id}</div>
+              <div className="font-bold text-right">{brand.id}</div>
               {/* <Barcode value={brand._id} /> */}
             </div>
           </th>
@@ -23,7 +23,7 @@ export default function SupplyTableDetail({ brands }) {
             </div>
           </td>
           <td className="text-ellipsis">{brand.address}</td>
-          <td>{brand.phone}</td>
+          <td className="text-right">{brand.phone}</td>
           <td className="whitespace-nowrap">{brand.supplyName}</td>
 
           <td className="whitespace-nowrap">

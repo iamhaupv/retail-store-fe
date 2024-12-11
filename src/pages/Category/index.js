@@ -271,8 +271,8 @@ export default function Category() {
                     {units.map((unit) => (
                       <tr className="hover:bg-slate-100">
                         <td key={unit._id}>{unit.name}</td>
-                        <td>{unit.convertQuantity}</td>
-                        <td>
+                        <td className="text-right w-10">{unit.convertQuantity}</td>
+                        <td className="w-32">
                           <div className="flex">
                             <label
                               onClick={() => {
