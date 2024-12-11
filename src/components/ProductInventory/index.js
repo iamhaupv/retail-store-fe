@@ -71,12 +71,12 @@ export default function ProductInventory({ products }) {
           <tr key={product._id}>
             <td>
               <div>
-                <div className="font-bold">{product.id || "ASM001"}</div>
+                <div className="font-bold text-right">{product.id || "ASM001"}</div>
                 {/* <Barcode value={product._id}/> */}
               </div>
             </td>
             <td>
-              <div className="font-bold">{product.idPNK || "P0212421"}</div>
+              <div className="font-bold text-right">{product.idPNK || "P0212421"}</div>
             </td>
             <td>
               <div className="flex items-center gap-3">
@@ -97,10 +97,10 @@ export default function ProductInventory({ products }) {
               <span>{checkExpirationStatus(product.expires)}</span>
             </td>
             <td>{formatDate(product.expires)}</td>
-            <td> {product.quantityDynamic} </td>
-            <td>{product?.unit}</td>
-            <td>{product.importPrice.toLocaleString()} đ</td>
-            <td>{product.discount || 0}%</td>
+            <td className="text-right"> {product.quantityDynamic} </td>
+            <td className="text-right">{product?.unit}</td>
+            <td className="text-right">{product.importPrice.toLocaleString()} đ</td>
+            <td className="text-right">{product.discount || 0}%</td>
             <td>
               <div className="flex">
                 <button

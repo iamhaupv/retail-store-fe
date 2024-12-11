@@ -41,7 +41,7 @@ export default function TableProductByName({ listProduct, reloadProducts }) {
         <tr key={product._id} className="hover:bg-slate-100">
           <td>
             <div>
-              <div className="font-bold">{product.id}</div>
+              <div className="font-bold text-right">{product.id}</div>
             </div>
           </td>
           <td>
@@ -64,16 +64,16 @@ export default function TableProductByName({ listProduct, reloadProducts }) {
             {product.status === "in_stock" ? "Còn hàng" : "Hết hàng"}
           </td>
           <td>
-            <h1 className="">{product.quantity}</h1>
+            <h1 className=" text-right">{product.quantity}</h1>
           </td>
           <td>{product?.unit?.name}</td>
           <td>
-            <h1 className="whitespace-nowrap">
+            <h1 className="whitespace-nowrap text-right">
               {product.price.toLocaleString()} đ
             </h1>
           </td>
           <td>
-            <h1 className="whitespace-nowrap">
+            <h1 className="whitespace-nowrap text-right">
               {product.sold}
             </h1>
           </td>

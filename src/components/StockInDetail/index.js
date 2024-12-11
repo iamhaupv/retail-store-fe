@@ -14,15 +14,15 @@ export default function StockInDetail({ receipts }) {
     <>
       {receipts.map((receipt) => (
         <tr key={receipt._id} className="hover:bg-slate-100">
-          <td>{receipt.idPNK}</td>
+          <td className="text-right w-10">{receipt.idPNK}</td>
           <td>{formatDate(receipt.createdAt)}</td>
           <td>
             {/* {receipt.user.name} */}
             {receipt?.user?.employee?.name}
           </td>
-          <td className="content-end">{receipt.products.length}</td>
+          <td className="content-end text-right w-10">{receipt.products.length}</td>
           <td>
-            <h1 className="flex justify-end items-center">
+            <h1 className="flex justify-end items-center text-right">
             {receipt.products.reduce((total, product) => {
                 const quantity = product.quantity || 0; // Số lượng thực tế
                 const importPrice = product.importPrice || 0; // Giá nhập

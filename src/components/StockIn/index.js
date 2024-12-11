@@ -255,8 +255,8 @@ export default function StockIn() {
                 className={
                   sortConfig.key === "idPNK"
                     ? sortConfig.direction === "asc"
-                      ? "asc"
-                      : "desc"
+                      ? "asc "
+                      : "desc "
                     : ""
                 }
               >
