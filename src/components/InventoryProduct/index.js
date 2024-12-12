@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ProductInventory from "../ProductInventory";
 import apiGetAllProductByReceipt from "../../apis/apiGetAllProductByReceipt";
 import Autocomplete from "../AutoComplete";
-import apiGetFilteredWarehouseReceipts from "../../apis/apiGetFilteredWarehouseReceipts";
 import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 import "./InventoryProduct.css";
 import { ToastContainer } from "react-toastify";
@@ -386,25 +385,15 @@ export default function InventoryProduct({ onChangeModal }) {
               </tr>
             </thead>
             <tbody>
-              {title === "" &&
-              status === "" &&
-              brand === "" &&
-              id === "" &&
-              idPNK === "" ? (
-                <ProductInventory
-                  products={products}
-                  reloadProducts={reloadProducts}
-                />
-              ) : searchProducts.length > 0 ? (
-                <ProductInventory
-                  products={searchProducts}
-                  reloadProducts={reloadProducts}
-                />
-              ) : (
-                <td>
-                  <div>Không có sản phẩm nào</div>
-                </td>
-              )}
+            {products.length > 0 && title === "" && status === "" && brand === "" && id === "" && idPNK === "" ? (
+    <ProductInventory products={products} reloadProducts={reloadProducts} />
+  ) : searchProducts.length > 0 ? (
+    <ProductInventory products={searchProducts} reloadProducts={reloadProducts} />
+  ) : (
+    <tr>
+      <td colSpan="10" className="text-center">Không có sản phẩm nào</td>
+    </tr>
+  )}
             </tbody>
             <tfoot>
               <tr></tr>

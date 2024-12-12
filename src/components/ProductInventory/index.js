@@ -35,11 +35,13 @@ export default function ProductInventory({ products, reloadProducts }) {
     setIsModalOpen(true);
   };
   const handleDiscountChange = async (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
     if (name === "discount") {
       // Ensure discount is a number between 0 and 100
-      if (value < 0) value = 0;
-      if (value > 100) value = 100;
+      if (value < 5)
+         value = "";
+      if (value > 80) 
+        value = "";
     }
 
     setCurrentProduct((prevProduct) => ({
@@ -227,6 +229,8 @@ export default function ProductInventory({ products, reloadProducts }) {
               </label>
               <input
                 type="number"
+                min={5}
+                max={80}
                 id="discount"
                 name="discount"
                 value={currentProduct?.discount || ""}

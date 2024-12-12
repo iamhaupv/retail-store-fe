@@ -4,74 +4,91 @@ import Swal from "sweetalert2";
 import apiCreateUnit from "../../apis/apiCreateUnit";
 import apiGetAllUnit from "../../apis/apiGetAllUnit";
 import apiUnit from "../../apis/apiUnit";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Category() {
-  const [id, setId] = useState("")
+  const [isDelete, setIsDelete] = useState(false);
+  const [id, setId] = useState("");
   const [isUpdate, setIsUpdate] = useState(false);
   const [payload, setPayload] = useState({});
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false); // Thêm state loading
+  const [unitCurrent, setUnitCurrent] = useState(null);
+  const handleIsDisplay = async (product) => {
+    try {
+      
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("Token is invalid!");
+      const id = product._id
+      const response = await apiUnit.apiIsDisplay(token, {id});
+      if(response.success) {
+        toast.success("Xóa thành công")
+        fetchUnits()
+      }
+        else toast.error("Xóa không thành công")
+      setIsDelete(false);
+    } catch (error) {
+      console.log("handle is display is error", error);
+    }
+    
+  };
+  // #region table sort
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-   // #region table sort
-   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const sortTable = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
+    }
 
-   const sortTable = (key) => {
-     let direction = "asc";
-     if (sortConfig.key === key && sortConfig.direction === "asc") {
-       direction = "desc"; // Đổi hướng nếu cột đã được sắp xếp theo chiều tăng dần
-     }
- 
-     console.log("Key, value", key); 
- 
-     const sortedData = [
-       ...(units),
-     ].sort((a, b) => {
-       //console.log("Key, value", typeof a[key]); 
-       if (typeof a[key] === "string") {
-         // Sắp xếp theo chuỗi (ABC)
-         if (direction === "asc") {
-           return a[key].localeCompare(b[key]);
-         } else {
-           return b[key].localeCompare(a[key]);
-         }
-       } else if (typeof a[key] === "number") {
-         // Sắp xếp theo số (bé nhất đến lớn nhất)
-         if (direction === "asc") {
-           return a[key] - b[key];
-         } else {
-           return b[key] - a[key];
-         }
-       } else if (typeof a[key] === "object") {
-         for (const [key2, value] of Object.entries(a[key])) {
-           if (key2 === "name") {
-             // Sắp xếp theo chuỗi (ABC)
-             if (direction === "asc") {
-               return a[key]["name"].localeCompare(b[key]["name"]);
-             } else {
-               return b[key]["name"].localeCompare(a[key]["name"]);
-             }
-           }
-           // if (key2 === "name") {
-           //   if (direction === "asc") {
-           //     return a[key]["name"].localeCompare(b[key]["name"]);
-           //   } else {
-           //     return b[key]["name"].localeCompare(a[key]["name"]);
-           //   }
-           // } 
-         }
-       }
-       return 0;
-     });
- 
-     setSortConfig({ key, direction });
-         setUnits(sortedData);
-      // Cập nhật lại danh sách sản phẩm đã sắp xếp
-   };
- 
-      // Cập nhật lại danh sách sản phẩm đã sắp xếp
-   
-   
-   // end region
+    console.log("Key, value", key);
+
+    const sortedData = [...units].sort((a, b) => {
+      //console.log("Key, value", typeof a[key]);
+      if (typeof a[key] === "string") {
+        // Sắp xếp theo chuỗi (ABC)
+        if (direction === "asc") {
+          return a[key].localeCompare(b[key]);
+        } else {
+          return b[key].localeCompare(a[key]);
+        }
+      } else if (typeof a[key] === "number") {
+        // Sắp xếp theo số (bé nhất đến lớn nhất)
+        if (direction === "asc") {
+          return a[key] - b[key];
+        } else {
+          return b[key] - a[key];
+        }
+      } else if (typeof a[key] === "object") {
+        for (const [key2, value] of Object.entries(a[key])) {
+          if (key2 === "name") {
+            // Sắp xếp theo chuỗi (ABC)
+            if (direction === "asc") {
+              return a[key]["name"].localeCompare(b[key]["name"]);
+            } else {
+              return b[key]["name"].localeCompare(a[key]["name"]);
+            }
+          }
+          // if (key2 === "name") {
+          //   if (direction === "asc") {
+          //     return a[key]["name"].localeCompare(b[key]["name"]);
+          //   } else {
+          //     return b[key]["name"].localeCompare(a[key]["name"]);
+          //   }
+          // }
+        }
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setUnits(sortedData);
+    // Cập nhật lại danh sách sản phẩm đã sắp xếp
+  };
+
+  // Cập nhật lại danh sách sản phẩm đã sắp xếp
+
+  // end region
 
   const handleBlur = async (e) => {
     const { name } = e.target;
@@ -131,7 +148,11 @@ export default function Category() {
         const token = localStorage.getItem("accessToken");
         if (!token) throw new Error("Token is invalid!");
         if (id) {
-          await apiUnit.apiUpdateUnit(token, { pid: id, name, convertQuantity });
+          await apiUnit.apiUpdateUnit(token, {
+            pid: id,
+            name,
+            convertQuantity,
+          });
         } else {
           await apiCreateUnit(token, { name, convertQuantity });
         }
@@ -144,38 +165,6 @@ export default function Category() {
       }
     }
   };
-  // const handleUpdate = async (id) => {
-  //   const { name, convertQuantity } = payload;
-
-  //   // Kiểm tra xem có lỗi không
-  //   if (!name || !convertQuantity) {
-  //     Swal.fire("Lỗi!", "Vui lòng kiểm tra thông tin!", "error");
-  //     return;
-  //   }
-
-  //   // Hiển thị hộp thoại xác nhận
-  //   const result = await Swal.fire({
-  //     title: "Bạn có muốn lưu không?",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Có",
-  //     cancelButtonText: "Không",
-  //   });
-
-  //   if (result.isConfirmed) {
-  //     setLoading(true);
-  //     try {
-  //       const token = localStorage.getItem("accessToken");
-  //       if (!token) throw new Error("Token is invalid!");
-  //       await apiUnit.apiUpdateUnit(token, { pid: id, payload});
-  //       setLoading(false);
-  //       Swal.fire("Thành công!", "Dữ liệu đã được lưu.", "success");
-  //       fetchUnits();
-  //     } catch (error) {
-  //       setLoading(false);
-  //       Swal.fire("Lỗi!", "Không thể lưu dữ liệu.", "error");
-  //     }
-  //   }
-  // };
   const [units, setUnits] = useState([]);
   const fetchUnits = async () => {
     try {
@@ -190,8 +179,11 @@ export default function Category() {
   useEffect(() => {
     fetchUnits();
   }, []);
+  console.log();
+  
   return (
     <>
+    <ToastContainer/>
       <div
         className="w-11/12 h-full justify-center flex"
         style={{ backgroundColor: "#F5F5F5" }}
@@ -212,8 +204,8 @@ export default function Category() {
               <div className="flex mt-5 w-full h-1/6 justify-end">
                 <label
                   onClick={() => {
-                    setIsUpdate(false)
-                    setPayload([])
+                    setIsUpdate(false);
+                    setPayload([]);
                   }}
                   htmlFor="UpdateDrawer-side"
                   className="drawer-button btn btn-success text-white w-36 mr-9"
@@ -245,25 +237,29 @@ export default function Category() {
                   <thead>
                     <tr>
                       <th
-                      onClick={() => sortTable("name")}
-                      className={
-                        sortConfig.key === "name"
-                          ? sortConfig.direction === "asc"
-                            ? "asc"
-                            : "desc"
-                          : ""
-                      }
-                      >Đơn vị tính</th>
+                        onClick={() => sortTable("name")}
+                        className={
+                          sortConfig.key === "name"
+                            ? sortConfig.direction === "asc"
+                              ? "asc"
+                              : "desc"
+                            : ""
+                        }
+                      >
+                        Đơn vị tính
+                      </th>
                       <th
-                      onClick={() => sortTable("convertQuantity")}
-                      className={
-                        sortConfig.key === "convertQuantity"
-                          ? sortConfig.direction === "asc"
-                            ? "asc"
-                            : "desc"
-                          : ""
-                      }
-                      >Số lượng quy đổi</th>
+                        onClick={() => sortTable("convertQuantity")}
+                        className={
+                          sortConfig.key === "convertQuantity"
+                            ? sortConfig.direction === "asc"
+                              ? "asc"
+                              : "desc"
+                            : ""
+                        }
+                      >
+                        Số lượng quy đổi
+                      </th>
                       <th>Thao tác</th>
                     </tr>
                   </thead>
@@ -271,13 +267,15 @@ export default function Category() {
                     {units.map((unit) => (
                       <tr className="hover:bg-slate-100">
                         <td key={unit._id}>{unit.name}</td>
-                        <td className="text-right w-10">{unit.convertQuantity}</td>
+                        <td className="text-right w-10">
+                          {unit.convertQuantity}
+                        </td>
                         <td className="w-32">
                           <div className="flex">
                             <label
                               onClick={() => {
                                 setIsUpdate(true);
-                                setId(unit._id)
+                                setId(unit._id);
                                 setPayload({
                                   name: unit.name,
                                   convertQuantity: unit.convertQuantity,
@@ -308,11 +306,10 @@ export default function Category() {
                                 backgroundColor: "#feebe8",
                                 outline: "",
                               }}
-                              onClick={() =>
-                                document
-                                  .getElementById("DeleteSupplyDetail")
-                                  .showModal()
-                              }
+                              onClick={() => {
+                                setIsDelete(true)
+                                setUnitCurrent(unit)
+                              }}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -334,22 +331,30 @@ export default function Category() {
                         </td>
                       </tr>
                     ))}
-                    <dialog id="DeleteSupplyDetail" className="modal">
-                      <div className="modal-box w-3/12 ">
-                        <h3 className="font-bold text-lg">
-                          Bạn muốn xóa đơn vị tính này khỏi danh sách bán?
-                        </h3>
-                        <div className="flex modal-action justify-between ">
-                          <button className="btn w-20 bg-orange-500">
-                            {" "}
-                            Đồng ý
-                          </button>
-                          <form method="dialog ">
-                            <button className="btn w-20">Hủy</button>
-                          </form>
+                    {isDelete && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div className="modal-box w-3/12 bg-white p-6 rounded-lg">
+                          <h3 className="font-bold text-lg mb-4">
+                            Bạn có muốn xóa đơn vị tính này không?
+                          </h3>
+                          <div>Xóa</div>
+                          <div className="flex justify-between mt-6">
+                            <button
+                              className="btn w-20 bg-orange-500 text-white"
+                              onClick={()=>handleIsDisplay(unitCurrent)}
+                            >
+                              Đồng ý
+                            </button>
+                            <button
+                              className="btn w-20 bg-gray-300"
+                              onClick={() => setIsDelete(false)}
+                            >
+                              Hủy
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </dialog>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -393,7 +398,7 @@ export default function Category() {
                   )}
                 </div>
                 <button
-                  onClick={()=> handleSubmit(id)} // Gọi handleSubmit khi nhấn nút
+                  onClick={() => handleSubmit(id)} // Gọi handleSubmit khi nhấn nút
                   className={`btn btn-success text-white w-36 ml-80 mt-4 ${
                     loading ? "loading" : ""
                   }`} // Thêm lớp loading

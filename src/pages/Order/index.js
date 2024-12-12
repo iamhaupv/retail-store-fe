@@ -11,19 +11,29 @@ export default function Order() {
   const getToday = () => {
     const today = new Date();
     return new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  };  
+  };
   const [order, setOrder] = useState("");
+  function formatDate(date) {
+    if (!(date instanceof Date)) {
+      date = new Date(date);
+    }
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
   const [value, setValue] = useState({
-    startDate: getToday(),
-    endDate: getToday(),
+    startDate: formatDate(getToday()),
+    endDate: formatDate(getToday()),
   });
+
   const handleNextDay = () => {
     const newStartDate = new Date(value.startDate);
     const newEndDate = new Date(value.endDate);
-  
-    newStartDate.setDate(newStartDate.getDate() + 1); 
-    newEndDate.setDate(newEndDate.getDate() + 1); 
-  
+
+    newStartDate.setDate(newStartDate.getDate() + 1);
+    newEndDate.setDate(newEndDate.getDate() + 1);
+
     setValue({
       startDate: newStartDate,
       endDate: newEndDate,
@@ -32,20 +42,26 @@ export default function Order() {
   const handlePrevDay = () => {
     const newStartDate = new Date(value.startDate);
     const newEndDate = new Date(value.endDate);
-  
-    newStartDate.setDate(newStartDate.getDate() - 1); 
+
+    newStartDate.setDate(newStartDate.getDate() - 1);
     newEndDate.setDate(newEndDate.getDate() - 1);
-  
+
     setValue({
       startDate: newStartDate,
       endDate: newEndDate,
+    });
+  };
+  const handleCurrentDay = () => {
+    setValue({
+      startDate: getToday(),
+    endDate: getToday(),
     });
   };
   const [listOrderByCondition, setListOrderByCondition] = useState([]);
   const [employee, setEmployee] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orders, setOrders] = useState([]);
-  
+
   const fetchOrderByCondition = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -69,15 +85,7 @@ export default function Order() {
   const handleOrderClick = (order) => {
     setSelectedOrder(order);
   };
-  function formatDate(date) {
-    if (!(date instanceof Date)) {
-      date = new Date(date);
-    }
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
+  
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -123,13 +131,16 @@ export default function Order() {
         product?.price * product?.quantity * product?.unit?.convertQuantity),
     0
   );
+  // const totalDiscount = selectedOrder?.products?.reduce((sum, product) => {
+  //   const discount = product?.product?.discount || 0;
+  //   const price = product?.product?.price;
+  //   const quantity = product?.quantity;
+  //   const convertQuantity = product?.unit?.convertQuantity || 1;
+  //   const productDiscount = price * quantity * discount * convertQuantity;
+  //   return sum + productDiscount / 100;
+  // }, 0);
   const totalDiscount = selectedOrder?.products?.reduce((sum, product) => {
-    const discount = product?.product?.discount || 0;
-    const price = product?.product?.price;
-    const quantity = product?.quantity;
-    const convertQuantity = product?.unit?.convertQuantity || 1;
-    const productDiscount = price * quantity * discount * convertQuantity;
-    return sum + productDiscount / 100;
+    return sum + product.discountAmount;
   }, 0);
   return (
     <>
@@ -140,22 +151,6 @@ export default function Order() {
         <div className="w-full animate__animated animate__fadeInRight ">
           <div className=" mt-3 mr-3 flex justify-between">
             <h4 className="font-bold text-xl w-full ml-4">Danh sách hóa đơn</h4>
-            {/* <div className="w-32 p-1 bg-white rounded-lg shadow-md text-center">
-      <div className="flex justify-between">
-        <button
-          onClick={handlePrevDay}
-          className="px-1 py-0.5 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none text-xs"
-        >
-          Trở về
-        </button>
-        <button
-          onClick={handleNextDay}
-          className="px-1 py-0.5 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none text-xs"
-        >
-          Tiếp tục
-        </button>
-      </div>
-    </div> */}
             <div className="flex w-fit">
               <Link to="/createOrder">
                 <button className="drawer-button btn btn-success text-white w-32">
@@ -223,48 +218,56 @@ export default function Order() {
               )}
             </select>
             <div className="flex w-fit">
-            <button
-                    type="button"
-                    className="btn w-28 h-3 justify-items-center border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
-                    onClick={handlePrevDay}
-                  >
-                    <svg
-                      class="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    Trở về
-                  </button>
-                  <button
-                    type="button"
-                    className="btn w-28 h-3 ml-4 mr-2 justify-items-center  border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
-                    onClick={handleNextDay}
-                  >
-                    Tiếp
-                    <svg
-                      class="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
+              <button
+                type="button"
+                className="mr-4 btn w-28 h-3 justify-items-center border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
+                onClick={handleCurrentDay}
+              >
+                Hiện tại
+              </button>
+              <button
+                type="button"
+                className="btn w-28 h-3 justify-items-center border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
+                onClick={handlePrevDay}
+              >
+                <svg
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Trở về
+              </button>
+              <button
+                type="button"
+                className="btn w-28 h-3 ml-4 mr-2 justify-items-center  border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
+                onClick={handleNextDay}
+              >
+                Tiếp
+                <svg
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
               <div className="w-72 mr-2">
                 <Datepicker
                   value={value}
                   onChange={(newValue) => setValue(newValue)}
+                  dateFormat="dd/MM/yyyy"
                 />
               </div>
               <label className="input input-bordered h-10 flex items-center gap-2">

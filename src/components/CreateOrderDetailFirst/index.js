@@ -606,7 +606,7 @@ export default function CreateOrderDetailFirst() {
               </tbody>
             </table>
           </div>
-          <div className="flex w-full ml-20 h-auto" >
+          <div className="flex w-full ml-4 h-auto" >
             <div className="w-8/12"></div>
             <div className="h-auto justify-end items-end mt-4">
               <div className="flex justify-between items-center">

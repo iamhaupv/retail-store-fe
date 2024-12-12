@@ -11,6 +11,7 @@ import apiFilterProductMultiCondition from "../../apis/apiFilterProductMultiCond
 import Autocomplete from "../../components/AutoComplete";
 import apiFilterCategoryByBrand from "../../apis/apiFilterCategoryByBrand";
 import apiFilterProductByBrand from "../../apis/apiFilterProductByBrand";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function WarehouseReceipt() {
   const [isUpdate, setIsupdate] = useState(false)
@@ -269,8 +270,8 @@ export default function WarehouseReceipt() {
       value = value.replace(/[^\d]/g, "");
 
       // Ensure the value is not less than 0
-      if (parseFloat(value) < 0) {
-        value = "0";
+      if (parseFloat(value) <= 0) {
+        value = "1";
       }
       let price = formatCurrency(value);
       let inputEle = document.getElementById("id-" + product._id);
@@ -439,6 +440,7 @@ export default function WarehouseReceipt() {
   }
   return (
     <>
+    <ToastContainer/>
       <div
         className="w-11/12 h-auto justify-center flex overflow-y-auto"
         style={{ backgroundColor: "#F5F5F5" }}
@@ -527,15 +529,22 @@ export default function WarehouseReceipt() {
                               <input
                                 name="quantity"
                                 value={product.quantity}
-                                onChange={(e) =>
-                                  handleChangeInput(
-                                    product,
-                                    index,
-                                    "quantity",
-                                    e.target.value
-                                  )
-                                }
-                                type="text"
+                                // onChange={(e) =>
+                                //   handleChangeInput(
+                                //     product,
+                                //     index,
+                                //     "quantity",
+                                //     e.target.value
+                                //   )
+                                // }
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  if (value > 0) {
+                                    handleChangeInput(product, index, "quantity", value);
+                                  }
+                                }}
+                                min={1}
+                                type="Number"
                                 placeholder="10"
                                 className="input input-bordered w-36 h-10"
                               />
@@ -573,6 +582,7 @@ export default function WarehouseReceipt() {
                                   )
                                 }
                                 type="text"
+                               
                                 placeholder="10000"
                                 className="input input-bordered w-36 h-10"
                               />

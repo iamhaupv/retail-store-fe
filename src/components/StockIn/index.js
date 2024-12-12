@@ -7,46 +7,71 @@ import apiGetAllReceipt from "../../apis/apiGetAllReceipt";
 import InputPNK from "../InputPNK";
 import apiFilterReceiptByDate from "../../apis/apiFilterReceiptByDate";
 import "./StockIn.css";
-import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 export default function StockIn() {
-  const getToday = () => {
-    const today = new Date();
-    return new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  };  
+  const getStartOfWeek = (date) => {
+    const current = new Date(date);
+    const day = current.getDay();
+    const diff = current.getDate() - day + (day === 0 ? -6 : 1);
+    current.setDate(diff);
+    current.setHours(0, 0, 0, 0);
+    return current;
+  };
+
+  const getEndOfWeek = (date) => {
+    const current = new Date(date);
+    const day = current.getDay();
+    const diff = current.getDate() - day + (day === 0 ? 0 : 7);
+    current.setDate(diff);
+    current.setHours(23, 59, 59, 999);
+    return current;
+  };
+
   const [value, setValue] = useState({
-    startDate: getToday(),
-    endDate: getToday(),
+    startDate: getStartOfWeek(new Date()),
+    endDate: getEndOfWeek(new Date()),
   });
-  const [receiptsWeek, setReceiptsWeek] = useState([])
+  const handleCurrentDate = () => {
+    setValue({
+      startDate: getStartOfWeek(new Date()),
+      endDate: getEndOfWeek(new Date()),
+    });
+  };
+  const handleNextWeek = () => {
+    const newStartDate = new Date(value.startDate);
+    const newEndDate = new Date(value.endDate);
+
+    // Move to the next week by adding 7 days
+    newStartDate.setDate(newStartDate.getDate() + 7);
+    newEndDate.setDate(newEndDate.getDate() + 7);
+
+    // Update the state with the new dates
+    setValue({
+      startDate: getStartOfWeek(newStartDate), // Start of the next week
+      endDate: getEndOfWeek(newEndDate), // End of the next week
+    });
+  };
+
+  // Handle "Previous week" button click
+  const handlePrevWeek = () => {
+    const newStartDate = new Date(value.startDate);
+    const newEndDate = new Date(value.endDate);
+
+    // Move to the previous week by subtracting 7 days
+    newStartDate.setDate(newStartDate.getDate() - 7);
+    newEndDate.setDate(newEndDate.getDate() - 7);
+
+    // Update the state with the new dates
+    setValue({
+      startDate: getStartOfWeek(newStartDate), // Start of the previous week
+      endDate: getEndOfWeek(newEndDate), // End of the previous week
+    });
+  };
 
   const [receipts, setReceipts] = useState([]);
   const [idPNKs, setIdPNKs] = useState([]);
   const [recepitsByDate, setReceiptsByDate] = useState([]);
   const [idPNK, setIdPNK] = useState("");
-  const handleNextDay = () => {
-    const newStartDate = new Date(value.startDate);
-    const newEndDate = new Date(value.endDate);
-  
-    newStartDate.setDate(newStartDate.getDate() + 1); 
-    newEndDate.setDate(newEndDate.getDate() + 1); 
-  
-    setValue({
-      startDate: newStartDate,
-      endDate: newEndDate,
-    });
-  };
-  const handlePrevDay = () => {
-    const newStartDate = new Date(value.startDate);
-    const newEndDate = new Date(value.endDate);
-  
-    newStartDate.setDate(newStartDate.getDate() - 1); 
-    newEndDate.setDate(newEndDate.getDate() - 1);
-  
-    setValue({
-      startDate: newStartDate,
-      endDate: newEndDate,
-    });
-  };
+
   // #region table sort
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const sortTable = (key) => {
@@ -67,7 +92,6 @@ export default function StockIn() {
         } else {
           return b[key].localeCompare(a[key]);
         }
-
       } else if (typeof a[key] === "number") {
         // Sắp xếp theo số (bé nhất đến lớn nhất)
         if (direction === "asc") {
@@ -77,13 +101,13 @@ export default function StockIn() {
         }
       } else if (typeof a[key] === "object") {
         console.log("Key 3", a[key].length, a[key], key);
-        
+
         if (key === "products") {
           // Sắp xếp theo chuỗi (ABC)
           if (direction === "asc") {
-            return a[key].length - b[key].length
+            return a[key].length - b[key].length;
           } else {
-            return b[key].length - a[key].length
+            return b[key].length - a[key].length;
           }
         }
 
@@ -110,13 +134,13 @@ export default function StockIn() {
     });
 
     setSortConfig({ key, direction });
-    if(idPNK === "" && value.startDate === null && value.endDate === null){
+    if (idPNK === "" && value.startDate === null && value.endDate === null) {
       setReceipts(sortedData);
-    }else{
-      setReceiptsByDate(sortedData)
+    } else {
+      setReceiptsByDate(sortedData);
     }
-    
- // Cập nhật lại danh sách sản phẩm đã sắp xếp
+
+    // Cập nhật lại danh sách sản phẩm đã sắp xếp
   };
   // end region
   const fetchReceipts = async () => {
@@ -199,7 +223,7 @@ export default function StockIn() {
 
   const receiptCount =
     idPNK === "" && value.startDate === null && value.endDate === null
-      ? receiptsWeek.length
+      ? receipts.length
       : idPNK !== "" && value.startDate === null && value.endDate === null
       ? idPNKs.length
       : value.startDate !== null && value.endDate !== null && idPNK === ""
@@ -237,44 +261,51 @@ export default function StockIn() {
         {/* Calender */}
 
         <div className="flex items-center ml-2">
-        <button
-                    type="button"
-                    className="btn w-28 h-4 justify-items-center border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
-                    onClick={handlePrevDay}
-                  >
-                    <svg
-                      class="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    Trở về
-                  </button>
-                  <button
-                    type="button"
-                    className="btn w-28 h-4 ml-4 mr-2 justify-items-center  border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
-                    onClick={handleNextDay}
-                  >
-                    Tiếp
-                    <svg
-                      class="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </button>
+          <button
+            type="button"
+            className="mr-4 btn w-28 h-4 justify-items-center border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
+            onClick={handleCurrentDate}
+          >
+            Tuần hiện tại
+          </button>
+          <button
+            type="button"
+            className="btn w-28 h-4 justify-items-center border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
+            onClick={handlePrevWeek}
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Trở về
+          </button>
+          <button
+            type="button"
+            className="btn w-28 h-4 ml-4 mr-2 justify-items-center  border-y border-gray-300 px-3.5 text-sm font-semibold text-gray-900 hover:bg-white "
+            onClick={handleNextWeek}
+          >
+            Tiếp
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
           <p className="w-20">Ngày lập:</p>
           <div className="w-72">
             <Datepicker
@@ -310,10 +341,12 @@ export default function StockIn() {
         </Link>
       </div>
       {/* Table StockIn */}
-      <div className="overflow-y-auto  mt-7"
-      style={{
-        height: "calc(100vh - 354px)",
-      }}>
+      <div
+        className="overflow-y-auto  mt-7"
+        style={{
+          height: "calc(100vh - 354px)",
+        }}
+      >
         <table className="table  table-pin-rows">
           {/* head */}
           <thead>
@@ -386,7 +419,7 @@ export default function StockIn() {
             value.startDate === null &&
             value.endDate === null ? (
               receipts.length > 0 ? (
-                <StockInDetail receipts={receiptsWeek} />
+                <StockInDetail receipts={receipts} />
               ) : (
                 <div>Không có phiếu nào</div>
               )

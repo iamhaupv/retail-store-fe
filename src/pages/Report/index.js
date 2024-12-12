@@ -9,7 +9,7 @@ import apiWarehouseReceipt from "../../apis/apiWarehouseReceipt";
 export default function Report() {
   const [year, setYear] = useState("2024");
   const [years, setYears] = useState({});
-  const [month, setMonth] = useState("11");
+  const [month, setMonth] = useState("12");
   const [months, setMonths] = useState({});
   const [receipt, setReceipt] = useState({});
   const [sum, setSum] = useState({});

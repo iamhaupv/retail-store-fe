@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { PieChart, Pie, Sector } from "recharts";
 import apiOrder from "../../apis/apiOrder";
+import { useLocation } from "react-router-dom";
 
 export default function PieChartProduct() {
+  const location = useLocation()
+  const dataToDisplay = location.state.dataToDisplay
   const [year, setYear] = useState("2024");
   const [years, setYears] = useState([]);
-  const [month, setMonth] = useState("11");
+  const [month, setMonth] = useState("12");
   const [months, setMonths] = useState([]);
   useEffect(() => {
     const fetchSumTotalAmountByMonth = async () => {
@@ -75,6 +78,8 @@ export default function PieChartProduct() {
     const value = e.target.value;
     setMonth(value);
   };
+  const colors = ["#FF8042", "#FFBB28", "#00C49F", "#0088FE", "#FF6247", "#6A5ACD"];
+
   const renderActiveShape = (props) => {
 
     const RADIAN = Math.PI / 180;
@@ -231,7 +236,8 @@ export default function PieChartProduct() {
             <Pie
               activeIndex={activeIndex}
               activeShape={renderActiveShape}
-              data={month !== "" ? transformedData(months) : transformedData(years)}
+              // data={month !== "" ? transformedData(months) : transformedData(years)}
+              data={dataToDisplay}
               cx={450}
               cy={300}
               innerRadius={180}

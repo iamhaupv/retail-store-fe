@@ -16,7 +16,7 @@ export default function ReportDetail() {
   const [value, setValue] = useState({ startDate: null, endDate: null });
   const [year, setYear] = useState("2024");
   const [years, setYears] = useState([]);
-  const [month, setMonth] = useState("11");
+  const [month, setMonth] = useState("12");
   const [months, setMonths] = useState([]);
   useEffect(() => {
     const fetchSumTotalAmountByMonth = async () => {

@@ -41,6 +41,8 @@ export default function Report2Product() {
   } else if (selectedRange === "365") {
     dataToDisplay = years;
   }
+  console.log(dataToDisplay);
+  
   return (
     <>
       <div className="overflow-x-auto">
@@ -54,7 +56,7 @@ export default function Report2Product() {
             </select>
             (so sánh với lần báo cáo trước đó)
           </h1>
-          <Link to="/pieChartProduct">
+          <Link to="/pieChartProduct" state={{dataToDisplay}}>
             <button
               className="btn w-36 mt-5"
               style={{ backgroundColor: "#e5edf8", color: "#2f80ed" }}

@@ -1,24 +1,23 @@
-import React, { PureComponent, useCallback, useEffect, useState } from "react";
-import Datepicker from "react-tailwindcss-datepicker";
-import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
+import React, { useCallback, useEffect, useState } from "react";
+import { PieChart, Pie, Sector, Cell } from "recharts";
 import apiOrder from "../../apis/apiOrder";
-//import renderActiveShape from "../../components/renderActiveShape/index"
-
-const data = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
-];
 
 
 
 export default function PieChartCategory() {
   const [year, setYear] = useState("2024");
   const [years, setYears] = useState([]);
-  const [month, setMonth] = useState("11");
+  const [month, setMonth] = useState("12");
   const [months, setMonths] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const colors = [
+    "#FF5733",
+    "#33FF57",
+    "#3357FF",
+    "#FF33A6",
+    "#FF8C00",
+    "#9B59B6",
+  ];
   const onPieEnter = useCallback(
     (_, index) => {
       setActiveIndex(index);
@@ -240,15 +239,26 @@ export default function PieChartCategory() {
             <Pie
               activeIndex={activeIndex}
               activeShape={renderActiveShape}
-              data={month !== "" ? transformedData(months) : transformedData(years)}
+              data={
+                month !== "" ? transformedData(months) : transformedData(years)
+              }
               cx={450}
               cy={300}
               innerRadius={180}
               outerRadius={220}
-              fill="#f13612"
               dataKey="value"
               onMouseEnter={onPieEnter}
-            />
+            >
+              {(month !== ""
+                ? transformedData(months)
+                : transformedData(years)
+              ).map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={colors[index % colors.length]}
+                />
+              ))}
+            </Pie>
           </PieChart>
           </div>
         </div>

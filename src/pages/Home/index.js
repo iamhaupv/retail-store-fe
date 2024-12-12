@@ -17,7 +17,7 @@ export default function Home() {
   const [percen, setPercen] = useState({});
   const [year, setYear] = useState("2024");
   const [years, setYears] = useState([]);
-  const [month, setMonth] = useState("11");
+  const [month, setMonth] = useState("12");
   const [months, setMonths] = useState([]);
   const [revenue, setRevenue] = useState({});
   const [productQuantity, setProductQuantity] = useState([]);
@@ -158,8 +158,8 @@ export default function Home() {
               <h1 className="w-full flex ml-4 mt-4 mb-4">
                 <h1 className={`${revenue?.totalAmount > 0 ? 'text-red-400 mr-1' : 'text-green-400 mr-1'}`}>
                   {revenue?.totalAmount > 0
-                    ? +roundNumber(percen?.percentageChange?.totalAmount, 2)
-                    : -roundNumber(percen?.percentageChange?.totalAmount, 2)}
+                    ? + roundNumber(percen?.percentageChange?.totalAmount, 2)
+                    : - roundNumber(percen?.percentageChange?.totalAmount, 2)}
                   %
                 </h1>
                 kể từ ngày hôm qua
