@@ -22,6 +22,21 @@ export default function Home() {
   const [revenue, setRevenue] = useState({});
   const [productQuantity, setProductQuantity] = useState([]);
   const [product_out_of_stock, setProduct_out_of_stock] = useState([]);
+  const customTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const { total, totalImportPrice } = payload[0].payload;
+      const revenue = total - totalImportPrice;
+      return (
+        <div className="p-2 bg-white border rounded shadow">
+          <p className="font-bold">{label}</p>
+          <p>{`Lợi nhuận: ${revenue.toLocaleString()} VNĐ`}</p>
+          <p>{`Tiền vốn: ${totalImportPrice.toLocaleString()} VNĐ`}</p>
+          <p>{`Tổng doanh thu: ${total.toLocaleString()} VNĐ`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
   useEffect(() => {
     const fetchPercen = async () => {
       const token = localStorage.getItem("accessToken");
@@ -329,7 +344,7 @@ export default function Home() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip content={customTooltip}/>
                   <Legend />
                   <Line
                     type="monotone"
