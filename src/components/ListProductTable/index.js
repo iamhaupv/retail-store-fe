@@ -566,11 +566,17 @@ export default function ListProductTable({ role }) {
                   listProduct={products}
                   // listProduct={productsPagination}
                   reloadProducts={reloadProducts}
+                  role={localStorage.getItem(
+                    'role'
+                  )}
                 />
               ) : listProduct.length > 0 ? (
                 <TableProductByName
                   listProduct={listProduct}
                   reloadProducts={reloadProducts}
+                  role={localStorage.getItem(
+                    'role'
+                  )}
                 />
               ) : (
                 <td>
