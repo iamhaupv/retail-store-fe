@@ -28,7 +28,7 @@ export default function SideBar({ role }) {
   
   // Các mục sidebar cho admin
   const adminItems = [
-    { to: "/", label: "Tổng quan", icon: faGaugeHigh, key: "Tổng quan" },
+    { to: "/home", label: "Tổng quan", icon: faGaugeHigh, key: "Tổng quan" },
     {to: "/product-list",  label: "Sản phẩm",key: "Sản phẩm", icon: faBuffer },
     //{ to: "/product", label: "[+] Thêm mới sản phẩm", key: "Thêm mới sản phẩm" },
     //{ to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },
@@ -49,7 +49,7 @@ export default function SideBar({ role }) {
 
   // Các mục sidebar cho user
   const userItems = [
-    { to: "/", label: "Dashboard", icon: faGaugeHigh, key: "dashBoard" },
+    { to: "/home", label: "Tổng quan", icon: faGaugeHigh, key: "Tổng quan" },
     { to: "/product-list", key:"Danh sách sản phẩm", label: "Danh sách sản phẩm", icon: faBuffer },
     // { to: "/product", label: "[+] Thêm mới sản phẩm", key: "Thêm mới sản phẩm" },
     //{ to: "/product-list", label: "Danh sách sản phẩm", key: "Danh sách sản phẩm" },

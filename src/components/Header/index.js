@@ -28,7 +28,7 @@ export default function Header(props) {
     <>
       <div className="navbar h-11 bg-base-100">
         <div className="flex-1">
-          <Link to="/">
+          <Link to="/home">
           <img
             src={logo_company}
             className="w-48 h-full"

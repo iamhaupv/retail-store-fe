@@ -27,16 +27,22 @@ import UpdateSupply from "../pages/UpdateSupply";
 import UpdateUnit from "../pages/UpdateUnit";
 import PieChartProduct from "../pages/PieChartProduct";
 import PieChartCategory from "../pages/PieChartCategory";
+import { Navigate } from "react-router-dom";
 
 export const routes = [
+
   { path: "/signin", element: <SignIn /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
+  {
+    path: "/",
+    element: <Navigate to="/signin" />, 
+  },
   {
     path: "/",
     element: <LayoutDefault />,
     children: [
       {
-        path: "/",
+        path: "/home",
         element: <Home />,
       },
       {
