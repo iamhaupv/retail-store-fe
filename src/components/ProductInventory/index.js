@@ -37,11 +37,10 @@ export default function ProductInventory({ products, reloadProducts }) {
   const handleDiscountChange = async (e) => {
     let { name, value } = e.target;
     if (name === "discount") {
-      // Ensure discount is a number between 0 and 100
-      if (value < 5)
-         value = "";
-      if (value > 80) 
-        value = "";
+      value = parseFloat(value);
+        if (value < 1 || value > 80 || isNaN(value)) {
+            value = "";
+        }
     }
 
     setCurrentProduct((prevProduct) => ({
@@ -229,7 +228,7 @@ export default function ProductInventory({ products, reloadProducts }) {
               </label>
               <input
                 type="number"
-                min={5}
+                min={0}
                 max={80}
                 id="discount"
                 name="discount"

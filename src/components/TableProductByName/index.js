@@ -238,7 +238,7 @@ export default function TableProductByName({
               </h1>
               <h1>{selectedProduct ? selectedProduct.description : ""}</h1>
               <h1 className="text-xl font-medium">
-                {selectedProduct ? selectedProduct.price : ""} đ
+                {selectedProduct ? selectedProduct?.price.toLocaleString() : ""} đ
               </h1>
 
               <div className="card-actions justify-start"></div>

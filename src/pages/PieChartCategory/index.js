@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { PieChart, Pie, Sector, Cell } from "recharts";
 import apiOrder from "../../apis/apiOrder";
-
-
+import { useLocation } from "react-router-dom";
 
 export default function PieChartCategory() {
+  const location = useLocation();
+  const dataToDisplay = location.state.dataToDisplay;
+  const selectedRange = location.state.selectedRange;
   const [year, setYear] = useState("2024");
   const [years, setYears] = useState([]);
   const [month, setMonth] = useState("12");
@@ -108,7 +110,7 @@ export default function PieChartCategory() {
     const ex = mx + (cos >= 0 ? 1 : -1) * 22;
     const ey = my;
     const textAnchor = cos >= 0 ? "start" : "end";
-  
+
     return (
       <g>
         <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
@@ -167,7 +169,8 @@ export default function PieChartCategory() {
         >
           <div className="w-full flex justify-between ">
             <h1 className="font-bold text-xl ml-2 mt-2">
-              Biểu đồ top 5 loại sản phẩm bán chạy
+              Biểu đồ top 5 loại sản phẩm bán chạy trong {selectedRange} ngày
+              gần nhất
             </h1>
             <div className="flex mt-2">
               {/* <div className="flex items-center">
@@ -179,7 +182,7 @@ export default function PieChartCategory() {
                   />
                 </div>
               </div> */}
-              <div class="flex items-center space-x-2">
+              {/* <div class="flex items-center space-x-2">
               <label for="year" class="font-semibold text-gray-700">
                 Chọn năm
               </label>
@@ -201,11 +204,10 @@ export default function PieChartCategory() {
                 <option value="2022">2022</option>
                 <option value="2023">2023</option>
                 <option value="2024" selected>2024</option>
-                {/* <option value="2025">2025</option> */}
               </select>
-            </div>
+            </div> */}
 
-            <div class="flex items-center space-x-2">
+              {/* <div class="flex items-center space-x-2">
               <label for="month" class="font-semibold text-gray-700">
                 Chọn tháng
               </label>
@@ -231,35 +233,30 @@ export default function PieChartCategory() {
                 <option value="11">Tháng 11</option>
                 <option value="12" selected>Tháng 12</option>
               </select>
-            </div>
+            </div> */}
             </div>
           </div>
           <div className="w-full">
-          <PieChart width={800} height={800}>
-            <Pie
-              activeIndex={activeIndex}
-              activeShape={renderActiveShape}
-              data={
-                month !== "" ? transformedData(months) : transformedData(years)
-              }
-              cx={450}
-              cy={300}
-              innerRadius={180}
-              outerRadius={220}
-              dataKey="value"
-              onMouseEnter={onPieEnter}
-            >
-              {(month !== ""
-                ? transformedData(months)
-                : transformedData(years)
-              ).map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={colors[index % colors.length]}
-                />
-              ))}
-            </Pie>
-          </PieChart>
+            <PieChart width={800} height={800}>
+              <Pie
+                activeIndex={activeIndex}
+                activeShape={renderActiveShape}
+                data={dataToDisplay}
+                cx={450}
+                cy={300}
+                innerRadius={180}
+                outerRadius={220}
+                dataKey="value"
+                onMouseEnter={onPieEnter}
+              >
+                {dataToDisplay.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index % colors.length]}
+                  />
+                ))}
+              </Pie>
+            </PieChart>
           </div>
         </div>
       </div>

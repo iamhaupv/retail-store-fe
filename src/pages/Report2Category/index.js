@@ -54,7 +54,7 @@ export default function Report2Category() {
             </select>
             (so sánh với lần báo cáo trước đó)
           </h1>
-          <Link to="/pieChartCategory">
+          <Link to="/pieChartCategory" state={{dataToDisplay, selectedRange}}>
             <button
               className="btn w-36 mt-5"
               style={{ backgroundColor: "#e5edf8", color: "#2f80ed" }}
@@ -74,14 +74,14 @@ export default function Report2Category() {
           </thead>
           <tbody>
             {/* row 1 */}
-            {dataToDisplay.map((week)=> (
+            {dataToDisplay.slice(0, 5).map((week)=> (
               <tr key={week._id}>
               <td>
                 <div class="flex items-center gap-3">
                   <div class="avatar">
                   </div>
                   <div>
-                    <div class="font-bold">{week?.categoryName}</div>
+                    <div class="font-bold">{week?.name}</div>
                     {/* <div class="text-sm opacity-50">United States</div> */}
                   </div>
                 </div>
@@ -103,7 +103,7 @@ export default function Report2Category() {
                         d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
                       />
                     </svg>
-                    {week?.totalQuantity}
+                    {week?.value}
                   </div>
                 </div>
               </td>

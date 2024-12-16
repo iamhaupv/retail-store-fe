@@ -23,8 +23,8 @@ export default function Order() {
     return `${day}/${month}/${year}`;
   }
   const [value, setValue] = useState({
-    startDate: formatDate(getToday()),
-    endDate: formatDate(getToday()),
+    startDate: getToday(),
+    endDate: getToday(),
   });
 
   const handleNextDay = () => {
@@ -267,7 +267,6 @@ export default function Order() {
                 <Datepicker
                   value={value}
                   onChange={(newValue) => setValue(newValue)}
-                  dateFormat="dd/MM/yyyy"
                 />
               </div>
               <label className="input input-bordered h-10 flex items-center gap-2">

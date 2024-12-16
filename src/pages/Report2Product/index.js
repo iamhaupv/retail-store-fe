@@ -41,7 +41,6 @@ export default function Report2Product() {
   } else if (selectedRange === "365") {
     dataToDisplay = years;
   }
-  console.log(dataToDisplay);
   
   return (
     <>
@@ -56,7 +55,7 @@ export default function Report2Product() {
             </select>
             (so sánh với lần báo cáo trước đó)
           </h1>
-          <Link to="/pieChartProduct" state={{dataToDisplay}}>
+          <Link to="/pieChartProduct" state={{dataToDisplay, selectedRange}}>
             <button
               className="btn w-36 mt-5"
               style={{ backgroundColor: "#e5edf8", color: "#2f80ed" }}
@@ -76,8 +75,7 @@ export default function Report2Product() {
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
-            {dataToDisplay.map((week)=> (
+            {dataToDisplay.slice(0, 5).map((week)=> (
               <tr key={week._id}>
               <th>{week.id}</th>
               <td>
@@ -141,14 +139,7 @@ export default function Report2Product() {
             </tr>
             ))}
           </tbody>
-          {/* <tfoot>
-            <tr>
-              <th></th>
-              <th className="font-bold text-lg text-black">Tổng</th>
-              <th className="font-bold text-lg text-black">1.000</th>
-              <th className="font-bold text-lg text-black">1.200.000 đ</th>
-            </tr>
-          </tfoot> */}
+          
         </table>
       </div>
     </>

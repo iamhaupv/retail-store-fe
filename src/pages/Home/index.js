@@ -156,13 +156,12 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="w-full flex ml-4 mt-4 mb-4">
-                <h1 className={`${revenue?.totalAmount > 0 ? 'text-red-400 mr-1' : 'text-green-400 mr-1'}`}>
+                <h1 className={`${revenue?.percentageChange?.totalAmount > 0 ? 'text-green-400 mr-1' : 'text-red-400 mr-1'}`}>
                   {revenue?.totalAmount > 0
-                    ? + roundNumber(percen?.percentageChange?.totalAmount, 2)
-                    : - roundNumber(percen?.percentageChange?.totalAmount, 2)}
-                  %
+                    ? <p>  {roundNumber(percen?.percentageChange?.totalAmount, 2)}%</p>
+                    : <p>  {roundNumber(percen?.percentageChange?.totalAmount, 2)}%</p>}
                 </h1>
-                kể từ ngày hôm qua
+                <h1>kể từ ngày hôm qua</h1>
               </h1>
             </div>
             <div className=" w-1/3 h-2/6 card  bg-white rounded-xl top-7  ml-4 mr-4 ">
@@ -195,8 +194,8 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="w-full flex ml-4 mt-4 mb-4">
-                <h1 className={`${revenue?.totalOrders > 0 ? 'text-red-400 mr-1' : 'text-green-400 mr-1'} `}>
-                  {revenue?.totalOrders > 0 ? + roundNumber(percen?.percentageChange?.totalOrders, 2) : - revenue?.totalOrders}%
+                <h1 className={`${revenue?.percentageChange?.totalOrders > 0 ? 'text-green-400 mr-1' : 'text-red-400 mr-1'} `}>
+                  {revenue?.totalOrders > 0 ? <p>{roundNumber(percen?.percentageChange?.totalOrders, 2)}%</p> :  <p>{revenue?.percentageChange?.totalOrders}%</p>}
                 </h1>
                 kể từ ngày hôm qua
               </h1>
