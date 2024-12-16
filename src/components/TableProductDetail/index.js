@@ -1,28 +1,13 @@
-import { useBarcode } from "@createnextapp/react-barcode";
 import { CarouselProduct } from "../CarouselProduct";
 import React, { useEffect, useState } from "react";
 import apiGetAllProduct from "../../apis/apiGetAllProducts";
 import apiIsDisplay from "../../apis/apiIsDisplay";
 import { Link } from "react-router-dom";
-
 export default function TableProductDetail() {
   
   const [products, setProducts] = useState([]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  //#region Tạo barcode
-  // const { inputRef } = useBarcode({
-  //   value: "ASM001",
-  //   options: {
-  //     displayValue: false,
-  //     background: "#ffffff",
-  //     width: 1,
-  //     height: 25,
-  //   },
-  // });
-   //#endregion
-   
-   //#region Lấy dữ liệu sản phẩm
   const fetchPrducts = async () => {
     try {
       const token = localStorage.getItem("accessToken");
