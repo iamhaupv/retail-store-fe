@@ -174,7 +174,7 @@ export default function Home() {
                 <h1 className={`${percen?.percentageChange?.totalAmount > 0 ? 'text-green-400 mr-1' : 'text-red-400 mr-1'}`}>
                   {percen?.percentageChange?.totalAmount > 0
                     ? <p> + {roundNumber(percen?.percentageChange?.totalAmount, 2)}%</p>
-                    : <p> - {roundNumber(percen?.percentageChange?.totalAmount, 2)}%</p>}
+                    : <p>  {roundNumber(percen?.percentageChange?.totalAmount, 2)}%</p>}
                 </h1>
                 <h1>kể từ ngày hôm qua</h1>
               </h1>
@@ -210,7 +210,7 @@ export default function Home() {
               </div>
               <h1 className="w-full flex ml-4 mt-4 mb-4">
                 <h1 className={`${percen?.percentageChange?.totalOrders > 0 ? 'text-green-400 mr-1' : 'text-red-400 mr-1'} `}>
-                  {percen?.percentageChange?.totalOrders > 0 ? <p>+ {roundNumber(percen?.percentageChange?.totalOrders, 2)}%</p> : - <p>{revenue?.percentageChange?.totalOrders}%</p>}
+                  {percen?.percentageChange?.totalOrders > 0 ? <p>+ {roundNumber(percen?.percentageChange?.totalOrders, 2)}%</p> : <p>{roundNumber(percen?.percentageChange?.totalOrders, 2)}%</p>}
                 </h1>
                 kể từ ngày hôm qua
               </h1>
