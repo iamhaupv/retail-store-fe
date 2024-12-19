@@ -2,38 +2,51 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import apiEmployee from "../../apis/apiEmployee";
 import apiShift from "../../apis/apiShift";
+import apiEmployeeShift from "../../apis/apiEmployeeShift";
 export default function EmployeeSchedule() {
-  const [shifts, setShifts] = useState([])
-  const [employees, setEmployees] = useState([])
+  const [shifts, setShifts] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [selectedDate, setSelectedDate] = useState(moment());
+  const [emp_shi, setEmp_Shi] = useState([]);
   useEffect(() => {
-    const fetchShifts = async() => {
+    const fetchEmp_Shi = async () => {
       try {
-        const token = localStorage.getItem("accessToken")
-        if(!token) throw new Error("Token is invalid!")
-        const response = await apiShift.apiGetAllShifts(token)
-        setShifts(response?.shifts)
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiEmployeeShift.apiGetAllEmployeeShift(token);
+        setEmp_Shi(response.emp_shi);
+      } catch (error) {
+        console.log("fetch Emp Shi", error);
+      }
+    };
+    fetchEmp_Shi();
+  }, []);
+  useEffect(() => {
+    const fetchShifts = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiShift.apiGetAllShifts(token);
+        setShifts(response?.shifts);
       } catch (error) {
         console.log("fetch employees is error", error);
-        
       }
-    } 
-    fetchShifts()
-  }, [])
+    };
+    fetchShifts();
+  }, []);
   useEffect(() => {
-    const fetchEmployees = async() => {
+    const fetchEmployees = async () => {
       try {
-        const token = localStorage.getItem("accessToken")
-        if(!token) throw new Error("Token is invalid!")
-        const response = await apiEmployee.apiGetListEmployee(token)
-        setEmployees(response.data)
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error("Token is invalid!");
+        const response = await apiEmployee.apiGetListEmployee(token);
+        setEmployees(response.data);
       } catch (error) {
         console.log("fetch employees is error", error);
-        
       }
-    } 
-    fetchEmployees()
-  }, [])
+    };
+    fetchEmployees();
+  }, []);
   const handleDateChange = (event) => {
     setSelectedDate(moment(event.target.value));
   };
@@ -58,7 +71,7 @@ export default function EmployeeSchedule() {
     "Thứ bảy",
     "Chủ nhật",
   ];
-  const shift = ["7:30 - 12:30", "12:30 - 17:30","17:30 - 22:30"];
+  const shift = ["7:30 - 12:30", "12:30 - 17:30", "17:30 - 22:30"];
   return (
     <>
       <div
@@ -150,12 +163,7 @@ export default function EmployeeSchedule() {
                 </div>
                 <div class="flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto">
                   <div class="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">
-                    {/*
-                    Always include: "relative py-2 px-3"
-                    Is current month, include: "bg-white"
-                    Is not current month, include: "bg-white text-gray-500"
-                    */}
-                    {daysOfWeek.map((day, index) => (
+                    {/* {daysOfWeek.map((day, index) => (
                       <div
                         key={index}
                         class="relative bg-white px-3 py-2 text-gray-500 "
@@ -163,34 +171,98 @@ export default function EmployeeSchedule() {
                           height: "calc(100vh - 564px)",
                         }}
                       >
-                        {/*
-                        Is today, include: "flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white"
-                    */}
+                      
                         <time dateTime={day.format("YYYY-MM-DD")}>
-                          7:30 - 12:30{" "}
+                          7:30 - 12:30
                         </time>
-                      </div>
-                    ))}
-                    {daysOfWeek.map((day, index) => (
-                      <div key={index} class="relative bg-white px-3 py-2">
-                        <time dateTime={day.format("YYYY-MM-DD")}>
-                          12:30 - 17:30
-                        </time>
-                        <ol class="mt-2">
+                        {emp_shi.map((e) => (
+                          <ol class="mt-2">
                           <li>
                             <a href="#" class="group flex">
                               <p class="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
-                                Nguyễn Thanh Khoa
+                                {e?.shift?.name === "7:30 - 12:30" ? e?.employee?.name : "" }
                               </p>
                             </a>
                           </li>
                         </ol>
+                        ))}
+                      </div>
+                    ))} */}
+                    {daysOfWeek.map((day, index) => (
+                      <div key={index} className="relative bg-white px-3 py-2">
+                        <time dateTime={day.format("YYYY-MM-DD")}>
+                          {/* Display shift 7:30 - 12:30 */}
+                          <p>7:30 - 12:30</p>
+                          {emp_shi
+                            .filter(
+                              (e) =>
+                                e?.shift?.name === "7:30 - 12:30" &&
+                                moment(e.start).isSameOrBefore(day, "day") &&
+                                moment(e.end).isSameOrAfter(day, "day")
+                            )
+                            .map((e) => (
+                              <ol key={e._id}>
+                                <li>
+                                  <a href="#" className="group flex">
+                                    <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
+                                      {e?.employee?.name}
+                                    </p>
+                                  </a>
+                                </li>
+                              </ol>
+                            ))}
+                        </time>
                       </div>
                     ))}
                     {daysOfWeek.map((day, index) => (
-                      <div key={index} class="relative bg-white px-3 py-2">
+                      <div key={index} className="relative bg-white px-3 py-2">
                         <time dateTime={day.format("YYYY-MM-DD")}>
-                          17:30 - 22:30
+                          {/* Display shift 12:30 - 17:30 */}
+                          <p>12:30 - 17:30</p>
+                          {emp_shi
+                            .filter(
+                              (e) =>
+                                e?.shift?.name === "12:30 - 17:30" &&
+                                moment(e.start).isSameOrBefore(day, "day") &&
+                                moment(e.end).isSameOrAfter(day, "day")
+                            )
+                            .map((e) => (
+                              <ol key={e._id}>
+                                <li>
+                                  <a href="#" className="group flex">
+                                    <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
+                                      {e?.employee?.name}
+                                    </p>
+                                  </a>
+                                </li>
+                              </ol>
+                            ))}
+                        </time>
+                      </div>
+                    ))}
+                    {daysOfWeek.map((day, index) => (
+                      <div key={index} className="relative bg-white px-3 py-2">
+                        <time dateTime={day.format("YYYY-MM-DD")}>
+                          {/* Display shift 17:30 - 22:30 */}
+                          <p>17:30 - 22:30</p>
+                          {emp_shi
+                            .filter(
+                              (e) =>
+                                e?.shift?.name === "17:30 - 22:30" &&
+                                moment(e.start).isSameOrBefore(day, "day") &&
+                                moment(e.end).isSameOrAfter(day, "day")
+                            )
+                            .map((e) => (
+                              <ol key={e._id}>
+                                <li>
+                                  <a href="#" className="group flex">
+                                    <p className="flex-auto truncate font-medium text-gray-900 group-hover:text-indigo-600">
+                                      {e?.employee?.name}
+                                    </p>
+                                  </a>
+                                </li>
+                              </ol>
+                            ))}
                         </time>
                       </div>
                     ))}
@@ -220,9 +292,11 @@ export default function EmployeeSchedule() {
                   <option disabled selected>
                     Chọn nhân viên
                   </option>
-                 {employees.map((employee) => (
-                  <option value={employee._id}>{employee.name}</option>
-                 ))}
+                  {employees.map((employee) => (
+                    <option key={employee?._id} value={employee._id}>
+                      {employee.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="flex justify-start items-center mt-2">
@@ -232,7 +306,9 @@ export default function EmployeeSchedule() {
                     Chọn ca làm
                   </option>
                   {shifts?.map((shift) => (
-                    <option value={shift?._id}>{shift?.name}</option>
+                    <option key={shift?._id} value={shift?._id}>
+                      {shift?.name}
+                    </option>
                   ))}
                 </select>
               </div>

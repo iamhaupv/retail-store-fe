@@ -42,12 +42,12 @@ export default function Information() {
   };
   
   const handleChangeInput = (e) => {
-    const { name, value } = e.target; // Lấy tên và giá trị từ input
+    const { name, value } = e.target;
     setUser((prevUser) => ({
       ...prevUser,
       employee: {
-        ...prevUser.employee,  // Giữ lại thông tin employee cũ
-        [name]: value,         // Chỉ cập nhật trường name trong employee
+        ...prevUser.employee, 
+        [name]: value,      
       },
     }));
   };
